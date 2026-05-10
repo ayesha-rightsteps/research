@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ayesha's Paper Visual Summary</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4ff;
+      color: #1a1a2e;
+      padding: 24px;
+      min-height: 100vh;
+    }
+    h1 { font-size: 1.4rem; font-weight: 800; color: #2d2d7e; margin-bottom: 4px; }
+    .subtitle { font-size: 0.85rem; color: #666; margin-bottom: 20px; }
+    .authors { font-size: 0.82rem; color: #888; margin-bottom: 4px; }
+    .venue { font-size: 0.82rem; color: #4a6fa5; font-weight: 600; }
+
+    /* CORE STORY */
+    .story-box {
+      background: linear-gradient(135deg, #2d2d7e, #4a6fa5);
+      color: white;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .story-box h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-bottom: 12px; }
+    .story-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+    .story-label {
+      background: rgba(255,255,255,0.2);
+      border-radius: 6px;
+      padding: 3px 9px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+      min-width: 88px;
+      text-align: center;
+    }
+    .story-text { font-size: 0.85rem; line-height: 1.4; }
+
+    /* KEY NUMBERS */
+    .numbers-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .number-card {
+      background: white;
+      border-radius: 14px;
+      padding: 14px 18px;
+      flex: 1;
+      min-width: 130px;
+      box-shadow: 0 2px 12px rgba(74,111,165,0.1);
+      border-left: 4px solid #4a6fa5;
+      text-align: center;
+    }
+    .number-big { font-size: 2rem; font-weight: 900; color: #2d2d7e; line-height: 1; }
+    .number-label { font-size: 0.72rem; color: #666; margin-top: 4px; line-height: 1.3; }
+
+    /* DOMAINS */
+    .section-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 12px; }
+    .domains-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .domain-card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 2px 12px rgba(74,111,165,0.08);
+    }
+    .domain-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .domain-name { font-size: 0.85rem; font-weight: 700; color: #2d2d7e; margin-bottom: 6px; }
+    .domain-tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #4a6fa5;
+      border-radius: 20px;
+      padding: 2px 8px;
+      font-size: 0.68rem;
+      margin: 2px 2px 2px 0;
+    }
+
+    /* ALGORITHMS */
+    .algo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .algo-card {
+      background: white;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 10px rgba(74,111,165,0.07);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .algo-badge {
+      background: #2d2d7e;
+      color: white;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      white-space: nowrap;
+      min-width: 48px;
+      text-align: center;
+    }
+    .algo-badge.star { background: #e05a2b; }
+    .algo-badge.green { background: #2a7e4e; }
+    .algo-info {}
+    .algo-name { font-size: 0.78rem; font-weight: 700; color: #1a1a2e; }
+    .algo-desc { font-size: 0.7rem; color: #666; margin-top: 2px; line-height: 1.3; }
+
+    /* CHALLENGES */
+    .challenges-row { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .challenge-card {
+      background: white;
+      border-radius: 14px;
+      padding: 14px;
+      flex: 1;
+      min-width: 140px;
+      box-shadow: 0 2px 10px rgba(74,111,165,0.07);
+      border-top: 4px solid #e05a2b;
+    }
+    .challenge-icon { font-size: 1.3rem; margin-bottom: 6px; }
+    .challenge-name { font-size: 0.78rem; font-weight: 700; color: #c0392b; margin-bottom: 4px; }
+    .challenge-desc { font-size: 0.7rem; color: #666; line-height: 1.35; }
+
+    /* INDUSTRY */
+    .industry-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .industry-chip {
+      background: white;
+      border-radius: 30px;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #2d2d7e;
+      box-shadow: 0 2px 8px rgba(74,111,165,0.1);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* QUICK QA */
+    .qa-box {
+      background: linear-gradient(135deg, #2a7e4e, #3aaf6e);
+      color: white;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .qa-box h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-bottom: 12px; }
+    .qa-item { margin-bottom: 12px; }
+    .qa-q { font-size: 0.78rem; font-weight: 700; opacity: 0.9; margin-bottom: 3px; }
+    .qa-a { font-size: 0.8rem; opacity: 0.95; line-height: 1.4; }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #aaa;
+      padding-top: 10px;
+      border-top: 1px solid #dde3f5;
+    }
+    .footer strong { color: #4a6fa5; }
+
+    @media (max-width: 500px) {
+      .domains-grid, .algo-grid { grid-template-columns: 1fr; }
+      .numbers-row, .challenges-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <h1>A Survey on DRL in Autonomous Systems</h1>
+  <p class="subtitle">Applications, Open Challenges, and Future Directions</p>
+  <p class="authors">Govinda · Brik · Harous &nbsp;|&nbsp; University of Sharjah, UAE</p>
+  <p class="venue">IEEE Trans. on Intelligent Transportation Systems · Vol. 26, No. 7 · July 2025</p>
+
+  <br />
+
+  <!-- CORE STORY -->
+  <div class="story-box">
+    <h2>📖 The Core Story</h2>
+    <div class="story-row">
+      <span class="story-label">PROBLEM</span>
+      <span class="story-text">Traditional control methods can't handle unpredictable real-world conditions in autonomous systems.</span>
+    </div>
+    <div class="story-row">
+      <span class="story-label">SOLUTION</span>
+      <span class="story-text">A systematic review of DRL across 4 domains, with structured comparison tables to map the field.</span>
+    </div>
+    <div class="story-row">
+      <span class="story-label">KEY RESULT</span>
+      <span class="story-text">DRL consistently outperforms traditional methods. VILDS: 98.2% lane accuracy. SIFRCNN: 23% miss rate drop. SAC: 100% robot safety.</span>
+    </div>
+    <div class="story-row">
+      <span class="story-label">SO WHAT</span>
+      <span class="story-text">DRL is already in Tesla, Waymo, Amazon & DJI — but Sim-to-Real gap and safety certification remain unsolved.</span>
+    </div>
+  </div>
+
+  <!-- KEY NUMBERS -->
+  <p class="section-title">🔢 Key Numbers</p>
+  <div class="numbers-row">
+    <div class="number-card">
+      <div class="number-big">98.2%</div>
+      <div class="number-label">Lane detection accuracy (VILDS)</div>
+    </div>
+    <div class="number-card">
+      <div class="number-big">96.5%</div>
+      <div class="number-label">Departure warning accuracy (VILDS)</div>
+    </div>
+    <div class="number-card">
+      <div class="number-big">23%</div>
+      <div class="number-label">Miss rate improvement — nighttime pedestrian detection (SIFRCNN)</div>
+    </div>
+    <div class="number-card">
+      <div class="number-big">100%</div>
+      <div class="number-label">SAC safety rate — robot trajectory planning (6,000 episodes)</div>
+    </div>
+    <div class="number-card">
+      <div class="number-big">7</div>
+      <div class="number-label">Academic databases searched (2018–2024)</div>
+    </div>
+  </div>
+
+  <!-- 4 DOMAINS -->
+  <p class="section-title">🗂️ 4 Domains Covered</p>
+  <div class="domains-grid">
+    <div class="domain-card">
+      <div class="domain-icon">🚗</div>
+      <div class="domain-name">Autonomous Cars</div>
+      <span class="domain-tag">Lane Following</span>
+      <span class="domain-tag">Parking</span>
+      <span class="domain-tag">Urban Navigation</span>
+      <span class="domain-tag">Collision Avoidance</span>
+      <span class="domain-tag">Braking</span>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">🤖</div>
+      <div class="domain-name">Autonomous Robotics</div>
+      <span class="domain-tag">Swarm Behaviour</span>
+      <span class="domain-tag">Collision Avoidance</span>
+      <span class="domain-tag">Trajectory Planning</span>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">🚁</div>
+      <div class="domain-name">Autonomous Drones</div>
+      <span class="domain-tag">Security</span>
+      <span class="domain-tag">Pollution Control</span>
+      <span class="domain-tag">Stability</span>
+      <span class="domain-tag">Path Planning</span>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">🛡️</div>
+      <div class="domain-name">ADAS</div>
+      <span class="domain-tag">Lane Departure Warning</span>
+      <span class="domain-tag">Pedestrian Detection</span>
+      <span class="domain-tag">Adaptive Cruise Control</span>
+    </div>
+  </div>
+
+  <!-- ALGORITHMS -->
+  <p class="section-title">⚙️ DRL Algorithms — Which Does What</p>
+  <div class="algo-grid">
+    <div class="algo-card">
+      <div class="algo-badge star">DDPG</div>
+      <div class="algo-info">
+        <div class="algo-name">Deep Deterministic Policy Gradient</div>
+        <div class="algo-desc">Best for continuous control (steering, speed). Most-used algorithm in the survey.</div>
+      </div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-badge">DQN</div>
+      <div class="algo-info">
+        <div class="algo-name">Deep Q-Network</div>
+        <div class="algo-desc">Best for discrete decisions (routing, braking events). Landmark 2013 invention by DeepMind.</div>
+      </div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-badge green">SAC</div>
+      <div class="algo-info">
+        <div class="algo-name">Soft Actor-Critic</div>
+        <div class="algo-desc">Safest algorithm — adds exploration bonus. Achieved 100% safety in robot arm planning.</div>
+      </div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-badge">PPO</div>
+      <div class="algo-info">
+        <div class="algo-name">Proximal Policy Optimization</div>
+        <div class="algo-desc">Stable, incremental learning. Used for robotic swarms and AWS DeepRacer racing.</div>
+      </div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-badge">D3QN</div>
+      <div class="algo-info">
+        <div class="algo-name">Dueling Double DQN</div>
+        <div class="algo-desc">Improved DQN. Reduces overestimation. Used for drone interception & obstacle avoidance.</div>
+      </div>
+    </div>
+    <div class="algo-card">
+      <div class="algo-badge">MARL</div>
+      <div class="algo-info">
+        <div class="algo-name">Multi-Agent RL</div>
+        <div class="algo-desc">Multiple agents coordinating. Used for drone fleet pollution monitoring.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHALLENGES -->
+  <p class="section-title">⚠️ Open Challenges</p>
+  <div class="challenges-row">
+    <div class="challenge-card">
+      <div class="challenge-icon">🔬</div>
+      <div class="challenge-name">Sim-to-Real Gap</div>
+      <div class="challenge-desc">Systems trained in simulation underperform in real-world deployment. #1 unsolved problem.</div>
+    </div>
+    <div class="challenge-card">
+      <div class="challenge-icon">🛡️</div>
+      <div class="challenge-name">Safety & Robustness</div>
+      <div class="challenge-desc">DRL systems can fail on rare edge cases. Safety certification frameworks don't exist yet.</div>
+    </div>
+    <div class="challenge-card">
+      <div class="challenge-icon">📈</div>
+      <div class="challenge-name">Scalability</div>
+      <div class="challenge-desc">DRL often can't generalize across diverse, unstructured real-world scenarios.</div>
+    </div>
+    <div class="challenge-card">
+      <div class="challenge-icon">⚖️</div>
+      <div class="challenge-name">Ethics & Regulation</div>
+      <div class="challenge-desc">Liability, privacy, bias, and global regulatory frameworks are all unresolved.</div>
+    </div>
+  </div>
+
+  <!-- INDUSTRY -->
+  <p class="section-title">🏭 Real-World Industrial Deployments</p>
+  <div class="industry-row">
+    <div class="industry-chip">🚗 Tesla Autopilot</div>
+    <div class="industry-chip">🚗 Waymo ChauffeurNet</div>
+    <div class="industry-chip">🤖 Boston Dynamics Atlas</div>
+    <div class="industry-chip">📦 Amazon Robotics</div>
+    <div class="industry-chip">🚁 Amazon Prime Air</div>
+    <div class="industry-chip">🚁 DJI Drones</div>
+    <div class="industry-chip">🛡️ Mobileye (Intel)</div>
+    <div class="industry-chip">💻 Nvidia DRIVE Platform</div>
+  </div>
+
+  <!-- QUICK Q&A -->
+  <div class="qa-box">
+    <h2>💬 Quick Q&A — If Sir Asks...</h2>
+    <div class="qa-item">
+      <div class="qa-q">What is the main contribution?</div>
+      <div class="qa-a">First unified survey covering all 4 autonomous system domains with structured comparison tables — not just a paper list.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-q">What is the biggest limitation?</div>
+      <div class="qa-a">Sim-to-Real transfer remains unsolved — systems work great in simulation but lose performance in the real world.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-q">What is the future direction?</div>
+      <div class="qa-a">Integrating Large Language Models (LLMs) and transformer architectures for smarter, more generalizable autonomous systems.</div>
+    </div>
+    <div class="qa-item">
+      <div class="qa-q">Why DRL over traditional methods?</div>
+      <div class="qa-a">Traditional methods follow fixed rules — they break in unexpected situations. DRL learns and adapts, making it far more robust.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    💙 Prepared for Ayesha &nbsp;·&nbsp; Open this file in any browser &nbsp;·&nbsp; <strong>You've got this!</strong>
+  </div>
+
+</body>
+</html>
