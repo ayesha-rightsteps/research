@@ -1,0 +1,98 @@
+<mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="1">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- Background -->
+    <mxCell id="bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF2FA;strokeColor=#9E9E9E;strokeWidth=2;shadow=0;" vertex="1" parent="1">
+      <mxGeometry x="10" y="10" width="780" height="520" as="geometry" />
+    </mxCell>
+
+    <!-- Title -->
+    <mxCell id="title" value="Multi-UAV Coordination: Joint Target Assignment and Collision Avoidance" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;fontColor=#1A237E;" vertex="1" parent="1">
+      <mxGeometry x="10" y="14" width="780" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- Conflict Zone -->
+    <mxCell id="conflict" value="&lt;b&gt;Conflict Zone&lt;/b&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=2;opacity=70;fontSize=11;fontColor=#BF360C;fontStyle=2;" vertex="1" parent="1">
+      <mxGeometry x="320" y="215" width="160" height="110" as="geometry" />
+    </mxCell>
+
+    <!-- ARROW: D1 to T1 (blue dashed) -->
+    <mxCell id="a1" value="" style="endArrow=block;endFill=1;dashed=1;dashPattern=8 4;strokeColor=#1565C0;strokeWidth=2.5;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="150" y="115" as="sourcePoint" />
+        <mxPoint x="635" y="400" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ARROW: D2 to T2 (red dashed) -->
+    <mxCell id="a2" value="" style="endArrow=block;endFill=1;dashed=1;dashPattern=8 4;strokeColor=#B71C1C;strokeWidth=2.5;" edge="1" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="640" y="115" as="sourcePoint" />
+        <mxPoint x="145" y="400" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ARROW: D3 to T3 (green dashed, no conflict) -->
+    <mxCell id="a3" value="" style="endArrow=block;endFill=1;dashed=1;dashPattern=8 4;strokeColor=#2E7D32;strokeWidth=2.5;" edge="1" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <mxPoint x="100" y="340" as="sourcePoint" />
+        <mxPoint x="655" y="340" as="targetPoint" />
+      </mxGeometry>
+    </mxCell>
+
+    <!-- DRONE D1 (top-left, blue) -->
+    <mxCell id="d1" value="&lt;b&gt;UAV 1&lt;/b&gt;" style="shape=mxgraph.cisco.routers.router;fillColor=#1565C0;strokeColor=#E3F2FD;fontColor=#1565C0;fontStyle=1;fontSize=11;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;" vertex="1" parent="1">
+      <mxGeometry x="95" y="80" width="60" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- DRONE D2 (top-right, red) -->
+    <mxCell id="d2" value="&lt;b&gt;UAV 2&lt;/b&gt;" style="shape=mxgraph.cisco.routers.router;fillColor=#B71C1C;strokeColor=#FFCDD2;fontColor=#B71C1C;fontStyle=1;fontSize=11;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;" vertex="1" parent="1">
+      <mxGeometry x="635" y="80" width="60" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- DRONE D3 (left, green) -->
+    <mxCell id="d3" value="&lt;b&gt;UAV 3&lt;/b&gt;" style="shape=mxgraph.cisco.routers.router;fillColor=#2E7D32;strokeColor=#C8E6C9;fontColor=#2E7D32;fontStyle=1;fontSize=11;verticalLabelPosition=bottom;verticalAlign=top;labelPosition=center;" vertex="1" parent="1">
+      <mxGeometry x="45" y="310" width="60" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- TARGET T1 (bottom-right, for UAV1) -->
+    <mxCell id="t1" value="&lt;b&gt;T1&lt;/b&gt;" style="shape=mxgraph.maps.misc.pin;fillColor=#1565C0;strokeColor=#E3F2FD;fontColor=#1565C0;fontStyle=1;fontSize=12;verticalLabelPosition=bottom;verticalAlign=top;" vertex="1" parent="1">
+      <mxGeometry x="640" y="370" width="35" height="45" as="geometry" />
+    </mxCell>
+
+    <!-- TARGET T2 (bottom-left, for UAV2) -->
+    <mxCell id="t2" value="&lt;b&gt;T2&lt;/b&gt;" style="shape=mxgraph.maps.misc.pin;fillColor=#B71C1C;strokeColor=#FFCDD2;fontColor=#B71C1C;fontStyle=1;fontSize=12;verticalLabelPosition=bottom;verticalAlign=top;" vertex="1" parent="1">
+      <mxGeometry x="115" y="370" width="35" height="45" as="geometry" />
+    </mxCell>
+
+    <!-- TARGET T3 (right, for UAV3) -->
+    <mxCell id="t3" value="&lt;b&gt;T3&lt;/b&gt;" style="shape=mxgraph.maps.misc.pin;fillColor=#2E7D32;strokeColor=#C8E6C9;fontColor=#2E7D32;fontStyle=1;fontSize=12;verticalLabelPosition=bottom;verticalAlign=top;" vertex="1" parent="1">
+      <mxGeometry x="665" y="310" width="35" height="45" as="geometry" />
+    </mxCell>
+
+    <!-- Legend box -->
+    <mxCell id="legbg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#BDBDBD;strokeWidth=1;" vertex="1" parent="1">
+      <mxGeometry x="295" y="410" width="210" height="100" as="geometry" />
+    </mxCell>
+    <mxCell id="leg1" value="--- Assignment Path" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+      <mxGeometry x="310" y="418" width="185" height="22" as="geometry" />
+    </mxCell>
+    <mxCell id="leg2" value="UAV icon   = Drone" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+      <mxGeometry x="310" y="440" width="185" height="22" as="geometry" />
+    </mxCell>
+    <mxCell id="leg3" value="Pin icon   = Target location" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#333333;" vertex="1" parent="1">
+      <mxGeometry x="310" y="462" width="185" height="22" as="geometry" />
+    </mxCell>
+    <mxCell id="leg4" value="Orange zone = Collision risk" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontSize=11;fontColor=#BF360C;" vertex="1" parent="1">
+      <mxGeometry x="310" y="484" width="185" height="22" as="geometry" />
+    </mxCell>
+
+    <!-- Caption -->
+    <mxCell id="caption" value="Fig. 1. UAV 1 and UAV 2 are assigned to opposite targets. Their paths cross, creating a collision risk that neither assignment nor avoidance alone can resolve." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2;fontColor=#424242;" vertex="1" parent="1">
+      <mxGeometry x="10" y="535" width="780" height="30" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

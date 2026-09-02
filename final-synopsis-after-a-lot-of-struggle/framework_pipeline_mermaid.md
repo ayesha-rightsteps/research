@@ -6,41 +6,28 @@ Copy-paste this into any Mermaid renderer (e.g., mermaid.live) to get the visual
 
 ```mermaid
 flowchart TD
-    A([3D Environment\n5–8 Drones, Dynamic Targets, Obstacles]) --> B
+    A([2D Simulation Environment\n3 to 8 Drones · Dynamic Targets · Obstacles])
 
-    subgraph OBS [Step 1 — Observation Builder per Drone]
-        B[Self-State\n3D position + velocity]
-        C[Assignment State\nHungarian min-cost allocation\n→ target relative position]
-        D[Conflict Neighborhood\nDynamic Conflict Graph\n→ collision-course drone pairs]
-        E[Obstacle Proximity\n6 cardinal directions]
-    end
+    A --> B["Observation Builder\n1 Self-State — 2D position + velocity\n2 Assignment State — Hungarian allocation\n3 Conflict Graph — collision-course pairs\n4 Obstacle Proximity"]
 
-    B --> F[Joint Observation Vector]
-    C --> F
-    D --> F
+    B --> C[Joint Observation Vector]
+
+    C --> D["MAPPO Decentralized Actor\n2D velocity action"]
+    C --> E["Priority Arbitration Head\ntime-to-collision · target distance · conflict count\nlearned weight  α ∈ 0, 1"]
+
+    D --> F["Blended Reward\nr = α · r_assign + 1−α · r_avoid"]
     E --> F
 
-    F --> G[MAPPO Decentralized Actor\nOutputs: 3D velocity action]
-    F --> H[Priority Arbitration Head\n2-layer FF, 64 neurons\nInputs: τ_collision · d_target · n_conflict\nOutput: α ∈ 0,1]
+    F --> G[Environment Step — New State]
+    G --> A
 
-    G --> I[3D Velocity Command]
-    H --> J[Dynamic Weight α\nα→1: assignment dominant\nα→0: avoidance dominant]
+    H["Centralized Critic\nfull joint state — training only"] -.->|trains| D
+    H -.->|trains| E
 
-    I --> K["Reward Computation\nr_total = α × r_assign + 1−α × r_avoid"]
-    J --> K
-
-    K --> L[Environment Step\nNew State Observed]
-    L --> A
-
-    subgraph TRAIN [Centralized Training — MAPPO]
-        M[Centralized Critic\nFull Joint State of ALL Drones] --> N[Policy Gradient Update]
-        N -->|Updates jointly| G
-        N -->|Updates jointly| H
-    end
-
-    style H fill:#ff9900,color:#000,font-weight:bold
-    style K fill:#4CAF50,color:#fff
-    style TRAIN fill:#e8f4f8,stroke:#2196F3
+    style A fill:#1a237e,color:#fff,font-weight:bold
+    style E fill:#e65100,color:#fff,font-weight:bold
+    style F fill:#2e7d32,color:#fff,font-weight:bold
+    style H fill:#1565c0,color:#fff
 ```
 
 ---
