@@ -1,0 +1,337 @@
+COMSATS University Islamabad
+Synopsis for MS ☑ Ph.D. ☐
+Name: Ayesha Khalil
+Registration No.: 
+CIIT/SP25-RCS-009/ATD
+Program: MS (CS)
+Area of Specialization: 
+Artificial Intelligence
+Department: Computer Science
+Campus: Abbottabad
+Date of admission:  28-02-2025
+Date of synopsis submission: 
+18-06-2026
+Proposed Title of the Thesis: Multi-Agent Proximal Policy Optimization for Joint Dynamic Target Assignment and Collision Avoidance in UAV Systems
+  Supervisory Committee
+Name and Designation
+ Role
+ Dr. Faisal Rehman, Associate Professor
+Supervisor
+ Mr. Ehzaz Mustafa, Lecturer
+Co-supervisor
+ Dr. Sardar Khaliq uz Zaman, Assistant Professor
+Member
+ Dr. Nuhman ul Haq, Assistant Professor
+Member
+
+Student's Signature ______________________ 
+Summary of Research: 
+Multi-UAV coordination requires simultaneous target assignment and collision avoidance which are interdependent objectives that are typically addressed separately. Independent optimization can produce conflicting assignments, trajectory overlaps, increased avoidance maneuvers and delayed task completion. Existing approaches lack a unified mechanism to jointly optimize both objectives. Furthermore, traditional frameworks commonly rely on fixed reward coefficients that cannot adapt to changing assignment and collision-avoidance requirements during execution. This research proposes a unified Multi-agent Proximal Policy Optizmaition (MAPPO)-based deep reinforcement learning framework that jointly encodes target assignment and collision avoidance within each agent's observation space. A Priority Arbitration Head is introduced to dynamically balance the two objectives at each decision step by learning state-dependent objective weights, replacing static reward weighting. The framework incorporates curriculum learning in a two-dimensional multi-UAV environment and evaluated against fixed-weight baselines under varying swarm sizes and obstacle densities to assess whether dynamic objective prioritization improves coordination performance.
+	•	Introduction
+Unmanned aerial vehicle (UAV) technology has evolved from military and specialist applications to widespread civilian and industrial deployment. Applications in disaster response, search and rescue, precision agriculture, infrastructure inspection, and emergency communications have grown significantly, driven by advances in onboard computing, sensor miniaturization, and wireless communication. Real-world missions of meaningful scale cannot be accomplished by a single UAV operating alone such missions require multiple UAVs operating simultaneously to achieve the necessary coverage, redundancy, and task parallelism. This operational reality has introduced a new class of research problems that single-UAV systems cannot address, the coordination of multi-UAV systems operating collectively in shared airspace. 
+Consider a search and rescue operation in which five UAVs are deployed across a disaster zone, each assigned to a distinct target location. As UAVs approach their assigned targets, they will be flying in overlapping paths, resulting in a conflict zone where concurrently assigned and avoided demands occur. A UAV that focuses on getting to the target is likely to collide in the air, one that is avoidance-oriented exposes its target. This interaction is an example of the conflict between multi-UAV systems. The choice not to collide directly affects the ability to finish an assigned task in coordination.
+Multiple drones flying in the same space must make decisions that are individually rational but collectively effective. Traditional solutions to this problem involve centralized planners that solve the problem globally and then deploy the solution. Such techniques are effective in static environments, but fail if the environment changes, such as targets moving, obstacles emerging and drones going out of mission. The planner can't cover all base cases, and a real-time global solution is not feasible for larger teams. This restriction has motivated researchers to look at learning-based methods, in which the drone learns its navigation policy based on experience instead of being programmed for specific rules.
+This has come to be done using deep reinforcement learning (DRL). A DRL agent plays in a simulated world, receives reward signals, and incrementally learns a policy without the need for an explicit model of the world. This method can be extended to multiple agents using multi-agent deep reinforcement learning (MARL), enabling teams of drones to learn to cooperate by letting each agent learn how to react to the behavior of the other agents. There have been several proposed MARL frameworks in this setting, such as centralized-training decentralized-execution architectures, which allow agents to train with access to the global information, but execute independently in the deployment.
+There has been, however, a patchwork approach to progress in this area. Researchers who investigated ways of assigning targets to drones in real time did not account for collisions between teammates while developing their methods. The researchers investigated obstacle avoidance and avoidance between drones during flight but did not include any goal structure their drones were not required to reach any target, only another drone to avoid. Work done in the large-scale environment worked in two dimensions. What you get are a set of partial and competent solutions, none of which solve all parts of the coordination problem, and each of which makes the other parts either trivial or dealt with separately.
+This research addresses a well-identified case of structural fragmentation in multi-UAV coordination. A unified MAPPO-based policy is proposed that encodes both real-time target assignment and conflict-aware collision avoidance in a single joint observation, trained in a 2D environment with 3 to 8 drones. The objective is to address the structural coupling between these two objectives where assignment decisions shape spatial behavior and collision-driven deviations feed back into assignment feasibility within a single coordinated policy, and to empirically determine whether joint encoding produces better coordination outcomes than fixed-weight approaches.
+
+Figure 1: Multi-UAV target assignment with conflicting flight paths in a disaster response scenario.
+	•	Literature Review
+Mnih et al. [12] were the first to show that a convolutional neural network, trained using Q-learning, could attain human performance level on Atari games, directly from pixel inputs. Later improvements fixed important instabilities, Van Hasselt et al. [13] proposed Double DQN for systematic overestimation of the value of actions Wang et al. [14] introduced Dueling Network architecture, which learned two networks to estimate state values and action advantages, which proved useful when the choice of action was less important in the stat and Schaul et al. [15] introduced Prioritized Experience Replay, which sampled training transitions according to the temporal difference error, thus speeding up learning from rare but informative transitions. Tang et al. [1] employ the Improved D3QN architecture for dynamic scene navigation with a single UAV, which is built on these four contributions.
+Policy gradient methods were another approach that naturally worked with continuous action spaces. A different approach was proposed by Schulman et al. [16] where Proximal Policy Optimization (PPO) limits the size of the policy updates using a clipped surrogate objective, which eliminates the need to use trust-region constraints while maintaining training stability. PPO was made the baseline single-agent algorithm for comparison with cooperative MARL algorithms. To correct for overestimation of continuous-action actor-critic methods, Fujimoto et al. [18] introduced Twin Delayed Deep Deterministic Policy Gradient (TD3), which used clipped double Q learning, delayed policy updates and target policy smoothing. The policy backbone of the multi-UAV target assignment was chosen as TD3, adopted by Kong et al. [2] for its stability in continuous control.
+The extension was to multi-agent settings and introduced new coordination challenges. In the centralized-training decentralized-execution (CTDE) framework, Lowe et al. [17] introduced Multi-Agent Deep Deterministic Policy Gradient (MADDPG) where each agent's critic is trained with the complete joint state, while each agent's actor is only trained with its local state at execution time. To facilitate the credit assignment in cooperative tasks, Rashid et al. [19] proposed QMIX, a method that decomposes the joint action-value function into per-agent utilities constrained by monotonicity. In a simpler additive factorization, Sunehag et al. [22] introduced the Value Decomposition Networks (VDN). Mean Field theory was applied to MARL in [20] where the interaction between any one agent and the population was modelled as a mean field term rather than as pairwise interactions, which decreased the computational complexity from quadratic to linear with respect to the number of agents. Inspired by Yu et al. [21] who showed that PPO with a shared critic (MAPPO) is surprisingly competitive with more complex MARL algorithms on cooperative benchmarks, this variant is typically used as the policy backbone in recent UAV coordination work.
+Surveys of DRL for autonomous systems have given systematic overviews of progress regarding sub-domains. Govinda et al. [11] reviewed the applications in transportation, robotics, and UAV systems and found the lack of common frameworks that combine both navigation efficiency and inter-agent coordination as a prevailing drawback. Aggarwal and Kumar [23] introduced a review of path planning methods particularly for UAVs that summarizes failure cases of common path planning algorithms in dynamic environments and identifies DRL as the most promising approach for real-time adaptive path planning. Most UAV coordination problems that are formulated by MARLs are formulated in a formal framework called decentralized partially observable Markov decision process (Dec-POMDPs), introduced by Oliehoek and Amato [24]. Gronauer and Diepold [25] conducted a comprehensive review of multi-agent DRL, which they identified as having two major ongoing challenges, scalability and partial observability.
+In a single-UAV navigation scenario in a dynamic environment, Tang et al. [1] introduced an Improved D3QN based on Dueling Double DQN, Prioritized Experience Replay and the heuristic action-selection bias towards the target to obtain success rates of about 95% in moving threat zones, which are superior to both A* and RRT in terms of path quality. The problem of large-scale 2D environments was tackled by Jarray et al. [3] with a dynamic reward function that is calculated from the ratio of distances at every step, which allows a DQN with 3D convolutional feature extraction to come close to 98% success in low obstacles environments, and 85% in 40 obstacles, significantly outperforming particle swarm and grey wolf optimization baselines.
+The additional challenge of target assignment was added to the path planning in multi-UAV coordination. Kong et al. [2] introduced a framework called TANet-TD3, which assigns targets and computes the path simultaneously, learned by employing Hungarian algorithm labels to ensure optimal supervision of target assignment, both with and without moving obstacles and partial observability, for five drones in a 2D environment. The performance of the mean-field DDPG with multi-head attention weighting (MARL) was extended to 80-120 drones, with an above 90% success rate at 120 drones, compared to the failure of standard MARL baselines. PO-WMFDDPG was extended to 80-120 drones while maintaining an above 90% task success rate at 120 drones, compared to the failure of standard MARL baselines. Both papers, however, are two dimensional, and neither has a real-time mechanism for changing targets in the presence of dynamic targets.
+The most closely related work to this research is DA-MAPPO (Sheng et al. [10]), which introduces real-time Hungarian-algorithm-based target assignments directly into each drone's observation vector, and updates it at each decision step. The paper's ablation study of mission success is fascinating, there is a dramatic decline in mission success going from over 90% to 0%, directly confirming that the mechanism itself rather than the policy design is responsible for the success of the framework. DA-MAPPO was evaluated on three drones in a 2D space with static obstacles and relies on a simple collision penalty rather than an explicit avoidance mechanism.
+For collision avoidance specifically, Rezaee et al. [9] introduced a sparse (conflict-driven) graph, where drone pairs that are believed to be on a collision course during a specified time window are connected, and replaced the dense all-to-all interaction graph as seen in most previous works on graph-based MARL. Every drone collects conflict neighbor information via an Improved Graph Attention Network that features stacked double attention and residual connections. The framework yields an increase of 17% in reward, 10% fewer dangerous separation events and 44% fewer interaction edges than the previous best baseline trained with curriculum learning with 3 to 10 drones. Most important of all, IGAT-MARL doesn't have a target assignment component, drones don't have a goal structure, and the task is simply to avoid colliding with others. 
+There has been recent research on the use of LLMs in UAV coordination. To tackle the issues associated with cold-start in MARL training, Xu et al. [6] proposed a novel approach that employs GPT-4o to offer strategic relay position initialization for UAV multi-hop networking. Wang et al. [7] presented a two-stage approach RALLY that employs LLM semantic consensus to assign Commander, Coordinator and Executor roles for drones and then further optimizes coordination via an RMIX value-mixing network. Poudel and Moh [5] discussed the problem of heterogeneous drone fleets in disaster scenarios where MAML is used to rapidly adapt to unseen environments with resource-aware coalition formation. Khan et al. [8] offered a systematic review of multi-agent coordination frameworks based on LLMs. These have pushed the limits of multi-agent coordination but none of them studied the interaction between dynamic target assignment and collision avoidance in 2D space which is the focus of this work.
+The literature, when taken together, shows that no structural solution has been proposed for the coupling between target assignment and collision avoidance in a unified policy. DA-MAPPO and IGAT-MARL each handle one side while leaving the other unmodeled. No framework accounts for how assignment decisions shape each drone's spatial behavior and how safety-driven course deviations feed back into assignment feasibility particularly in two-dimensional space where this coupling becomes structurally significant. It is this gap that the proposed research targets. Table 1 below gives a summary of all the reviewed studies.
+Table 1. Summary of Related Work
+Ref
+Author(s) & Year
+Method / Algorithm
+Key Result
+Gap / Limitation
+[11]
+Govinda et al. (2025)
+Systematic review of DRL in UAV systems
+No unified framework for navigation + coordination
+Survey only no algorithm proposed
+[23]
+Aggarwal & Kumar (2020)
+Review of UAV path-planning algorithms
+DRL identified as best for dynamic environments
+Survey only no multi-agent coverage
+[24]
+Oliehoek & Amato (2016)
+Formal Dec-POMDP framework for multi-agent coordination
+Standard formulation used by all MARL UAV papers
+Theoretical only intractable for large state spaces
+[25]
+Gronauer & Diepold (2022)
+Survey and taxonomy of MARL methods
+Scalability and partial observability as top open challenges
+Survey only no empirical contribution
+[12]
+Mnih et al. (2015)
+DQN: CNN + experience replay + target network
+Human-level on 29/49 Atari games
+Discrete actions only no multi-agent extension
+[13]
+Van Hasselt et al. (2016)
+Double DQN: decoupled action selection and evaluation
+Reduces Q-value overestimation over DQN
+Discrete actions only
+[14]
+Wang et al. (2016)
+Dueling Network: V(s) + A(s,a) streams
+Better generalization when action choice matters less
+Discrete actions only no multi-agent extension
+[15]
+Schaul et al. (2016)
+Prioritized Experience Replay (PER): TD-error sampling
+Faster convergence from rare informative transitions
+Adds overhead sensitive to hyperparameters
+[16]
+Schulman et al. (2017)
+PPO: clipped surrogate objective
+Stable baseline for continuous and discrete control
+On-policy sample inefficient
+[17]
+Lowe et al. (2017)
+MADDPG: centralised critic + decentralised actor
+Stable training across cooperative and competitive tasks
+Scales poorly with number of agents
+[18]
+Fujimoto et al. (2018)
+TD3: clipped double Q + delayed updates + target smoothing
+State-of-the-art on continuous control benchmarks
+Not directly extendable to cooperative MARL
+[19]
+Rashid et al. (2018)
+QMIX: monotonic joint Q-value factorisation
+Outperforms IQL and VDN on cooperative tasks
+Monotonicity limits representational capacity
+[20]
+Yang et al. (2018)
+Mean Field MARL: pairwise → mean-field interaction
+Scales to 200 agents with linear complexity
+Loses individual agent detail in heterogeneous swarms
+[21]
+Yu et al. (2022)
+MAPPO: PPO + shared centralised critic
+Competitive with QMIX widely adopted MARL baseline
+On policy requires global state during training
+[22]
+Sunehag et al. (2018)
+VDN: additive per-agent Q-value decomposition
+Outperforms independent Q-learning simple and tractable
+Too restrictive for complex inter-agent dependencies
+[1]
+Tang et al. (2024)
+Improved D3QN + PER + heuristic target bias
+95% success outperforms A* and RRT
+Single UAV 2D only
+[2]
+Kong et al. (2024)
+TANet-TD3: assignment + path planning, Hungarian supervision
+Handles dynamic targets with partial observability
+5 drones only 2D only no collision avoidance
+[3]
+Jarray et al. (2025)
+DQN + 3D CNN + dynamic step reward
+98% success in low-obstacle 3D environment (25 km²)
+Single UAV static obstacles only
+[4]
+Zhang et al. (2025)
+PO-WMFDDPG: mean-field DDPG + multi-head attention
+>90% success at 120 UAVs where baselines collapse
+2D only static obstacles no dynamic reassignment
+[5]
+Poudel & Moh (2026)
+RCTP: MAML + MA-DDPG + coalition formation
+30-40% faster mission completion under drone failures
+2D only up to 30 drones
+[6]
+Xu et al. (2026)
+MRLMN: IPPO + role-based reward + GPT-4o distillation
++52% data rate +27% user coverage
+Networking task only 2D GPT-4o dependency
+[7]
+Wang et al. (2025)
+RALLY: LLM role assignment + RMIX value mixing
+Generalizes to unseen swarm sizes without retraining
+14.5s latency no target assignment
+[8]
+Khan et al. (2026)
+Comparison: CrewAI vs AutoGen vs LangChain + hybrid
+96.1% success at 76% lower token cost
+Wildfire domain only hybrid tested with 6 agents only
+[9]
+Rezaee et al. (2026)
+IGAT-MARL: sparse conflict graph + Graph Attention Network
++17% reward 44% fewer graph edges vs. best baseline
+No target assignment fixed wing only 2D only
+[10]
+Sheng et al. (2026)
+DA-MAPPO: per-step Hungarian assignment in observation + MAPPO
+90-99% mission success 25 pp above best baseline
+2D only 3 drones only no collision-avoidance mechanism
+
+	•	Problem Statement
+In multi-UAV cooperative missions such as search and rescue and area surveillance, effective mission completion depends on both accurate target assignment and safe navigation through a shared airspace. When target assignment and collision avoidance are optimized independently, UAVs may be directed toward conflicting locations, resulting in trajectory overlaps, increased avoidance maneuvers and degraded mission efficiency. Excessive collision avoidance actions can force UAVs to deviate from their assigned targets, causing mission delays, incomplete task coverage and reduced overall coordination performance.
+	•	Research Objectives
+The primary aim of this research is to develop and evaluate a unified multi-UAV coordination framework that simultaneously addresses target assignment and collision avoidance in dynamic environments. To achieve this aim, the study focuses on the following specific objectives:
+	•	To design and implement a Priority Arbitration Head a lightweight feedforward module jointly trained with the MAPPO actor that dynamically weights assignment and avoidance objectives at each decision step using time-to-collision, distance to the assigned target, and conflict neighborhood count as inputs, integrated within a unified observation framework that encodes both Hungarian-algorithm-based target assignment and conflict-graph-aware neighborhood for each drone in a two-dimensional environment. 
+	•	To test the proposed framework on different number of drones and check if the performance deteriorates with the number of simultaneous assignment-conflict interactions. 
+	•	To perform controlled ablation experiments that isolate the contribution of each framework component the conflict graph, the Hungarian assignment mechanism, and the Priority Arbitration Head with explicit comparison between the learned arbitration weight α and fixed-coefficient baseline, in order to determine whether a learned weighting mechanism outperforms fixed reward coefficients in maintaining both high mission success and low collision incidence under dynamic two-dimensional conditions.
+	•	Research Methodology
+The proposed research is of quantitative, experimental type with the application of multi-agent deep reinforcement learning, in a controlled 2D simulation environment. The framework is based on MAPPO (Multi-Agent Proximal Policy Optimization), which was chosen for having been proven to perform well in the target assignment scenario by DA-MAPPO and because of its proven stability under partial observability.
+	•	 Framework Design
+The observation vector for each drone includes four elements: 
+	•	The 2D position and velocity of the drone.
+	•	The 2D relative position of the drone's current target, as computed from a minimum-cost Hungarian assignment performed over all drones at each decision step.
+	•	The positions and velocities of the drone's current conflict neighbors only these neighbors are determined by a dynamic conflict graph established at each decision step, which connects sets of drone pairs expected to come within a certain time horizon of a danger threshold.
+	•	Obstacle proximity readings in four cardinal directions. Actions are 2D velocity commands that are executed continuously over time, trained against a common MAPPO actor-critic network and centralized critic, and executed by a decentralized MAPPO actor network. Priority Arbitration Head a two-layer feedforward network, jointly trained with the MAPPO actor through the same policy gradient update takes three scalar inputs at each decision step: time-to-collision (τ_collision), distance to the assigned target (d_target), and the count of drones in the conflict neighborhood (n_conflict). It outputs a single dynamic weight α ∈ [0,1]. The arbitration head adds no parameters to the centralized critic and requires no separate training loop its weights are updated jointly with the MAPPO actor at each gradient step. This design makes the Priority Arbitration Head the first learned mechanism in the multi-UAV coordination literature to resolve the assignment–avoidance trade-off dynamically at each decision step, replacing the fixed hand-tuned reward coefficients used in all existing frameworks.
+
+	•	Training Strategy
+The four-stage curriculum is utilized. 
+Stage 1: Replicate DA-MAPPO with 3 drones in 2D with static targets and make it a validation baseline. 
+Stage 2: Is a game with 5 drones that move and some obstacles. 
+Stage 3: Expands to 8 drones, high obstacle density and dynamic targets. 
+Stage 4: Tests generalization of behavior in different-sized swarms not presented in training. The design for this curriculum has been validated by both DA-MAPPO and IGAT-MARL.
+	•	Evaluation Measures
+Primary measure is mission success rate, measured as the proportion of episodes in which all the drones can reach their assigned targets without having any drone and obstacle collisions or inter-drone collisions within a pre-defined time limit. Secondary metrics include inter-drone collision count, obstacle collision count, number of target reassignments per episode and average trajectory length per drone. The system will be tested with different obstacle densities and different swarm sizes, as specified in the difficulty configurations of DA-MAPPO. Four baselines are implemented, standard MAPPO (without assignment and conflict graph) DA-MAPPO ported to 2D without using a conflict graph IGAT-MARL with a fixed assignment and original 2D DA-MAPPO for replication verification. The experiments will be conducted on PyBullet simulation and PyTorch.
+
+
+Figure 2. Proposed Framework
+
+References
+[1] J. Tang, Y. Liang, and K. Li, "Dynamic scene path planning of UAVs based on deep reinforcement learning," Drones, vol. 8, no. 2, p. 60, 2024.
+[2] X. Kong, Y. Zhou, Z. Li, and S. Wang, "Multi-UAV simultaneous target assignment and path planning based on deep reinforcement learning in dynamic multiple obstacles environments," Front. Neurorobot., vol. 17, p. 1302898, 2024.
+[3] R. Jarray, I. Zaghbani, and S. Bouallègue, "Dynamic reward-based deep reinforcement learning algorithm for UAV path planning in large-scale environments," Procedia Comput. Sci., vol. 270, pp. 692–702, 2025.
+[4] Y. Zhang et al., "Large-scale UAV swarm path planning based on mean-field reinforcement learning," Chin. J. Aeronaut., vol. 38, no. 9, p. 103484, 2025.
+[5] S. Poudel and S. Moh, "MAML-integrated multi-agent reinforcement learning for adaptive coalition-based UAV coordination in disaster scenarios," Internet of Things, vol. 37, p. 101930, 2026.
+[6] Y. Xu et al., "Scalable UAV multi-hop networking via multi-agent reinforcement learning with large language models," arXiv:2505.08448, 2026.
+[7] Y. Wang et al., "RALLY: Role-adaptive LLM-driven yoked navigation for agentic UAV swarms," IEEE Open J. Veh. Technol., vol. 6, 2025.
+[8] M. S. Khan, M. J. Khan, M. Sharif, and S. Yasmin, "Beyond single-framework architectures: A systematic evaluation and hybrid design for scalable multi-agent coordination," IEEE Access, vol. 14, 2026.
+[9] M. R. Rezaee, N. A. W. A. Hamid, M. Hussin, and Z. A. Zukarnain, "Efficient multi-agent deep reinforcement learning algorithm for multi-UAV collision avoidance," Appl. Soft Comput., vol. 197, p. 115145, 2026.
+[10] Y. Sheng, X. Xie, H. Liu, and J. Li, "Dynamic target assignment and cooperative decision-making for UAV swarms based on multi-agent reinforcement learning," IEEE Internet Things J., doi: 10.1109/JIOT.2026.3686066, 2026.
+[11] S. Govinda, B. Brik, and S. Harous, "A survey on deep reinforcement learning applications in autonomous systems," IEEE Trans. Intell. Transp. Syst., vol. 26, no. 7, 2025.
+[12] V. Mnih et al., "Human-level control through deep reinforcement learning," Nature, vol. 518, pp. 529–533, 2015.
+[13] H. Van Hasselt, A. Guez, and D. Silver, "Deep reinforcement learning with double Q-learning," in Proc. AAAI, 2016, pp. 2094–2100.
+[14] Z. Wang et al., "Dueling network architectures for deep reinforcement learning," in Proc. ICML, 2016, pp. 1995–2003.
+[15] T. Schaul, J. Quan, I. Antonoglou, and D. Silver, "Prioritized experience replay," in Proc. ICLR, 2016.
+[16] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, "Proximal policy optimization algorithms," arXiv:1707.06347, 2017.
+[17] R. Lowe et al., "Multi-agent actor-critic for mixed cooperative-competitive environments," in Proc. NeurIPS, 2017, pp. 6379–6390.
+[18] S. Fujimoto, H. Hoof, and D. Meger, "Addressing function approximation error in actor-critic methods," in Proc. ICML, 2018, pp. 1587–1596.
+[19] T. Rashid et al., "QMIX: Monotonic value function factorisation for deep multi-agent reinforcement learning," in Proc. ICML, 2018, pp. 4295–4304.
+[20] Y. Yang et al., "Mean field multi-agent reinforcement learning," in Proc. ICML, 2018, pp. 5571–5580.
+[21] C. Yu et al., "The surprising effectiveness of PPO in cooperative multi-agent games," in Proc. NeurIPS, 2022.
+[22] P. Sunehag et al., "Value-decomposition networks for cooperative multi-agent learning based on team reward," in Proc. AAMAS, 2018.
+[23] S. Aggarwal and N. Kumar, "Path planning techniques for unmanned aerial vehicles: A review, solutions, and challenges," Comput. Commun., vol. 149, pp. 270–299, 2020.
+[24] F. A. Oliehoek and C. Amato, A Concise Introduction to Decentralized POMDPs. Springer, 2016.
+[25] A. Gronauer and K. Diepold, "Multi-agent deep reinforcement learning: A survey," Artif. Intell. Rev., vol. 55, pp. 895–943, 2022.
+
+Tentative Schedule
+Tasks
+Duration
+Duration
+Duration
+Duration
+Duration
+Duration
+Task-I: 2D environment setup + DA-MAPPO replication baseline
+1-2 month
+
+
+
+
+
+Task-II: Assignment-augmented 2D obs + conflict graph integration
+
+3-4 month
+
+
+
+
+Task-III: Curriculum training 3→5→8 drones
+
+
+5-7 month
+
+
+
+Task-IV: Systematic evaluation vs. 4 baselines (3 swarm sizes × 3 obstacle densities)
+
+
+
+8-9 month
+
+
+Task-V: Ablation experiments + failure case analysis
+
+
+
+
+10-11 month
+
+Task-VI: Thesis writing, revision, and submission
+
+
+
+
+
+12 months
+
+
+
+
+
+
+
+Details of Completed Coursework
+
+Course Code and Title
+Credit Hours
+Grade Points / Semester
+Result Semester: Spring 2025
+1.
+(CSC630) Advanced Data Mining
+3
+3.33
+2.
+(CSC631) Advanced Topics in Computer Networks
+3
+4
+3.
+(CSC652) Advanced Topics in Computer Vision
+3
+4
+4.
+(CSC683) Advanced Algorithm Analysis
+3
+4
+CGPA: 3.83
+
+Result Semester: Fall 2025
+1.
+(CSC512) Theory of Automata – II
+3
+3.66
+2.
+(CSC602) Advanced Operating Systems
+3
+4
+3.
+(CSC604) Advanced Computer Architecture
+3
+4
+4.
+(CSC607) Research Methodology
+1
+3.66
+CGPA: 3.85
+
+
