@@ -10,8 +10,9 @@ Synopsis approved → this folder is for the implementation.
 |------|------|
 | `CLAUDE.md` | **Read this first.** Project context, rules, session protocol. |
 | `docs/paper/` | Ayesha's approved synopsis (source of truth) |
-| `docs/plans/` | Implementation guide + plans |
-| `docs/research/` | New research / notes / decisions made during implementation |
+| `docs/plans/` | How we run it — master plan, roadmap, experiment protocol, engineering standards |
+| `docs/research/` | Technical design — MDP formalization, PAH design, assignment/conflict math, baseline specs, supervisor questions |
+| `handbook/` | Every `docs/` and `code/` file explained in simple Hinglish (for Ayesha) + `glossary.md` |
 | `sessions/` | One log per session (following `template.md`) |
 | `code/` | All code (see `code/README.md`) |
 

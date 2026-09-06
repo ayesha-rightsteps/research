@@ -11,7 +11,7 @@ code/
 ├── algorithms/
 │   ├── hungarian.py          # target assignment (scipy.optimize.linear_sum_assignment wrapper)
 │   ├── conflict_graph.py     # which drone pairs are on a collision course
-│   ├── mappo.py              # MAPPO actor-critic (base: marlbenchmark/on-policy)
+│   ├── mappo.py              # MAPPO actor-critic — minimal clean impl from scratch (~300-400 lines)
 │   └── pah.py                # Priority Arbitration Head — THE NOVEL PART
 │
 ├── training/

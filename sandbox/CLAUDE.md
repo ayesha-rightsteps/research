@@ -38,10 +38,14 @@ This is the most important rule and it overrides tone.
 1. Read this `CLAUDE.md`.
 2. Read the most recent `sessions/YYYY-MM-DD.md` — see where the last session stopped
    and what is pending. Read the 1–2 files before it if you need more context.
-3. **Ask who is working today: Manish or Ayesha?**
+3. Know the plan: `docs/plans/00_master_plan.md` (phases + the MUST / MUST-NOT rules)
+   and `docs/plans/01_roadmap.md` (current-phase tasks). Technical spec is in
+   `docs/research/`. We are in **P0 (formalization)** until the supervisor signs off on
+   `docs/research/04_open_questions_for_supervisor.md`.
+4. **Ask who is working today: Manish or Ayesha?**
    Example: *"Aaj kaun kaam kar raha hai — Manish ya Ayesha?"*
-4. Switch to the right mode below.
-5. Record who worked in the session log at the end.
+5. Switch to the right mode below.
+6. Record who worked in the session log at the end.
 
 ---
 
@@ -130,8 +134,10 @@ Ayesha and Manish first.
 1. **Environment** — custom 2D Gymnasium world (drones, targets, obstacles)
 2. **Hungarian algorithm** — `scipy.optimize.linear_sum_assignment` (target assignment)
 3. **Conflict graph** — which drone pairs are on a collision course
-4. **MAPPO** — main actor-critic brain (base: `marlbenchmark/on-policy`)
+4. **MAPPO** — main actor-critic brain (minimal clean implementation from scratch, ~300–400 lines; not a fork of `marlbenchmark/on-policy`)
 5. **PAH** — the novel arbitration head
+
+Full technical design: `docs/research/`. How we run it: `docs/plans/`.
 
 ---
 
@@ -144,12 +150,15 @@ sandbox/
 │
 ├── docs/                      ← everything important lives here
 │   ├── paper/                 ← Ayesha's synopsis (source of truth)
-│   │   ├── Synopsis_CIIT-SP25-RCS-009-ATD.docx
-│   │   └── synopsis_text.txt  ← plain-text extract
-│   ├── plans/                 ← implementation plans
-│   │   └── implementation_guide.md
-│   └── research/              ← any NEW research done during implementation
-│                                (paper notes, method breakdowns, design decisions)
+│   ├── plans/                 ← how we run it (master plan, roadmap, protocol, standards)
+│   │                             + implementation_guide.md (Ayesha's original)
+│   └── research/              ← technical design + any NEW research during implementation
+│                                (MDP, PAH, assignment/conflict, baselines, method notes)
+│
+├── handbook/                  ← EVERY docs/ and code/ file explained in simple Hinglish
+│   ├── glossary.md            ← all technical words, one place
+│   ├── plans/  research/  code/   ← mirror of docs/ and code/, same filenames
+│   └── paper/                 ← the synopsis explained simply
 │
 ├── sessions/                  ← working memory. One file per session.
 │   ├── template.md            ← follow this format
@@ -162,6 +171,11 @@ sandbox/
 - Everything important goes inside `docs/`. Do not scatter files at the sandbox root.
 - New paper read, method worked out, or design decision made → note it in `docs/research/`.
 - Do not create code files outside `code/`.
+- **Handbook rule:** whenever you create or meaningfully change a file in `docs/` or
+  `code/`, also create/update its plain-Hinglish explanation in `handbook/` at the
+  mirrored path with the same filename (`.py` → `.md`). Keep it simple: what it is, why
+  we need it, the main points, and any hard words (add new terms to
+  `handbook/glossary.md`). This is for Ayesha — no jargon without explanation.
 - Do not commit temporary / scratch files.
 - **No `git commit` and no `git push`** unless Manish explicitly asks.
 
@@ -202,7 +216,7 @@ into `docs/` when it is actively being used.
 | Language | Python 3.10 or 3.11 |
 | Core libs | `torch`, `numpy`, `scipy`, `gymnasium`, `matplotlib`, `pandas` |
 | Environment | Custom 2D Gymnasium env. **Do NOT use PyBullet** — the synopsis mentions it, but the research is 2D and PyBullet is overkill. Keep a written justification for the thesis defense in `docs/research/`. |
-| MAPPO base | `marlbenchmark/on-policy` (MIT license) — clone and modify; a from-scratch rewrite is not required |
+| MAPPO | Minimal clean implementation from scratch (~300–400 lines): shared actor, centralized critic, GAE, PPO clip, entropy. `marlbenchmark/on-policy` is a *reference to read*, not a base to fork — it is too heavy to modify and debug. Rationale in `docs/research/03_baseline_specs.md` and the 2026-09-06 session log. |
 | Hungarian | Do not implement it yourself — use `scipy.optimize.linear_sum_assignment` |
 | Style | Readable, commented, simple code. Avoid clever one-liners — Ayesha has to be able to read every line. |
 | Reproducibility | Fix the seed for every experiment. Hyperparameters go in `code/configs/*.yaml`, not hardcoded. |
