@@ -1,0 +1,33 @@
+# Stage 1 — 3 drones, static targets, no obstacles
+# Goal: replicate DA-MAPPO mechanism (baseline)
+
+env:
+  n_drones:         3
+  n_obstacles:      0       # no obstacles in stage 1
+  world_size:       100.0
+  max_speed:        5.0
+  max_steps:        300     # max steps per episode
+  target_radius:    5.0
+  collision_radius: 3.0
+
+mappo:
+  lr:         0.0003
+  gamma:      0.99
+  lam:        0.95
+  clip_eps:   0.2
+  vf_coef:    0.5
+  ent_coef:   0.01
+  n_epochs:   10
+  batch_size: 64
+
+training:
+  total_episodes:   3000    # train for 3000 episodes
+  rollout_steps:    512     # steps collected before each update
+  eval_every:       100     # evaluate every N episodes
+  eval_episodes:    20      # episodes per evaluation
+  save_every:       200     # save checkpoint every N episodes
+  seed:             42
+
+paths:
+  results_dir:  code/results
+  run_name:     stage1_seed42
