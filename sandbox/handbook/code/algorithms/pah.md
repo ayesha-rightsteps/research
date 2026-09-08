@@ -9,7 +9,7 @@ Ek chhota sa brain jo har step pe decide karta hai: "Abhi drone ko **target dhun
 Yeh decision ek number se hota hai — **α (alpha)** — jo 0.1 se 0.9 ke beech hota hai.
 
 ```
-α → 0.9  = "mission pe focus karo, abhi safe ho"
+α → 0.9  = "mission pe focus karein, abhi safe ho"
 α → 0.1  = "rukko, takkar hone wali hai — safety pehle"
 
 r_final = α × r_mission  +  (1 - α) × r_safety
@@ -25,7 +25,7 @@ PAH yeh seekhta hai: "Jab situation aisi hai toh α aisa hona chahiye." Yeh **th
 
 ## Real life se misaal
 
-Socho tum car drive kar rahi ho. Normally tum apni manzil ki taraf fast jaogi. Lekin agar saamne dusri car aa rahi ho — tum pehle brake marti ho, phir manzil ki taraf sochti ho.
+Sochiye aap car drive kar rahi hain. Normally aap apni manzil ki taraf fast jaayengi. Lekin agar saamne dusri car aa rahi hai — aap pehle brake marti hain, phir manzil ki taraf sochti hain.
 
 PAH bhi yahi karta hai. τ_collision kam hoti hai (danger qarib hai) → α choti hoti hai → safety reward zyada matter karta hai.
 
@@ -38,7 +38,7 @@ PAH ko 3 numbers milte hain. Problem yeh thi ke yeh sab alag-alag ranges mein ho
 - d_target: 0 se 141 units (world diagonal)
 - n_conflict: 0 se N−1 (3 drones: 0, 1, ya 2)
 
-Agar yeh normalize nahi karo toh MLP ek input basically ignore kar deta hai (kyunki baaki bahut badi hain).
+Agar yeh normalize nahi karein toh MLP ek input basically ignore kar deta hai (kyunki baaki bahut badi hain).
 
 `normalize()` function teen numbers lyta hai → sab ko 0 se 1 ke beech le aata hai.
 
@@ -84,10 +84,10 @@ Yeh dono alag log hote hain toh thesis mein hum show kar sakte hain: "mission re
 ## PAH kaise train hota hai?
 
 PAH **MAPPO ke saath** train hota hai — alag nahi. Jab PPO update hota hai:
-1. Old rollout mein stored `r_mission` aur `r_safety` nikaalo
-2. Current PAH se alpha recompute karo (with gradients)
-3. `r = α × r_mission + (1-α) × r_safety` banao
-4. GAE chalao, PPO loss banao, prior loss add karo
+1. Old rollout mein stored `r_mission` aur `r_safety` nikaalein
+2. Current PAH se alpha recompute karein (with gradients)
+3. `r = α × r_mission + (1-α) × r_safety` banayein
+4. GAE chalayein, PPO loss banayein, prior loss add karein
 5. Ek hi optimizer mein actor + PAH dono update ho jaate hain
 
 ## Files ka connection

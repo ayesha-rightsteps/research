@@ -23,11 +23,11 @@ Iske ilawa PAH ke baare mein ek important design decision hai jo Sir ki guidance
 
 ## Bhejne se pehle kia karna hai?
 
-File mein `[PLACEHOLDER]` likha hai — woh jagahein fill karo:
+File mein `[PLACEHOLDER]` likha hai — woh jagahein fill karein:
 - Sir ka email address
 - Mr. Ehzaz ka email address
 
-Phir seedha email client mein copy-paste kar ke bhejo.
+Phir seedha email client mein copy-paste kar ke bhejiye.
 
 ## Hard words (Glossary mein bhi hain)
 

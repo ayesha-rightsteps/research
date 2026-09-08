@@ -1,4 +1,4 @@
-# Samjho: docs/plans/03_engineering_standards.md
+# Samjhein: docs/plans/03_engineering_standards.md
 
 ## Yeh cheez kya hai
 Code likhne ke rules — kaise organize karna, kaise test karna, kaise save karna, taaki
@@ -16,18 +16,18 @@ result kis setting se aaya. Ye rules usse bachate hain.
 - **Config files (YAML):** har experiment ki saari settings ek `.yaml` file mein.
   Code ke andar koi number hardcode nahi. Seed bhi config mein.
 
-- **Determinism:** same seed → same result. Python, numpy, torch — sabke seed set karo.
-  Environment bhi seedable ho (test se pakka karo).
+- **Determinism:** same seed → same result. Python, numpy, torch — sabke seed set karein.
+  Environment bhi seedable ho (test se pakka karein).
 
 - **Testing (pytest):** environment ke liye zaroori tests — position update, collision
   detection, target-reached, reward ka sign (progress → +, takkar → bada −), same seed →
   same episode. Har training run se pehle tests green hone chahiye.
 
-- **Logging (TensorBoard):** reward, episode length, losses, entropy — sab log karo.
+- **Logging (TensorBoard):** reward, episode length, losses, entropy — sab log karein.
   Full model ke liye α ka histogram bhi. Har run ke saath `meta.json` — git commit,
   config, seed, package versions.
 
-- **Checkpointing:** har ~30 min training save karo (Kaggle session expire hoti hai).
+- **Checkpointing:** har ~30 min training save karein (Kaggle session expire hoti hai).
   Training resume ho sakni chahiye checkpoint se.
 
 - **Code style:** `black` se format, `ruff` se lint. Har function pe docstring
@@ -37,7 +37,7 @@ result kis setting se aaya. Ye rules usse bachate hain.
 - **Git:** `results/` folder git mein nahi (bade files). Model weights git mein nahi —
   Kaggle/Drive pe, index file mein location. **Koi commit/push bina Manish ke kahe.**
 
-- **Kaggle:** code GitHub se clone karo notebook mein, GPU on karo, train karo,
+- **Kaggle:** code GitHub se clone karein notebook mein, GPU on karein, train karein,
   `/kaggle/working/` mein checkpoint, phir download.
 
 ## Mushkil lafz

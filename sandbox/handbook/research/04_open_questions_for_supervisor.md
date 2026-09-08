@@ -1,4 +1,4 @@
-# Samjho: docs/research/04_open_questions_for_supervisor.md
+# Samjhein: docs/research/04_open_questions_for_supervisor.md
 
 ## Yeh cheez kya hai
 14 sawaal jo supervisor (Dr. Faisal Rehman) se poochhne hain — likhit jawab ke saath —
@@ -17,7 +17,7 @@ wala sawaal aayega. Abhi email pe OK le lo.
   - Q3: LiDAR ki jagah 4 direction ki doori — theek hai?
 
 - **B. PAH ka design (sabse important):**
-  - Q4: α reward pe lagao (Option A) ya advantage pe (Option B)? Hacking ka risk
+  - Q4: α reward pe lagayein (Option A) ya advantage pe (Option B)? Hacking ka risk
     explain kiya hai.
   - Q5: Agar A fail hua to critic mein ek extra head daal sakte hain? (synopsis kehta
     hai "no extra critic params")
@@ -43,6 +43,6 @@ wala sawaal aayega. Abhi email pe OK le lo.
 ## Mushkil lafz
 - **Deviation** = approved plan se hatna/badalna
 - **Sign-off** = officially "haan theek hai" mil jaana
-- **Regularizer** = training mein "aise mat karo" wala extra push
+- **Regularizer** = training mein "aise mat karein" wala extra push
 - **Qualitative match** = exact number match nahi, par "same pattern/behaviour" dikhna
 - **Curriculum** = aasaan se mushkil ki taraf training stages

@@ -1,9 +1,9 @@
 # Handbook — watch.py
 
 ## Yeh file kia hai?
-**Ek click script** — seedha run karo aur episode ki animation dekho.
+**Ek click script** — seedha run karein aur episode ki animation dekhein.
 
-Yeh koi complex file nahi — sirf 5 lines hain. Environment banao, rendering chalao, bas.
+Yeh koi complex file nahi — sirf 5 lines hain. Environment banayein, rendering chalayein, bas.
 
 ## Kaise use karein?
 Terminal mein:
@@ -17,5 +17,5 @@ Ek animated window khulegi — drones random actions le rahe honge.
 
 ## Yeh random kyun dikhta hai?
 Kyunke abhi koi AI nahi hai — drones koi cheez nahi seekhe. Woh bas randomly move kar rahe hain.
-Jab MAPPO train ho jayega, tum yahan trained policy daal sakte ho aur dekh sakte ho ke
+Jab MAPPO train ho jayega, aap yahan trained policy daal sakte hain aur dekh sakte hain ke
 drones properly kaam kar rahe hain.

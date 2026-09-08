@@ -1,4 +1,4 @@
-# Samjho: docs/plans/01_roadmap.md
+# Samjhein: docs/plans/01_roadmap.md
 
 ## Yeh cheez kya hai
 Har phase (P0 se P6) ke andar ke chhote-chhote kaam, kaunsa kaam kis pe depend karta

@@ -1,4 +1,4 @@
-# Samjho: Ayesha ka Synopsis (docs/paper/)
+# Samjhein: Ayesha ka Synopsis (docs/paper/)
 
 ## Yeh cheez kya hai
 Approved thesis proposal. Isme likha hai kya research karni hai — yeh **source of
@@ -31,7 +31,7 @@ Seedha matlab: **ek hi AI system jo ek saath (a) drones ko targets baante aur
   8 dynamic → unseen sizes
 - 4 baselines se compare — sabse important: **fixed-α vs learned-α (PAH)**
 - Main score: mission success rate (sab target pe + zero takkar + time limit)
-- Ablation: har hissa (conflict graph, Hungarian, PAH) nikaal ke dekho kitna zaroori
+- Ablation: har hissa (conflict graph, Hungarian, PAH) nikaal ke dekhein kitna zaroori
 
 ## Supervisory committee
 - Dr. Faisal Rehman (Supervisor), Mr. Ehzaz Mustafa (Co-supervisor),
@@ -40,7 +40,7 @@ Seedha matlab: **ek hi AI system jo ek saath (a) drones ko targets baante aur
 ## Ek baat dhyaan se
 Synopsis "PyBullet simulation" kehta hai. Hum custom 2D env use karenge (PyBullet 3D
 ke liye hai, hamari research 2D). Ye change supervisor se **likhit mein OK** karana hai
-— dekho `research/04_open_questions_for_supervisor.md`.
+— dekhein `research/04_open_questions_for_supervisor.md`.
 
 ## Mushkil lafz
 - **UAV** = Unmanned Aerial Vehicle = drone

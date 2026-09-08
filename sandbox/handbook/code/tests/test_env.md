@@ -5,9 +5,9 @@ Environment ke **unit tests** — yeh prove karte hain ke environment sahi kaam 
 AI training se pehle yeh sab pass hone chahiye.
 
 ## Tests kyun likhte hain?
-Soch lo tumne ghar banaya lekin check nahi kiya ke deewarein seedhi hain, darwaza khulta hai ya nahi. Phir furniture rakh di — aur pata chala ke zameen hi tilted thi.
+Sochiye tumne ghar banaya lekin check nahi kiya ke deewarein seedhi hain, darwaza khulta hai ya nahi. Phir furniture rakh di — aur pata chala ke zameen hi tilted thi.
 
-RL mein yahi hota hai. Agar environment mein koi bug ho aur pehle check na karo, toh MAPPO training fail hogi aur pata nahi chalega kyun. Tests yeh guarantee karte hain ke **zameen seedhi hai**.
+RL mein yahi hota hai. Agar environment mein koi bug ho aur pehle check na karein, toh MAPPO training fail hogi aur pata nahi chalega kyun. Tests yeh guarantee karte hain ke **zameen seedhi hai**.
 
 ## Kia kia test kiya?
 
@@ -33,7 +33,7 @@ RL mein yahi hota hai. Agar environment mein koi bug ho aur pehle check na karo,
 **15/15 pass** ✅ — environment sahi kaam kar raha hai, training shuru ho sakti hai.
 
 ## Hard words
-- **Unit test:** ek chota check — sirf ek kaam test karo, aur dekho sahi hua ya nahi
+- **Unit test:** ek chota check — sirf ek kaam test karein, aur dekhein sahi hua ya nahi
 - **pytest:** Python ka testing tool — tests run karta hai aur batata hai kaun pass/fail
 - **Determinism:** same input = same output, hamesha — experiments repeat karne ke liye zaroori
 - **assert:** "yeh sach hona chahiye" — agar nahi hua toh test fail

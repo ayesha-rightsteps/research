@@ -1,12 +1,12 @@
-# Samjho: docs/research/01_pah_design.md
+# Samjhein: docs/research/01_pah_design.md
 
 ## Yeh cheez kya hai
 Thesis ka **naya kaam** — Priority Arbitration Head (PAH) — ka poora design. Aur ek badi
 problem jo ismein chhupi hai.
 
 ## Iski zaroorat kyun
-Yehi tumhari original contribution hai. Iska design galat hua to poori thesis kamzor.
-Isliye pehle ache se soch lo.
+Yehi aapki original contribution hai. Iska design galat hua to poori thesis kamzor.
+Isliye pehle ache se sochiye.
 
 ## Main baatein
 
@@ -21,8 +21,8 @@ Isliye pehle ache se soch lo.
 
 - **Code ki galtiyan jo guide mein thi, humne theek ki:**
   - Network ko ek saath poora batch (`[B, 3]`) dena, ek-ek number nahi
-  - `forward()` ke andar naya tensor mat banao (gradient toot jaata hai)
-  - 3 inputs 3 alag scales pe hain (seconds, distance, count) — inhe **normalize** karo
+  - `forward()` ke andar naya tensor mat banayein (gradient toot jaata hai)
+  - 3 inputs 3 alag scales pe hain (seconds, distance, count) — inhe **normalize** karein
     pehle, warna network chhote wale input ignore kar deta hai
 
 - **BADI PROBLEM — "reward hacking":**
@@ -34,14 +34,14 @@ Isliye pehle ache se soch lo.
 - **4 tareeqe (formulations) soche:**
   - **A** = α reward pe (jaisa synopsis kehta hai). Simple, par hacking ka risk. Bachav:
     α pe ek "0.5 ki taraf kheencho" wala regularizer, α ko 0.1-0.9 mein clip.
-  - **B** = do critic heads rakho, α **advantage** pe lagao reward pe nahi. Hacking ka
+  - **B** = do critic heads rakhein, α **advantage** pe lagayein reward pe nahi. Hacking ka
     rasta band ho jaata hai. Thoda zyada code, critic mein ek extra head.
-  - **C** = α ko haath se banaye "sahi jawab" ki taraf train karo (supervised).
+  - **C** = α ko haath se banaye "sahi jawab" ki taraf train karein (supervised).
     Hacking nahi, par "learned" wala novelty kamzor. Ablation ke liye achha.
   - **D** = α ko actor ka ek aur output bana do. A jaisa hi risk.
 
-- **Plan:** pehle **A** banao (synopsis se match), heavily instrument karo (α ka graph
-  dekho). Agar α degenerate hota hai ya PAH fixed-α se nahi jeetta → **B** pe switch.
+- **Plan:** pehle **A** banayein (synopsis se match), heavily instrument karein (α ka graph
+  dekhein). Agar α degenerate hota hai ya PAH fixed-α se nahi jeetta → **B** pe switch.
   Ye switch chhota change hai, rewrite nahi.
 
 - **Thesis ke figures:** α vs time-to-collision ka graph, α vs n_conflict, ek episode
@@ -50,7 +50,7 @@ Isliye pehle ache se soch lo.
 ## Mushkil lafz
 - **Reward hacking** = reward badhana bina actually achha kaam kiye (cheating)
 - **Normalize** = alag-alag scale ke numbers ko ek jaise range (0-1) mein laana
-- **Regularizer** = training mein ek extra "aise mat karo" wala push (yahan: α ko 0.5 ke paas rakho)
+- **Regularizer** = training mein ek extra "aise mat karein" wala push (yahan: α ko 0.5 ke paas rakhein)
 - **Advantage** = "ye action average se kitna behtar tha" (number)
 - **Critic head** = critic network ka output hissa; "two heads" = do alag values nikaalna
 - **Degenerate** = solution jo technically kaam karta hai par bekaar/trivial hai

@@ -6,8 +6,8 @@ Conflict graph — yeh detect karta hai ke **kaun se drones aapas mein takrarne 
 Har drone ko har doosre drone se connect nahi karte (woh costly aur noisy hota) — sirf
 **khatarnak pairs** ko connect karte hain. Isliye "sparse" graph kehte hain.
 
-## Real life mein soch ke samjho
-Soch lo highway pe gaadiyan chal rahi hain. Traffic police sirf unhi gaadiyon ko watch
+## Real life mein soch ke samjhein
+Sochiye highway pe gaadiyan chal rahi hain. Traffic police sirf unhi gaadiyon ko watch
 karti hai jo ek dusre ki taraf ja rahi hain — baaki sab ignore. Yahi conflict graph karta hai.
 
 ## Andar kia kia hai?
@@ -20,14 +20,14 @@ Do drones ke liye:
 
 ```
 Agar DCPA < danger_threshold  AND  0 ≤ t* ≤ H (future mein)
-    → Edge add karo (yeh dono khatarnak hain!)
+    → Edge add karein (yeh dono khatarnak hain!)
 ```
 
 ### ConflictGraph class
 
 **`update(drone_pos, drone_vel)`** — har step pe call hota hai
-- Saare drone pairs check karo
-- Graph rebuild karo
+- Saare drone pairs check karein
+- Graph rebuild karein
 
 **`n_conflict(i)`** — drone i ke kitne conflict neighbors hain → PAH input 3
 
@@ -51,7 +51,7 @@ Ab (Stage 2+):    obs = 10 + 4×5 = 30 numbers per drone
 ## Parameters
 | Parameter | Value | Matlab |
 |-----------|-------|--------|
-| horizon H | 3.0 | 3 steps aage dekho |
+| horizon H | 3.0 | 3 steps aage dekhein |
 | d_danger | collision_radius × 3 | itni distance pe "danger" |
 | K_NBR | 4 | max 4 neighbors observation mein |
 

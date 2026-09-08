@@ -6,13 +6,13 @@ Yeh **visualization** file hai — iska kaam sirf yeh hai ke environment ka ek e
 
 Research ke liye zarori hai kyunke:
 - Dekh sako ke drones sahi kaam kar rahe hain ya nahi
-- Training ke baad dekho — kia drones samajhdar ho gaye?
+- Training ke baad dekhein — kia drones samajhdar ho gaye?
 - Supervisor ko dikhao kya bana hai
 
 ## Andar kia hai?
 
 ### `run_episode(env, policy, ...)` — Ek episode chalata aur dikhata hai
-- `env` = tumhara environment (MultiUAVEnv)
+- `env` = aapka environment (MultiUAVEnv)
 - `policy` = drone ka brain. **Agar None diya toh random actions** — koi AI nahi
 - Animated matplotlib window khulti hai
 

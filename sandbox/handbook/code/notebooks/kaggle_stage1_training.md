@@ -2,13 +2,13 @@
 
 ## Yeh file kia hai?
 Kaggle pe seedha upload karne wali **notebook** — isme sab kuch ek jagah hai.
-Koi GitHub nahi chahiye, koi alag files nahi — bas yeh ek file upload karo aur run karo.
+Koi GitHub nahi chahiye, koi alag files nahi — bas yeh ek file upload karein aur run karein.
 
 ## Kaggle pe kaise use karein?
 
 1. kaggle.com kholo → **"Create"** → **"New Notebook"**
-2. Top right → **"File"** → **"Import Notebook"** → yeh `.ipynb` file upload karo
-3. Right side panel → **"Session Options"** → **"Accelerator"** → **GPU T4 x2** select karo
+2. Top right → **"File"** → **"Import Notebook"** → yeh `.ipynb` file upload karein
+3. Right side panel → **"Session Options"** → **"Accelerator"** → **GPU T4 x2** select karein
 4. **"Run All"** dabao
 
 Bus! Training shuru ho jayegi. 1-2 ghante lagenge.
@@ -20,7 +20,7 @@ Bus! Training shuru ho jayegi. 1-2 ghante lagenge.
 | Cell 1 | Libraries install + GPU check |
 | Cell 2 | Environment (2D duniya — drones, targets) |
 | Cell 3 | MAPPO (Actor, Critic, training logic) |
-| Cell 4 | Setup — config numbers, environment + agent banao |
+| Cell 4 | Setup — config numbers, environment + agent banayein |
 | Cell 5 | **Asli training loop** — yahan drones seekhte hain |
 | Cell 6 | Results plot — success rate ka graph |
 
@@ -41,4 +41,4 @@ Success upar aana chahiye, collision neeche — yeh seekhne ki nishaani.
 - `history.json` — training log
 - `training_curves.png` — success rate ka graph
 
-Kaggle pe right side mein **Output** tab mein yeh sab dikhai denge — wahan se download kar sakte ho.
+Kaggle pe right side mein **Output** tab mein yeh sab dikhai denge — wahan se download kar sakte hain.

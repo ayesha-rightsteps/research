@@ -1,4 +1,4 @@
-# Samjho: docs/plans/02_experiment_protocol.md
+# Samjhein: docs/plans/02_experiment_protocol.md
 
 ## Yeh cheez kya hai
 Experiments chalane ke pakke rules — kya measure karna hai, kitni baar, kaise compare
@@ -20,7 +20,7 @@ committee bharosa nahi karegi. "Kitne seeds?" — is sawaal ka jawab strong hona
   se alag aur fixed — sab methods ke liye wahi 200 episodes, taaki fair comparison ho.
   Eval mein policy deterministic (koi random exploration nahi).
 
-- **Seeds:** har setting kam se kam **5 baar** alag seed se chalao. Result = average ±
+- **Seeds:** har setting kam se kam **5 baar** alag seed se chalayein. Result = average ±
   spread. Headline comparison (PAH vs fixed-α) ke liye 10 seeds.
 
 - **Methods ki list (5):** B1 plain MAPPO, B2 DA-MAPPO-2D, B3 IGAT-style,
@@ -33,7 +33,7 @@ committee bharosa nahi karegi. "Kitne seeds?" — is sawaal ka jawab strong hona
   rate zyada na ho. Plus: seekha hua α **constant nahi** hona chahiye — usko
   time-to-collision ke saath badalna chahiye.
 
-- **Agar PAH nahi jeeta:** to bhi thesis hai — honestly likho, analyze karo kyun.
+- **Agar PAH nahi jeeta:** to bhi thesis hai — honestly likhein, analyze karein kyun.
   Negative result bhi valid result hai.
 
 ## Mushkil lafz

@@ -1,11 +1,11 @@
-# Samjho: docs/research/03_baseline_specs.md
+# Samjhein: docs/research/03_baseline_specs.md
 
 ## Yeh cheez kya hai
 4 baselines (comparison ke liye systems) ka exact detail, aur DA-MAPPO + IGAT-MARL
 papers se nikaale hue saare numbers/settings.
 
 ## Iski zaroorat kyun
-Tumhara PAH kitna achha hai — ye tabhi pata chalega jab sahi cheezon se compare karo.
+Aapka PAH kitna achha hai — ye tabhi pata chalega jab sahi cheezon se compare karein.
 Aur DA-MAPPO/IGAT ko reproduce karne ke liye unki settings chahiye.
 
 ## Main baatein
@@ -17,7 +17,7 @@ Aur DA-MAPPO/IGAT ko reproduce karne ke liye unki settings chahiye.
 | B1 plain MAPPO | ✗ | ✗ | ek hi reward |
 | B2 DA-MAPPO-2D | ✓ | ✗ | fixed |
 | B3 IGAT-style | ✗ | ✓ | fixed |
-| B4 fixed-α MAPPO | ✓ | ✓ | **fixed** (0.3, 0.5, 0.7 try karo) |
+| B4 fixed-α MAPPO | ✓ | ✓ | **fixed** (0.3, 0.5, 0.7 try karein) |
 | **M hamara** | ✓ | ✓ | **PAH se seekha hua** |
 
 - **M vs B4** = "α seekhna vs α fix karna" — thesis ka sawaal
@@ -29,8 +29,8 @@ Aur DA-MAPPO/IGAT ko reproduce karne ke liye unki settings chahiye.
 - Network: MLP 3 layers × 256, learning rate 1e-5, PPO clip 0.2, entropy 0.1,
   10 PPO epochs, total 3 million steps
 - Reward: progress + arrival bonus + hover + graded obstacle penalty + step penalty
-- Curriculum: obstacles dheere badhao (0→40)
-- **Unka key result:** augmented observation hatao → success 0% (Table VI). Ye hamara
+- Curriculum: obstacles dheere-dheere badhte hain (0→40)
+- **Unka key result:** augmented observation hata dein to success 0% (Table VI). Ye hamara
   "stack sahi hai ya nahi" ka test hai.
 
 ### IGAT-MARL se nikale numbers

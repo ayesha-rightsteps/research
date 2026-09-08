@@ -1,4 +1,4 @@
-# Samjho: docs/research/00_problem_formalization.md
+# Samjhein: docs/research/00_problem_formalization.md
 
 ## Yeh cheez kya hai
 Problem ko maths ki bhaasha mein exactly likhna — drone ko kya dikhta hai, kya action
@@ -29,8 +29,8 @@ chalega ki reward function to define hi nahi tha. Ye doc supervisor ko bhi dikha
 
 - **Reward do hisson mein:**
   - `r_mission` = target ke kareeb jaane ka reward + pahunchne ka bonus + har step
-    thoda minus (jaldi karo) — **sirf mission wali cheezein**
-  - `r_safety` = takkar pe bada minus + obstacle ke paas minus + "kareeb aa rahe ho"
+    thoda minus (jaldi karein) — **sirf mission wali cheezein**
+  - `r_safety` = takkar pe bada minus + obstacle ke paas minus + "kareeb aa rahe hain"
     ka smooth minus — **sirf safety wali cheezein**
   - Final: `r = α·r_mission + (1−α)·r_safety`
   - Dono ko alag rakhna zaroori hai taaki α unke beech balance kar sake

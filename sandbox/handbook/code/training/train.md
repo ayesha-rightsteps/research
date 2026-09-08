@@ -4,8 +4,8 @@
 **Main training loop** — yeh file drones ko actually sikhati hai.
 Yahan sab kuch ek saath aata hai: environment + MAPPO + config.
 
-## Real life mein soch ke samjho
-Soch lo ek student 3000 exam papers practice karta hai:
+## Real life mein soch ke samjhein
+Sochiye ek student 3000 exam papers practice karta hai:
 - Har 512 questions ke baad teacher check karta hai (rollout → update)
 - Har 100 papers ke baad progress test hota hai (evaluation)
 - Har 200 papers ke baad progress save hoti hai (checkpoint)
@@ -32,7 +32,7 @@ pah:
 ```
 
 ### `collect_rollout()` — experience collect karta hai
-512 steps environment mein play karo. Jo kuch hua — actions, rewards — sab buffer mein store karo.
+512 steps environment mein play karein. Jo kuch hua — actions, rewards — sab buffer mein store karein.
 
 **Jab PAH ON ho:**
 - Har step pe environment se `pah_inputs` milte hain (tau, d_target, n_conflict)
@@ -41,18 +41,18 @@ pah:
 - r_mission, r_safety, pah_inputs bhi alag store hote hain (training ke liye zaroor)
 
 ### `evaluate()` — progress check karta hai
-20 fresh episodes chalao (bina training ke) aur dekho:
+20 fresh episodes chalayein (bina training ke) aur dekhein:
 - Kitne episodes mein sare drones target tak pahunche? → **Success Rate**
 - Kitne episodes mein collision hua? → **Collision Rate**
 
 ### `train()` — main loop
 ```
 Repeat jab tak episodes poore na ho jayein:
-  1. 512 steps khelo (collect_rollout) — PAH bhi use hota hai agar ON ho
-  2. MAPPO update karo — actor + critic + PAH (ek saath)
-  3. Har 100 episodes: evaluate + print karo
-  4. Har 200 episodes: model save karo (checkpoint — PAH weights bhi!)
-End mein: final model save karo
+  1. 512 steps khelein (collect_rollout) — PAH bhi use hota hai agar ON ho
+  2. MAPPO update karein — actor + critic + PAH (ek saath)
+  3. Har 100 episodes: evaluate + print karein
+  4. Har 200 episodes: model save karein (checkpoint — PAH weights bhi!)
+End mein: final model save karein
 ```
 
 ### Kia track hota hai training mein?
@@ -87,7 +87,7 @@ Sab settings wahan hain — yahan kuch hardcode nahi:
 | `stage2.yaml` | 5 drones, obstacles hain, PAH on — Stage 2 (abhi banana hai) |
 
 ## Kaggle pe kaise chalayein?
-Kaggle notebook (`kaggle_stage1_training.ipynb`) mein sab instructions hain — copy paste karke cells run karo.
+Kaggle notebook (`kaggle_stage1_training.ipynb`) mein sab instructions hain — copy paste karke cells run karein.
 
 ## Hard words
 - **Rollout:** ek baar environment mein khelna — experience collect karna

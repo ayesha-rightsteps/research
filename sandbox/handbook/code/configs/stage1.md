@@ -25,14 +25,14 @@ Koi bhi number change karna ho toh yahan aao, code mein mat jaao.
 | lam | 0.95 | GAE smoothing |
 | clip_eps | 0.2 | PPO clip — update zyada bada mat hone do |
 | n_epochs | 10 | Ek rollout se 10 baar seekhe |
-| batch_size | 64 | Ek baar mein 64 samples update karo |
+| batch_size | 64 | Ek baar mein 64 samples update karein |
 
 ### training
 | Setting | Value | Matlab |
 |---------|-------|--------|
-| total_episodes | 3000 | Itne episodes tak train karo |
-| rollout_steps | 512 | Har update se pehle itne steps collect karo |
+| total_episodes | 3000 | Itne episodes tak train karein |
+| rollout_steps | 512 | Har update se pehle itne steps collect karein |
 | eval_every | 100 | Har 100 episodes mein progress check |
-| eval_episodes | 20 | Evaluation mein 20 episodes chalao |
+| eval_episodes | 20 | Evaluation mein 20 episodes chalayein |
 | save_every | 200 | Har 200 episodes mein checkpoint save |
 | seed | 42 | Random seed — results reproducible hone ke liye |

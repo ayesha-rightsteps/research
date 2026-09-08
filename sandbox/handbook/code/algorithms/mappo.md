@@ -9,12 +9,12 @@ Yeh file 4 cheezein define karti hai:
 3. **RolloutBuffer** — experience store karta hai
 4. **MAPPO** — sab milake training karta hai
 
-## Real life mein soch ke samjho
+## Real life mein soch ke samjhein
 
-Soch lo tum tennis seekh rahi ho:
-- **Actor** = tumhara haath jo racket marta hai (decision maker)
+Sochiye aap tennis seekh rahi hain:
+- **Actor** = aapka haath jo racket marta hai (decision maker)
 - **Critic** = coach jo kehta hai "yeh shot acha tha, woh bura" (evaluator)
-- **RolloutBuffer** = notebook jis mein coach tumhare sab shots note karta hai
+- **RolloutBuffer** = notebook jis mein coach aapke sab shots note karta hai
 - **Training loop** = coach ki notes dekh ke haath improve karna
 
 Drones bhi yahi karte hain — baar baar play karte hain, coach evaluate karta hai, phir improve karte hain.
@@ -48,12 +48,12 @@ Drones bhi yahi karte hain — baar baar play karte hain, coach evaluate karta h
 - M3 GPU (MPS) use karta hai — fast!
 
 ### MAPPO.update()
-- Buffer dekho → advantages calculate karo → networks update karo
-- **PPO clip:** update itna bada mat karo ke policy bigad jaye
-- **Entropy bonus:** thodi randomness rakho — nahi toh drone ek hi cheez karta rahega
+- Buffer dekhein → advantages calculate karein → networks update karein
+- **PPO clip:** update itna bada mat karein ke policy bigad jaye
+- **Entropy bonus:** thodi randomness rakhein — nahi toh drone ek hi cheez karta rahega
 - **Gradient clipping:** ek bada update sab kuch barbaad kar sakta hai — roko
 - **PAH loss (jab PAH ON ho):** do cheezein:
-  1. *Policy gradient:* agar mission reward > safety reward → alpha badhao, warna ghatao
+  1. *Policy gradient:* agar mission reward > safety reward → alpha badhaayein, warna ghataayein
   2. *Prior loss:* alpha ko 0.5 ke paas rakhne ki chhoti pull
 
 ### MAPPO — PAH ke saath ya bina
@@ -74,7 +74,7 @@ PAH aur actor/critic ek hi optimizer mein hain — ek saath seekhte hain.
 - Actor: **4,996 parameters** (chota network — intentional)
 - Critic: **6,209 parameters**
 - PAH: **~130 parameters** (bahut chota — thesis mein "lightweight" yahi matlab)
-- Device: **MPS** (tumhara M3 GPU — fast training!)
+- Device: **MPS** (aapka M3 GPU — fast training!)
 
 ## Hard words
 - **PPO (Proximal Policy Optimization):** policy update ka safe tarika — chote chote steps

@@ -51,6 +51,7 @@ path**, bas `handbook/` ke andar.
 ### Research (research/)
 | Handbook file | Kis cheez ko samjhata hai |
 |---------------|---------------------------|
+| `research/concept.md` | **Sabse pehle padhein.** Poori research zero se — asli problem, idea (PAH), test kaise karenge, scope |
 | `research/00_problem_formalization.md` | Problem maths ki bhasha mein — MDP, obs, actions, rewards |
 | `research/01_pah_design.md` | PAH ka design + reward-hacking problem aur solutions |
 | `research/02_assignment_and_conflict.md` | Hungarian assignment + conflict graph — math aur code |
@@ -63,14 +64,14 @@ path**, bas `handbook/` ke andar.
 |---------------|---------------------------|
 | `code/environment/multi_uav_env.md` | Main 2D environment — drones, targets, obstacles, rewards |
 | `code/environment/rendering.md` | Visualization — animated window mein episode dekhna |
-| `code/environment/watch.md` | Ek click script — seedha run karo aur dekho |
+| `code/environment/watch.md` | Ek click script — seedha run karein aur dekhein |
 | `code/tests/test_env.md` | 15 unit tests — environment sahi kaam karta hai prove karte hain |
 | `code/algorithms/mappo.md` | MAPPO — drones ka AI brain (Actor, Critic, training loop) |
 | `code/algorithms/conflict_graph.md` | Conflict graph — kaun se drones takrarne wale hain detect karna |
 | `code/algorithms/pah.md` | PAH — thesis ka novel contribution, dynamic α se mission vs safety balance |
 | `code/training/train.md` | Training loop — Kaggle pe drones ko sikhane wali script |
 | `code/configs/stage1.md` | Stage 1 config — sab settings ka matlab |
-| `code/notebooks/kaggle_stage1_training.md` | Kaggle notebook — seedha upload karo aur run karo |
+| `code/notebooks/kaggle_stage1_training.md` | Kaggle notebook — seedha upload karein aur run karein |
 
 ## Kaam kaun karta hai
 

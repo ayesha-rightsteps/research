@@ -1,11 +1,11 @@
 # Handbook — multi_uav_env.py
 
 ## Yeh file kia hai?
-Tumhara **2D duniya** — jahan drones fly karte hain, targets hain, obstacles hain.
+Aapka **2D duniya** — jahan drones fly karte hain, targets hain, obstacles hain.
 Yeh poori research ki neenv hai. Iske bina kuch nahi.
 
-## Real life mein soch ke samjho
-Soch lo ek top-down game — jaise GTA ka map upar se dekho. Us map pe:
+## Real life mein soch ke samjhein
+Sochiye ek top-down game — jaise GTA ka map upar se dekhein. Us map pe:
 - 🚁 **Drones** hain jo move kar rahe hain
 - ⭐ **Targets** hain jahan drones ko pahunchna hai
 - ⬛ **Obstacles** hain jo raaste mein hain
@@ -24,13 +24,13 @@ Sab settings yahan set hoti hain:
 
 ### `reset()` — Naya episode shuru karta hai
 Jab bhi naya game shuru ho — drones, targets, obstacles sab random jagah rakh do.
-Phir **Hungarian algorithm** chalao: decide karo kaun sa drone kaun sa target lay.
+Phir **Hungarian algorithm** chalayein: decide karein kaun sa drone kaun sa target lay.
 
 ### `step(actions)` — Ek time step aagay badhata hai
-- Drones ko move karo (actions apply karo)
-- Check karo: koi takraya? koi target pahuncha?
-- Reward calculate karo
-- Observation return karo
+- Drones ko move karein (actions apply karein)
+- Check karein: koi takraya? koi target pahuncha?
+- Reward calculate karein
+- Observation return karein
 
 ### `_get_obs()` — Har drone ko information deta hai
 Har drone ko **10 numbers** milte hain:

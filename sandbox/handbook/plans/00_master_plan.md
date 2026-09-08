@@ -1,4 +1,4 @@
-# Samjho: docs/plans/00_master_plan.md
+# Samjhein: docs/plans/00_master_plan.md
 
 ## Yeh cheez kya hai
 Poore project ka "map" — hum kaam kaise karenge, kis order mein, aur kya rules hain.
@@ -14,13 +14,13 @@ hai, aur kya galtiyan nahi karni.
   connected nahi, wo out of scope.
 
 - **7 principles:**
-  1. Pehle design likho (formulation), phir code
-  2. Pehle purana result reproduce karo, phir naya banao
-  3. Environment ko test karke pakka karo, phir RL lagao
-  4. Ek baar mein ek cheez badlo, hamesha baseline ke saath compare karo
+  1. Pehle design likhein (formulation), phir code
+  2. Pehle purana result reproduce karein, phir naya banayein
+  3. Environment ko test karke pakka karein, phir RL lagayein
+  4. Ek baar mein ek cheez badlein, hamesha baseline ke saath compare karein
   5. Har result kam se kam 5 seeds pe (warna wo result nahi hai)
   6. Scope tight — sirf 2D, max 8 drones, koi extra feature nahi
-  7. Session log mein sach likho — fail hue experiments bhi
+  7. Session log mein sach likhein — fail hue experiments bhi
 
 - **7 phases:** P0 design likhna → P1 environment banana → P2 MAPPO banana →
   P3 assignment + conflict graph jodna → P4 PAH banana → P5 saare experiments +
@@ -35,7 +35,7 @@ hai, aur kya galtiyan nahi karni.
 ## Mushkil lafz
 - **Formulation** = design ko likhit roop mein daalna (formulas ke saath), code se pehle
 - **Baseline** = comparison ke liye rakha gaya purana/simple system
-- **Seed** = random ka starting point; fix karo taaki experiment repeat ho sake
+- **Seed** = random ka starting point; fix karein taaki experiment repeat ho sake
 - **Scope** = project ki hadd; "scope creep" = chupke se kaam badhta jaana (bura)
 - **Ablation** = ek hissa nikaal ke dekhna wo kitna zaroori tha
 - Baaki `handbook/glossary.md` mein

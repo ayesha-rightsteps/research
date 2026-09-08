@@ -5,6 +5,7 @@ reviewed by the supervisor** before P0 sign-off, then the working spec.
 
 | File | What it covers |
 |------|----------------|
+| `concept.md` | **Read first.** The whole research in plain language — the real-world problem, the tension, the idea (PAH), how we test it, scope, and the one bug currently in the code |
 | `00_problem_formalization.md` | The Dec-POMDP: world, state, observation vector (exact fields + dims), action, transition, termination, the mission/safety reward terms with formulas, parameter table |
 | `01_pah_design.md` | Priority Arbitration Head: fixed architecture, input normalization, the reward-hacking risk, 4 candidate training formulations, recommendation, thesis diagnostic figures |
 | `02_assignment_and_conflict.md` | Hungarian cost matrix + thrashing + anti-thrashing options; conflict graph with the proper closest-point-of-approach math; how both feed the observation and PAH |

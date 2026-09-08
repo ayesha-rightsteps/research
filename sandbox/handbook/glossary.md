@@ -1,11 +1,11 @@
 # Glossary — saare technical words, simple Hinglish mein
 
-Jab bhi koi word samajh na aaye, yahan dekho. Alphabet order.
+Jab bhi koi word samajh na aaye, yahan dekhein. Alphabet order.
 
 ---
 
-**Ablation study** — ek experiment jismein tum apne system ka ek hissa **nikaal** ke
-dekhte ho ki performance kitni giri. Isse pata chalta hai ki wo hissa actually kitna
+**Ablation study** — ek experiment jismein aap apne system ka ek hissa **nikaal** ke
+dekhte hain ki performance kitni giri. Isse pata chalta hai ki wo hissa actually kitna
 zaroori tha. Jaise gaadi se ek pehiya nikaal ke dekhna.
 
 **Actor (MAPPO mein)** — har drone ka "decision-maker" neural network. Input: drone ko
@@ -19,8 +19,8 @@ mission pe (target tak pahunchna) aur kitna safety pe (takkar se bachna). α = 0
 90% mission, 10% safety. **PAH isko har step pe khud decide karta hai — yehi thesis ka
 naya kaam hai.**
 
-**Baseline** — ek "comparison ke liye rakha gaya system". Tumhara naya method kitna
-achha hai, ye tabhi pata chalega jab usse kisi purane/simple method se compare karo.
+**Baseline** — ek "comparison ke liye rakha gaya system". Aapka naya method kitna
+achha hai, ye tabhi pata chalega jab usse kisi purane/simple method se compare karein.
 
 **Centralized critic** — training ke waqt ek network jo **poori duniya** dekhta hai
 (saare drones, targets, obstacles) aur batata hai "ye situation kitni achhi hai".
@@ -44,7 +44,7 @@ pata hota hai (global info), lekin asli use ke waqt har drone sirf apni local in
 kaam karta hai. MAPPO isi tarah kaam karta hai.
 
 **Curriculum learning** — pehle aasaan level, phir dheere-dheere mushkil. Jaise school —
-pehle jodना, phir guna. Hum: pehle 3 drones no obstacles, phir 8 drones dense obstacles.
+pehle jodna, phir guna. Hum: pehle 3 drones no obstacles, phir 8 drones dense obstacles.
 
 **Dec-POMDP** — "multiple agents, sab ko sirf apni aadhi-adhoori info dikhti hai" wale
 problem ka formal naam. Poora: Decentralized Partially Observable Markov Decision Process.
@@ -55,7 +55,7 @@ problem ka formal naam. Poora: Decentralized Partially Observable Markov Decisio
 **Episode** — ek poora "game" — reset se lekar (sab drones apne target pe pahunch gaye
 YA koi takra gaya YA time khatam) tak.
 
-**GAE (Generalized Advantage Estimation)** — advantage (upar dekho) ko smooth tarike se
+**GAE (Generalized Advantage Estimation)** — advantage (upar dekhein) ko smooth tarike se
 calculate karne ka tareeqa. Kam shor, better training.
 
 **Gymnasium** — Python ki ek library jo RL environments ka ek **standard shape** deti
@@ -84,7 +84,7 @@ target pe pahunche **bina kisi takkar ke**, time limit ke andar. Hamara main sco
 velocity, target kahan hai, aas-paas ke drones, obstacle kitni door. Actor ka input.
 
 **Off-policy / On-policy** — On-policy (PPO/MAPPO): sirf abhi ki policy se collect kiya
-data use karo. Off-policy (DQN): purana data bhi replay buffer se use karo. IGAT-MARL
+data use karein. Off-policy (DQN): purana data bhi replay buffer se use karein. IGAT-MARL
 off-policy hai, hum on-policy.
 
 **PAH (Priority Arbitration Head)** — hamara naya chhota network. Input: 3 numbers
@@ -92,7 +92,7 @@ off-policy hai, hum on-policy.
 Thesis ka novel contribution.
 
 **PPO (Proximal Policy Optimization)** — ek popular, stable RL algorithm. "Policy ko ek
-baar mein zyada mat badlo" — isi rule se stability aati hai (clipping).
+baar mein zyada mat badlein" — isi rule se stability aati hai (clipping).
 
 **Point-mass model** — drone ko ek **bindu (dot)** maan lena jiski sirf position aur
 velocity hai — koi size, weight, tilt nahi. 2D research ke liye kaafi.
