@@ -174,6 +174,47 @@ class RolloutBuffer:
         returns = advantages + values[:, np.newaxis]   # (T, n)
         return advantages, returns
 
+    def compute_gae_components(self, last_value: float, gamma: float, lam: float):
+        """
+        Option B: separate GAE for r_mission and r_safety.
+
+        Uses the combined-reward value function as a shared baseline so a
+        second critic head is not needed.  This is principled (α shapes
+        policy improvement direction, not accumulated reward) while keeping
+        the architecture simple.
+
+        Returns
+        -------
+        adv_mission : (T, n_drones)
+        adv_safety  : (T, n_drones)
+        """
+        if not self.use_pah:
+            raise RuntimeError("compute_gae_components requires use_pah=True")
+
+        T      = len(self.rewards)
+        n      = self.n_drones
+        rm     = np.array(self.r_mission, dtype=np.float32)   # (T, n)
+        rs     = np.array(self.r_safety,  dtype=np.float32)   # (T, n)
+        values = np.array(self.values,    dtype=np.float32)   # (T,)
+        dones  = np.array(self.dones,     dtype=np.float32)   # (T,)
+
+        adv_m  = np.zeros((T, n), dtype=np.float32)
+        adv_s  = np.zeros((T, n), dtype=np.float32)
+        gae_m  = np.zeros(n,      dtype=np.float32)
+        gae_s  = np.zeros(n,      dtype=np.float32)
+
+        for t in reversed(range(T)):
+            nv      = last_value if t == T - 1 else values[t + 1]
+            mask    = 1.0 - dones[t]
+            delta_m = rm[t] + gamma * nv * mask - values[t]
+            delta_s = rs[t] + gamma * nv * mask - values[t]
+            gae_m   = delta_m + gamma * lam * mask * gae_m
+            gae_s   = delta_s + gamma * lam * mask * gae_s
+            adv_m[t] = gae_m
+            adv_s[t] = gae_s
+
+        return adv_m, adv_s
+
     def to_tensors(self, device):
         """Return stored data as tensors on `device`."""
         obs       = torch.tensor(np.array(self.obs),       dtype=torch.float32, device=device)
@@ -335,30 +376,37 @@ class MAPPO:
         adv_t = torch.tensor(advantages_np, dtype=torch.float32, device=self.device)
         ret_t = torch.tensor(returns_np,    dtype=torch.float32, device=self.device)
 
-        # Normalise advantages (zero mean, unit std) — training stability
+        # Normalise combined advantages (zero mean, unit std) — training stability
         adv_flat = adv_t.reshape(-1)
-        adv_t = (adv_t - adv_flat.mean()) / (adv_flat.std() + 1e-8)
+        adv_t    = (adv_t - adv_flat.mean()) / (adv_flat.std() + 1e-8)
 
-        # Flatten time × drones so we can do mini-batch updates
-        obs_flat    = obs_t.reshape(T * n, -1)         # (T*n, obs_dim)
-        act_flat    = actions_t.reshape(T * n, -1)      # (T*n, act_dim)
-        old_lp_flat = old_lp_t.reshape(T * n)           # (T*n,)
-        adv_flat    = adv_t.reshape(T * n)              # (T*n,)
-        ret_flat    = ret_t.reshape(T * n)              # (T*n,)
+        # Flatten time × drones for mini-batch updates
+        obs_flat    = obs_t.reshape(T * n, -1)
+        act_flat    = actions_t.reshape(T * n, -1)
+        old_lp_flat = old_lp_t.reshape(T * n)
+        adv_flat    = adv_t.reshape(T * n)
+        ret_flat    = ret_t.reshape(T * n)
 
-        # Expand global states so each drone sample has its timestep's global state
-        gs_t   = obs_t.reshape(T, -1)                                # (T, global_dim)
-        gs_exp = gs_t.unsqueeze(1).expand(T, n, -1).reshape(T*n, -1) # (T*n, global_dim)
+        gs_t   = obs_t.reshape(T, -1)
+        gs_exp = gs_t.unsqueeze(1).expand(T, n, -1).reshape(T * n, -1)
 
-        # PAH flat tensors (None when PAH is inactive)
+        # PAH tensors (None when PAH is inactive — Stage 1)
+        tau_flat = d_flat = nc_flat = None
         if pah_data is not None:
-            rm_flat  = pah_data["r_mission"].reshape(T * n)   # (T*n,)
-            rs_flat  = pah_data["r_safety"].reshape(T * n)    # (T*n,)
-            tau_flat = pah_data["tau"].reshape(T * n)          # (T*n,)
-            d_flat   = pah_data["d"].reshape(T * n)            # (T*n,)
-            nc_flat  = pah_data["n"].reshape(T * n)            # (T*n,)
-        else:
-            rm_flat = rs_flat = tau_flat = d_flat = nc_flat = None
+            tau_flat = pah_data["tau"].reshape(T * n)
+            d_flat   = pah_data["d"].reshape(T * n)
+            nc_flat  = pah_data["n"].reshape(T * n)
+
+        # Option B: separate component advantages for PAH (computed once, used in every epoch)
+        # α weights which direction the policy improves — not which reward accumulates.
+        # Gradient flows through α → genuine RL signal, no reward-hacking shortcut.
+        adv_m_flat = adv_s_flat = None
+        if self.pah_wrapper is not None and pah_data is not None:
+            adv_m_np, adv_s_np = buffer.compute_gae_components(last_value, self.gamma, self.lam)
+            adv_m_t    = torch.tensor(adv_m_np, dtype=torch.float32, device=self.device).reshape(-1)
+            adv_s_t    = torch.tensor(adv_s_np, dtype=torch.float32, device=self.device).reshape(-1)
+            adv_m_flat = (adv_m_t - adv_m_t.mean()) / (adv_m_t.std() + 1e-8)
+            adv_s_flat = (adv_s_t - adv_s_t.mean()) / (adv_s_t.std() + 1e-8)
 
         total   = T * n
         indices = np.arange(total)
@@ -376,65 +424,46 @@ class MAPPO:
 
                 log_p, entropy = self.actor.evaluate_action(obs_flat[idx], act_flat[idx])
 
-                # PPO clipped surrogate objective
-                ratio  = (log_p - old_lp_flat[idx]).exp()
-                surr1  = ratio * adv_flat[idx]
-                surr2  = ratio.clamp(1 - self.clip_eps, 1 + self.clip_eps) * adv_flat[idx]
-                a_loss = -torch.min(surr1, surr2).mean()
-
-                # Value loss (MSE between predicted and actual returns)
+                # Value loss — critic trained on combined reward (same in both stages)
                 v_pred = self.critic(gs_exp[idx])
                 v_loss = 0.5 * (v_pred - ret_flat[idx]).pow(2).mean()
 
-                # Entropy bonus — keeps the policy from collapsing too early
+                # Entropy bonus
                 e_loss = -entropy.mean()
 
-                loss = a_loss + self.vf_coef * v_loss + self.ent_coef * e_loss
-
-                # ── PAH loss (only when active) ─────────────────────
-                if self.pah_wrapper is not None and pah_data is not None:
-                    alpha = self.pah_wrapper.compute_alpha_gradient(
+                if self.pah_wrapper is not None and adv_m_flat is not None:
+                    # ── Option B actor loss: α-weighted component advantages ──
+                    # PAH outputs α; gradient flows through α into this loss.
+                    # High α → follow mission advantage (get to target)
+                    # Low  α → follow safety advantage (avoid collision)
+                    # The critic baseline V is shared — α cannot inflate it.
+                    alpha    = self.pah_wrapper.compute_alpha_gradient(
                         tau_flat[idx], d_flat[idx], nc_flat[idx]
                     )  # (B, 1)
+                    alpha_sq = alpha.squeeze(-1)   # (B,)
 
-                    # Behavioral regression target for PAH.
-                    #
-                    # A raw (r_mission − r_safety) * α gradient causes reward
-                    # hacking: the agent can inflate return by pushing α toward
-                    # the less-negative component regardless of true urgency.
-                    # Instead, we supervise α toward a physical target derived
-                    # from collision-imminence (τ) and conflict count (n):
-                    #
-                    #   α_target = α_min + (α_max − α_min) · τ_norm · (1 − 0.3·n_norm)
-                    #
-                    # τ_norm = 1 → safe (no imminent collision) → α_target → α_max
-                    # τ_norm = 0 → collision now              → α_target → α_min
-                    # n_norm high → many conflicts             → α pulled lower
-                    #
-                    # This matches Option-C spirit (supervised target) while keeping
-                    # PAH input-driven and fully differentiable. Prior loss adds a
-                    # second pull toward 0.5 to prevent constant-α collapse.
-                    pah_min = self.pah_wrapper.pah.alpha_min
-                    pah_max = self.pah_wrapper.pah.alpha_max
-                    horizon = self.pah_wrapper.normalizer.horizon
-                    n_max   = max(self.pah_wrapper.normalizer.n_drones - 1, 1)
+                    w_adv  = alpha_sq * adv_m_flat[idx] + (1.0 - alpha_sq) * adv_s_flat[idx]
+                    ratio  = (log_p - old_lp_flat[idx]).exp()
+                    surr1  = ratio * w_adv
+                    surr2  = ratio.clamp(1 - self.clip_eps, 1 + self.clip_eps) * w_adv
+                    a_loss = -torch.min(surr1, surr2).mean()
 
-                    with torch.no_grad():
-                        tau_n    = (tau_flat[idx] / horizon).clamp(0.0, 1.0)
-                        nc_n     = (nc_flat[idx]  / n_max  ).clamp(0.0, 1.0)
-                        a_target = pah_min + (pah_max - pah_min) * tau_n * (1.0 - 0.3 * nc_n)
-                        a_target = a_target.unsqueeze(-1).clamp(pah_min, pah_max)
+                    # Prior loss — mild pull toward α=0.5, prevents constant-α collapse
+                    pah_prior = self.pah_wrapper.pah.compute_prior_loss(alpha)
+                    pah_losses.append(pah_prior.item())
 
-                    pah_regression = nn.functional.mse_loss(alpha, a_target)
-                    pah_prior      = self.pah_wrapper.pah.compute_prior_loss(alpha)
-                    pah_loss       = pah_regression + pah_prior
+                    loss = a_loss + self.vf_coef * v_loss + self.ent_coef * e_loss + pah_prior
 
-                    loss = loss + pah_loss
-                    pah_losses.append(pah_loss.item())
+                else:
+                    # ── Standard PPO actor loss (Stage 1 / no PAH) ──────────
+                    ratio  = (log_p - old_lp_flat[idx]).exp()
+                    surr1  = ratio * adv_flat[idx]
+                    surr2  = ratio.clamp(1 - self.clip_eps, 1 + self.clip_eps) * adv_flat[idx]
+                    a_loss = -torch.min(surr1, surr2).mean()
+                    loss   = a_loss + self.vf_coef * v_loss + self.ent_coef * e_loss
 
                 self.optimizer.zero_grad()
                 loss.backward()
-                # Gradient clipping — prevents very large updates
                 nn.utils.clip_grad_norm_(grad_params, max_norm=0.5)
                 self.optimizer.step()
 

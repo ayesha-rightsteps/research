@@ -6,7 +6,7 @@
 > **Yeh file kya hai?**
 > Is file mein poora project start se end tak explain kiya gaya hai.
 > Har cheez ka matlab, har cheez ka kisi doosri cheez se kya connection hai.
-> Isko parhne ke baad tumhe poori picture mil jaayegi.
+> Isko parhne ke baad aapko poori picture mil jaayegi.
 
 ---
 
@@ -14,7 +14,7 @@
 
 ### Problem kya hai?
 
-Soch lo teen drones hain. Inhe teen jagahon pe pahunchna hai — bina aapas mein takraye, bina obstacles se takraye.
+Sochiye teen drones hain. Inhe teen jagahon pe pahunchna hai — bina aapas mein takraye, bina obstacles se takraye.
 
 Yeh simple lagta hai, lekin mushkil yeh hai:
 - **Kaun sa drone kaun si jagah le?** (Target Assignment problem)
@@ -76,7 +76,7 @@ Yeh kaam karta hai **PAH** — Priority Arbitration Head. Yahi thesis ka novel c
 
 Drones ko sikhane ke liye pehle ek "duniya" chahiye jahan woh khelein.
 
-Soch lo ek video game map — upar se dekho:
+Sochiye ek video game map — upar se dekhein:
 - Drones upar se dikhte hain (top-down view)
 - World 100×100 units ka square hai
 - Drones move karte hain, targets hain, obstacles hain
@@ -165,12 +165,12 @@ Yeh woh algorithm hai jo drones ko actually sikhata hai — kahan jaana chahiye,
 Pehle RL samjho — poori thesis isi pe based hai.
 
 ```
-Soch lo tum ek nayi game seekh rahi ho:
-  - Tum kuch karo (action)
-  - Game tumhe points de (reward)
-  - Tum seekhti ho: woh action acha tha ya bura
-  - Agli baar better action karo
-  - Baar baar practice karo → expert ban jao
+Sochiye aap ek nayi game seekh rahi hain:
+  - Aap kuch karein (action)
+  - Game aapko points de (reward)
+  - Aap seekhti hain: woh action acha tha ya bura
+  - Agli baar better action karein
+  - Baar baar practice karein → expert ban jaayein
 ```
 
 Yahi AI ke saath hota hai:

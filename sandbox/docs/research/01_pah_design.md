@@ -203,3 +203,41 @@ Consolidated in `04_open_questions_for_supervisor.md` (Q4–Q6). In short:
 - Is α on the scalar reward (A) or on the advantage combination (B) acceptable?
 - Can we add a second critic head if A shows reward hacking?
 - Is an α prior/regularizer acceptable, or does it undermine "purely learned"?
+
+---
+
+## 9. Decision (2026-09-14) — Option B implemented
+
+After review by Manish (see `sessions/2026-09-14.md`, Part 2), **Option B ("α weights
+advantages") was selected as the primary implementation.** Reason: a previous
+implementation accidentally shipped Option C (supervised regression to a hand-crafted
+`α_target = f(τ, n)`), which breaks the "learned α" thesis claim — PAH was just copying a
+formula, not learning from experience.
+
+**What is now in the code (`code/algorithms/mappo.py`, `update()`):**
+
+1. `RolloutBuffer.compute_gae_components()` computes separate GAE trajectories for
+   `r_mission` and `r_safety`, using the shared critic value `V` as the baseline for
+   both. This is "Option B lite" — one critic, two advantage streams.
+
+2. The actor loss is:
+   ```
+   w_adv  = α · A_mission + (1-α) · A_safety      # α from PAH
+   a_loss = -E[ min(ratio·w_adv, clip(ratio)·w_adv) ]
+   ```
+   PAH gradient flows through `α` naturally. No hand-crafted `α_target`. No regression
+   loss. `d_target` (PAH's third input) now has a real signal path — it influences
+   `A_mission` which flows back through `α`.
+
+3. The only PAH-specific loss is `compute_prior_loss(α)` — a mild pull toward 0.5 to
+   prevent constant-α collapse.
+
+**Why not two critic heads:** adding a second head (`V_safety`) is the full Option B
+from Section 5B. We use a shared baseline for both advantage streams. This is a known
+simplification; if `V` cannot simultaneously fit both components well, the advantages
+will be noisier. This is acceptable for the thesis scope; if training is unstable, the
+two-head extension is the natural next step.
+
+**Option C becomes ablation:** train a PAH variant with supervised regression to
+`α* = α_min + (α_max−α_min)·τ_norm·(1−0.3·n_norm)`, compare it to Option B in
+evaluation. This is a valid thesis figure ("learned PAH vs heuristic PAH").

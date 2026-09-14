@@ -52,8 +52,8 @@ Drones bhi yahi karte hain — baar baar play karte hain, coach evaluate karta h
 - **PPO clip:** update itna bada mat karein ke policy bigad jaye
 - **Entropy bonus:** thodi randomness rakhein — nahi toh drone ek hi cheez karta rahega
 - **Gradient clipping:** ek bada update sab kuch barbaad kar sakta hai — roko
-- **PAH loss (jab PAH ON ho):** do cheezein:
-  1. *Behavioral regression:* PAH ko sikhao ke "jab collision door ho (τ bada) toh α bado, jab paas ho (τ chota) toh α ghato". Ek target α* compute hota hai τ se, aur PAH usi ke paas jaata hai.
+- **PAH loss (jab PAH ON ho) — Option B:**
+  1. *Component advantages:* `A_mission` aur `A_safety` alag alag compute hote hain (GAE, same critic baseline). PAH ka α inhe weight karta hai: `w_adv = α·A_mission + (1−α)·A_safety`. Isi weighted advantage pe PPO clip loss lagti hai. Gradient naturally α ke through jaata hai — koi hand-crafted formula nahi, seedha experience se seekhta hai.
   2. *Prior loss:* alpha ko 0.5 ke paas rakhne ki chhoti pull — collapse rokne ke liye
 
 ### MAPPO — PAH ke saath ya bina
