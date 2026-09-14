@@ -15,10 +15,14 @@ from environment.multi_uav_env import MultiUAVEnv
 # ──────────────────────────────────────────────
 
 def test_obs_shape():
-    """Observation must be (n_drones, 10) after reset."""
-    env = MultiUAVEnv(n_drones=3, n_obstacles=3, seed=0)
-    obs, _ = env.reset()
+    """Observation shape: 10 dims without conflict graph, 30 with (10 + 4*5)."""
+    env_base = MultiUAVEnv(n_drones=3, n_obstacles=3, seed=0, use_conflict_graph=False)
+    obs, _ = env_base.reset()
     assert obs.shape == (3, 10), f"Expected (3,10), got {obs.shape}"
+
+    env_cg = MultiUAVEnv(n_drones=3, n_obstacles=3, seed=0, use_conflict_graph=True)
+    obs_cg, _ = env_cg.reset()
+    assert obs_cg.shape == (3, 30), f"Expected (3,30), got {obs_cg.shape}"
 
 
 def test_reset_gives_valid_positions():
@@ -31,14 +35,16 @@ def test_reset_gives_valid_positions():
 
 def test_step_returns_correct_shapes():
     """step() must return obs, rewards, terminated, truncated, info with right shapes."""
-    env = MultiUAVEnv(n_drones=3, n_obstacles=3, seed=2)
+    env = MultiUAVEnv(n_drones=3, n_obstacles=3, seed=2, use_conflict_graph=False)
     env.reset()
     actions = env.action_space.sample()
     obs, rewards, terminated, truncated, info = env.step(actions)
-    assert obs.shape == (3, 10)
+    assert obs.shape == (3, 10), f"Expected (3,10), got {obs.shape}"
     assert rewards.shape == (3,)
     assert isinstance(terminated, bool)
     assert isinstance(truncated, bool)
+    # r_mission and r_safety always in info
+    assert "r_mission" in info and "r_safety" in info
 
 
 # ──────────────────────────────────────────────
@@ -117,14 +123,15 @@ def test_obstacle_collision_detected():
 # ──────────────────────────────────────────────
 
 def test_collision_gives_negative_reward():
-    """A drone on top of another must receive a negative reward."""
-    env = MultiUAVEnv(n_drones=2, n_obstacles=0, seed=0)
+    """A drone on top of another must receive a negative r_safety."""
+    env = MultiUAVEnv(n_drones=2, n_obstacles=0, seed=0, use_conflict_graph=False)
     env.reset()
     env.drone_pos[0] = np.array([50.0, 50.0])
     env.drone_pos[1] = np.array([50.0, 50.0])
     env.drone_vel = np.zeros((2, 2))
-    rewards = env._compute_rewards()
-    assert rewards[0] < 0, "Collision should give negative reward"
+    rewards, r_mission, r_safety = env._compute_rewards()
+    assert rewards[0] < 0,   "Collision should give negative combined reward"
+    assert r_safety[0] == -1.0, "Hard collision should give r_safety = -1.0"
 
 
 def test_closer_to_target_less_negative_reward():

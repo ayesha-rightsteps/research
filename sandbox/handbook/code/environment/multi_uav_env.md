@@ -33,14 +33,16 @@ Phir **Hungarian algorithm** chalayein: decide karein kaun sa drone kaun sa targ
 - Observation return karein
 
 ### `_get_obs()` — Har drone ko information deta hai
-Har drone ko **10 numbers** milte hain:
+Har drone ko **10 numbers** milte hain — sab **normalize** hain (0 se 1 ke beech):
 
-| Number | Matlab |
-|--------|--------|
-| 1, 2 | Apni position (x, y) |
-| 3, 4 | Apni speed (vx, vy) |
-| 5, 6 | Target kitna door hai aur kahan (relative) |
-| 7, 8, 9, 10 | North/South/East/West mein obstacle kitna door hai |
+| Number | Matlab | Range |
+|--------|--------|-------|
+| 1, 2 | Apni position (x, y) — world size se divide | [0, 1] |
+| 3, 4 | Apni speed (vx, vy) — max speed se divide | [-1, 1] |
+| 5, 6 | Target kahan hai (relative) — world size se divide | [-1, 1] |
+| 7, 8, 9, 10 | North/South/East/West mein obstacle kitna door | [0, 1] |
+
+**Normalize kyun?** Taake world 100m ho ya 500m ya 1km — numbers hamesha same range mein rahein. Neural network chhote numbers pe zyada achay seekhta hai, aur world size change karne pe dobara train nahi karni padegi.
 
 ### `_hungarian_assignment()` — Targets assign karta hai
 "Kaun sa drone kaun sa target lay?" — yeh math se optimal decide hota hai.
@@ -52,10 +54,22 @@ Yeh function **teen cheezein return karta hai** (pehle sirf ek thi):
 ```
 reward    = 0.5 × r_mission + 0.5 × r_safety   (default jab PAH nahi)
 r_mission = target se distance (negative number)
-r_safety  = collision hua? -1, nahi toh 0
+r_safety  = graded proximity penalty (neeche explain hai)
 ```
 
-Dono components alag kyun? Kyunki **PAH ko dono alag chahiye** taake woh apna α apply kare. Train ke waqt PAH ek alag formula use karta hai:
+**r_safety graded kyun hai?**
+Pehle sirf collision pe -1 milta tha — lekin tab tak bohot der ho jaati hai.
+Ab drone ke paas aate hi signal milna shuru ho jaata hai:
+
+| Distance | r_safety |
+|----------|----------|
+| < 3m (collision!) | -1.0 (hard) |
+| 3m se 9m ke beech (danger zone) | -0.33 se -1.0 (graded) |
+| > 9m (clear) | 0.0 |
+
+Yeh PAH ko pehle se signal deta hai — collision se pehle hi α adjust ho jaata hai.
+
+PAH train ke waqt:
 ```
 reward = α × r_mission + (1-α) × r_safety
 ```

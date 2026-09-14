@@ -20,7 +20,7 @@ Tuple `(N, S, {O_i}, {A_i}, P, R, γ)`:
 
 | Symbol | Meaning |
 |--------|---------|
-| `N` | number of drones, `N ∈ {3, 5, 8}` in training; `= M` (one target each) |
+| `N` | number of drones, `N ∈ {3, 5, 8}` in training; `= M` (one target each). Progression rationale: 3 is the minimum for non-trivial multi-agent interaction and replicates the DA-MAPPO baseline regime; 5 makes the conflict graph dense enough that PAH arbitration becomes meaningful; 8 is a stress test for scalability and generalization (tested on unseen swarm sizes in Stage 4). |
 | `S` | global state (all drone poses/velocities, all target positions, all obstacle positions) — used by the **centralized critic** only |
 | `O_i` | drone `i`'s local observation (Section 4) — used by the **decentralized actor** |
 | `A_i` | drone `i`'s action: a 2D velocity command (Section 5) |
@@ -34,7 +34,7 @@ Centralized training, decentralized execution (CTDE), standard for MAPPO.
 
 ## 2. World and assumptions
 
-- **2D continuous** workspace, `world_size × world_size` (*calibrate*: 100 × 100 units).
+- **2D continuous** workspace, `world_size × world_size` (500 × 500 metres; 1 unit = 1 m).
 - **Point-mass kinematics**, fixed timestep `dt` (*calibrate*: 0.1 s). No attitude, no
   aerodynamics. This is the deliberate simplification vs DA-MAPPO's Gazebo rigid-body
   model — justified because the research question (learned vs fixed α) does not depend
@@ -44,6 +44,91 @@ Centralized training, decentralized execution (CTDE), standard for MAPPO.
   targets periodically exchange positions), *not* continuous drift, unless the
   supervisor prefers drift. See `04`.
 - Homogeneous drones (same speed limit, same radius).
+
+### 2.1 Physical scale — unit mapping
+
+**1 simulation unit = 1 metre.**
+
+| Quantity | Sim value | Physical meaning | Justification |
+|----------|-----------|-----------------|---------------|
+| `world_size` | 500 u | 500 m × 500 m | Half-kilometre operational area — realistic small-UAV mission scale (campus, industrial site, search-and-rescue zone) |
+| `v_max` | 5 u/s | 5 m/s | Conservative cruise speed for a small multirotor (e.g. DJI Mini class) in a constrained urban area |
+| `d_col` | 2 u | 2 m | Separation threshold — roughly 2 × typical small-drone radius |
+| `d_safe` | 3 u | 3 m | ≈ stopping distance at v_max with moderate deceleration |
+| `arrival_radius` | 5 u | 5 m | Target acquired when drone centre within 5 m of target — realistic GPS accuracy margin |
+| `dt` | 0.1 s | 100 ms control loop | Standard autopilot update rate |
+| `T_max` | 300 steps | 30 s per episode | Enough for a drone at v_max to cross the workspace ~1.5 times |
+
+This scale is deliberately small relative to real UAV operations (which can span
+kilometres). The choice is justified because: (a) the research question is about the
+PAH weighting mechanism, not range or endurance; (b) a 100 m arena allows thousands of
+training episodes in minutes on a T4 GPU; (c) the relative ratios (speed / world size /
+collision radius) match DA-MAPPO's normalised regime, making our results directly
+comparable. A note will be added to the thesis "Scope and Assumptions" section.
+
+### 2.2 Obstacle placement — Poisson disk sampling
+
+Obstacles are placed using **Poisson disk sampling** with a minimum separation
+`r_obs_min = 2 × d_safe = 6 m` between any two obstacle centres. The algorithm:
+
+1. Place the first obstacle uniformly at random (with `margin = 10 m` from every edge).
+2. For each subsequent obstacle, sample a candidate uniformly at random. Accept it only
+   if it is at least `r_obs_min` from every already-placed obstacle **and** at least
+   `d_safe` from every drone start position and target.
+3. Reject and resample up to `max_tries = 1000` times; if no valid position is found,
+   reduce `K` silently for that episode.
+
+**Why Poisson disk, not pure uniform random?**
+Pure uniform placement can accidentally cluster obstacles into an impassable wall or
+place them on top of drone start positions. Poisson disk guarantees navigable corridors
+of width ≥ `r_obs_min` — a physically meaningful constraint. This is the standard
+method in robotics path-planning literature (Bridson 2007).
+
+> Implementation note: `_random_layout()` in `multi_uav_env.py` currently uses
+> rejection sampling with per-entity minimum distance checks. This must be updated to
+> enforce the **inter-obstacle** minimum distance `r_obs_min` explicitly (current code
+> only enforces separation from drones/targets). See next-steps in `sessions/`.
+
+---
+
+## 2.3 CTDE deployment model
+
+The system follows **Centralized Training, Decentralized Execution (CTDE)** —
+the standard paradigm for cooperative MARL (Lowe et al. 2017, Yu et al. 2022).
+
+### During training (offline / ground station)
+
+| Component | Where it runs | What it sees |
+|-----------|--------------|--------------|
+| **Centralized critic** | Ground station / training server (Kaggle T4 or local M3) | Full global state `S` = all N drones' observations concatenated |
+| **Actor (N copies, shared weights)** | Also on training server | Each drone's local observation `O_i` only |
+| **PAH** | Also on training server, jointly trained with actor | `τ_collision`, `d_target`, `n_conflict` per drone |
+
+The ground station collects observations from all drones at each timestep, feeds them
+to the critic, computes the centralized value estimate and GAE advantages, then updates
+all networks. **This requires a reliable communication channel** — assumed clear and
+zero-latency during training (an offline or lab-testing setup, not a live mission).
+
+### During deployment (online / in-flight)
+
+| Component | Where it runs | What it needs |
+|-----------|--------------|---------------|
+| **Actor** | Onboard each drone (companion computer or flight controller) | Only its own `O_i` — 10 numbers |
+| **PAH** | Onboard each drone (runs with actor) | Only its own `τ_collision`, `d_target`, `n_conflict` |
+| **Centralized critic** | **NOT deployed** — not needed at execution time | — |
+
+Each drone computes its own action independently. The actor has only ~5,000 parameters
+(< 20 kB) — deployable on any ARM Cortex-M class processor.
+
+**Communication assumption for deployment:** Each drone needs only its own local sensor
+data. No inter-drone communication is required at execution time. The conflict graph
+inputs (`τ_collision`, `n_conflict`) can be computed locally using onboard proximity
+sensors (ultrasonic / LiDAR) or via a lightweight broadcast of positions only (< 10
+bytes per drone per timestep). We assume a clear channel for this broadcast — no packet
+loss or delay model in the current scope.
+
+> This is a standard CTDE assumption shared by MAPPO, MADDPG, and QMIX. The thesis
+> "Scope and Assumptions" section will state this explicitly.
 
 ---
 
@@ -146,7 +231,7 @@ penalty are mission-side. This clean separation is what lets α trade the two of
 
 | Param | Symbol | Start | Source / note |
 |-------|--------|-------|---------------|
-| World size | `W` | 100 | calibrate |
+| World size | `W` | 500 | 500 m × 500 m; 1 unit = 1 metre |
 | Timestep | `dt` | 0.1 s | calibrate |
 | Max speed | `v_max` | 5 u/s | calibrate |
 | Inter-drone collision distance | `d_col` | 2 u | ~ 2× drone radius |

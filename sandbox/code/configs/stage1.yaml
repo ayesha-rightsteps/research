@@ -4,7 +4,7 @@
 env:
   n_drones:         3
   n_obstacles:      0       # no obstacles in stage 1
-  world_size:       100.0
+  world_size:       500.0   # 500 m × 500 m; 1 unit = 1 metre
   max_speed:        5.0
   max_steps:        300     # max steps per episode
   target_radius:    5.0

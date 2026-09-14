@@ -10,9 +10,35 @@ chalega ki reward function to define hi nahi tha. Ye doc supervisor ko bhi dikha
 
 ## Main baatein
 
-- **Duniya:** 2D square (jaise 100×100 ka field). Drone = ek dot jiski position aur
-  velocity hai (koi size/weight/tilt nahi — "point-mass"). N drones, N targets
-  (har drone ka ek), kuch round obstacles.
+- **Duniya:** 2D square — **500m × 500m** (1 unit = 1 metre). Half-kilometre ka area —
+  jaise ek chhota campus, industrial site, ya search-and-rescue zone. Yeh scale real UAV
+  missions se milta hai aur supervisor ko bhi credible lagega.
+  Drone = ek dot jiski position aur velocity hai (koi size/weight/tilt nahi —
+  "point-mass"). N drones, N targets (har drone ka ek), kuch round obstacles.
+
+- **Drones kitne — aur kyun yeh numbers:**
+  | Stage | Drones | Kyun |
+  |-------|--------|------|
+  | 1 | 3 | Minimum jab multi-agent interaction meaningful ho — DA-MAPPO baseline |
+  | 2 | 5 | Conflict graph dense hone lagta hai — PAH ka kaam shuru hota hai |
+  | 3 | 8 | Stress test — kitne drones tak system kaam karta hai? |
+
+- **Obstacles kahan rakhein — Poisson Disk Sampling:**
+  Pure random placement se obstacles ek doosre ke upar aa sakte hain ya raasta band ho
+  sakta hai. Isliye **Poisson disk sampling** use karte hain:
+  > "Obstacles randomly rakhein, lekin koi bhi do obstacles 6 metre se paas nahi honge"
+  
+  Yeh guarantee karta hai ke drones ke liye hamesha raasta milega.
+
+- **Physical scale table:**
+  | Cheez | Number | Real meaning |
+  |-------|--------|--------------|
+  | World size | 500 u | 500 metre × 500 metre |
+  | Max speed | 5 u/s | 5 m/s — slow safe UAV |
+  | Collision radius | 2 u | 2 metre separation |
+  | Target radius | 5 u | 5 metre GPS accuracy margin |
+  | One step | dt=0.1s | 100ms control loop |
+  | Max episode | 300 steps | 30 seconds |
 
 - **Observation (drone ko kya dikhta hai) — total ~31 numbers:**
   - apni position + velocity (4)
@@ -40,6 +66,25 @@ chalega ki reward function to define hi nahi tha. Ye doc supervisor ko bhi dikha
 
 - **Jo cheezein humne DA-MAPPO se hataayi (aur kyun theek hai):** 3D physics, LiDAR,
   communication model — ye sab thesis ke "assumptions" section mein likhenge.
+
+- **Centralized Critic kahan chalta hai — CTDE ka matlab:**
+
+  Training aur deployment mein fark hai:
+
+  | Phase | Critic | Actor |
+  |-------|--------|-------|
+  | **Training** (Kaggle/server pe) | ✅ Ground station pe — saare N drones ki observations ek saath dekhta hai | ✅ Server pe |
+  | **Deployment** (actual flight) | ❌ NAHI chalta — zaroorat hi nahi | ✅ Har drone apna actor khud chalaata hai |
+
+  Yeh CTDE hai: Centralized Training, Decentralized Execution.
+
+  Deployment mein har drone sirf **apna actor** chalaata hai — ~5,000 parameters, kisi
+  bhi chhote processor pe chal sakta hai. Critic sirf training ke liye tha taake better
+  learning ho sake — missions mein nahi chahiye.
+
+  **Channel assumption:** Training ke waqt ground station ko saare drones ki info
+  chahiye (clear channel assume). Deployment mein sirf thodi position broadcast (< 10
+  bytes per drone) — lamba range channel nahi chahiye.
 
 ## Mushkil lafz
 - **Dec-POMDP** = multi-agent + har agent ko aadhi info wali problem ka formal naam

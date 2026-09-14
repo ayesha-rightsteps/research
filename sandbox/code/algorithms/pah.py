@@ -54,7 +54,7 @@ class PAHNormalizer:
     n_drones    : total drones (so n_conflict is divided by n_drones − 1)
     """
     horizon:  float = 3.0
-    d_max:    float = 141.4   # sqrt(2) * 100
+    d_max:    float = 707.1   # sqrt(2) * 500  (500 m × 500 m world diagonal)
     n_drones: int   = 3
 
     def normalize(self, tau: torch.Tensor,
@@ -286,35 +286,33 @@ def split_reward(drone_pos, target_pos, assignment,
     Returns
     -------
     r_mission : (n_drones,)
-    r_safety  : (n_drones,)
+    r_safety  : (n_drones,)   graded in [-1, 0], matches _compute_rewards() in env
     """
-    n = len(drone_pos)
-    r_mission = np.zeros(n, dtype=np.float32)
-    r_safety  = np.zeros(n, dtype=np.float32)
+    n          = len(drone_pos)
+    r_mission  = np.zeros(n, dtype=np.float32)
+    r_safety   = np.zeros(n, dtype=np.float32)
+    d_danger   = collision_radius * 3.0
+    zone_width = d_danger - collision_radius
 
     for i in range(n):
-        # Mission: negative normalized distance to assigned target
+        # Mission: negative normalised distance to assigned target
         dist = np.linalg.norm(drone_pos[i] - target_pos[assignment[i]])
         r_mission[i] = -dist / world_size
 
-        # Safety: flat collision penalty
-        collided = False
+        # Safety: graded proximity — mirrors _compute_rewards() in multi_uav_env.py
+        min_dist = float('inf')
 
-        # drone–drone
         for j in range(n):
             if j == i:
                 continue
-            if np.linalg.norm(drone_pos[i] - drone_pos[j]) < collision_radius:
-                collided = True
-                break
+            min_dist = min(min_dist, np.linalg.norm(drone_pos[i] - drone_pos[j]))
 
-        # drone–obstacle
-        if not collided:
-            for obs_pos in obstacle_pos:
-                if np.linalg.norm(drone_pos[i] - obs_pos) < collision_radius:
-                    collided = True
-                    break
+        for obs_pos in obstacle_pos:
+            min_dist = min(min_dist, np.linalg.norm(drone_pos[i] - obs_pos))
 
-        r_safety[i] = -1.0 if collided else 0.0
+        if min_dist < collision_radius:
+            r_safety[i] = -1.0
+        elif min_dist < d_danger:
+            r_safety[i] = -((d_danger - min_dist) / zone_width)
 
     return r_mission, r_safety

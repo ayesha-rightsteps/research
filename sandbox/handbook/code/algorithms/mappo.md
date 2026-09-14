@@ -53,8 +53,8 @@ Drones bhi yahi karte hain — baar baar play karte hain, coach evaluate karta h
 - **Entropy bonus:** thodi randomness rakhein — nahi toh drone ek hi cheez karta rahega
 - **Gradient clipping:** ek bada update sab kuch barbaad kar sakta hai — roko
 - **PAH loss (jab PAH ON ho):** do cheezein:
-  1. *Policy gradient:* agar mission reward > safety reward → alpha badhaayein, warna ghataayein
-  2. *Prior loss:* alpha ko 0.5 ke paas rakhne ki chhoti pull
+  1. *Behavioral regression:* PAH ko sikhao ke "jab collision door ho (τ bada) toh α bado, jab paas ho (τ chota) toh α ghato". Ek target α* compute hota hai τ se, aur PAH usi ke paas jaata hai.
+  2. *Prior loss:* alpha ko 0.5 ke paas rakhne ki chhoti pull — collapse rokne ke liye
 
 ### MAPPO — PAH ke saath ya bina
 

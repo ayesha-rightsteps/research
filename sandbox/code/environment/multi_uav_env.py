@@ -167,11 +167,11 @@ class MultiUAVEnv(gym.Env):
             clearances = self._obstacle_clearances(i)
 
             base = np.concatenate([
-                self.drone_pos[i],   # 2  — own position
-                self.drone_vel[i],   # 2  — own velocity
-                rel_target,          # 2  — relative target position
-                clearances,          # 4  — N/S/E/W obstacle clearance
-            ])                       # = 10 total
+                self.drone_pos[i] / self.world_size,    # 2  — own position      [0, 1]
+                self.drone_vel[i] / self.max_speed,     # 2  — own velocity      [-1, 1]
+                rel_target        / self.world_size,    # 2  — relative target   [-1, 1]
+                clearances,                             # 4  — clearances (already [0,1])
+            ])                                          # = 10 total
 
             if self.cg is not None:
                 nbr_obs = self.cg.neighbor_obs(i, self.drone_pos, self.drone_vel)
@@ -188,23 +188,49 @@ class MultiUAVEnv(gym.Env):
         """
         Returns (rewards, r_mission, r_safety) — all shape (n_drones,).
 
-        When PAH is active the caller uses r_mission + r_safety directly and
-        computes the combined reward via learned α.  When PAH is off, fixed
-        α=0.5 is used here.  Keeping both components allows thesis logging
-        of per-objective returns regardless of which mode is running.
+        r_mission : negative normalised distance to assigned target    in [-1, 0]
+        r_safety  : graded collision / proximity penalty               in [-1, 0]
+                      -1.0  on actual collision (hard boundary)
+                      linear ramp toward -1 inside the danger zone
+                       0    when clear of all threats
+
+        The danger zone spans [collision_radius, 3 × collision_radius].
+        A graded r_safety gives PAH a useful gradient signal before a
+        collision happens — a binary -1-on-contact gives no signal during
+        the approach phase, which starves PAH of training signal.
+
+        Combined reward uses fixed α = 0.5 (PAH overrides this from outside).
         """
-        r_mission = np.zeros(self.n_drones, dtype=np.float32)
-        r_safety  = np.zeros(self.n_drones, dtype=np.float32)
+        r_mission  = np.zeros(self.n_drones, dtype=np.float32)
+        r_safety   = np.zeros(self.n_drones, dtype=np.float32)
+        d_danger   = self.collision_radius * 3.0
+        zone_width = d_danger - self.collision_radius
 
         for i in range(self.n_drones):
-            target_idx  = self.assignment[i]
-            dist        = np.linalg.norm(self.drone_pos[i] - self.target_pos[target_idx])
+            # ---- mission: negative normalised distance to assigned target ----
+            target_idx   = self.assignment[i]
+            dist         = np.linalg.norm(self.drone_pos[i] - self.target_pos[target_idx])
             r_mission[i] = -dist / self.world_size
 
-            if self._drone_collision(i) or self._obstacle_collision(i):
-                r_safety[i] = -1.0
+            # ---- safety: closest threatening object (drone or obstacle) ----
+            min_dist = float('inf')
 
-        # Fixed α=0.5 combined reward (PAH overrides this from outside)
+            for j in range(self.n_drones):
+                if j == i:
+                    continue
+                min_dist = min(min_dist,
+                               np.linalg.norm(self.drone_pos[i] - self.drone_pos[j]))
+
+            for obs_pos in self.obstacle_pos:   # empty loop when n_obstacles == 0
+                min_dist = min(min_dist,
+                               np.linalg.norm(self.drone_pos[i] - obs_pos))
+
+            if min_dist < self.collision_radius:
+                r_safety[i] = -1.0                                   # hard collision
+            elif min_dist < d_danger:
+                r_safety[i] = -((d_danger - min_dist) / zone_width) # graded proximity
+
+        # Fixed α = 0.5 combined reward (PAH overrides this from outside)
         rewards = 0.5 * r_mission + 0.5 * r_safety
         return rewards, r_mission, r_safety
 

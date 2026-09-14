@@ -397,12 +397,37 @@ class MAPPO:
                         tau_flat[idx], d_flat[idx], nc_flat[idx]
                     )  # (B, 1)
 
-                    # Policy gradient for PAH:
-                    #   ∂E[r]/∂α = E[(r_mission − r_safety)]
-                    # So we minimise −(r_m − r_s) * α  (gradient ascent on E[r])
-                    pah_pg   = -((rm_flat[idx] - rs_flat[idx]).unsqueeze(-1) * alpha).mean()
-                    pah_prior = self.pah_wrapper.pah.compute_prior_loss(alpha)
-                    pah_loss  = pah_pg + pah_prior
+                    # Behavioral regression target for PAH.
+                    #
+                    # A raw (r_mission − r_safety) * α gradient causes reward
+                    # hacking: the agent can inflate return by pushing α toward
+                    # the less-negative component regardless of true urgency.
+                    # Instead, we supervise α toward a physical target derived
+                    # from collision-imminence (τ) and conflict count (n):
+                    #
+                    #   α_target = α_min + (α_max − α_min) · τ_norm · (1 − 0.3·n_norm)
+                    #
+                    # τ_norm = 1 → safe (no imminent collision) → α_target → α_max
+                    # τ_norm = 0 → collision now              → α_target → α_min
+                    # n_norm high → many conflicts             → α pulled lower
+                    #
+                    # This matches Option-C spirit (supervised target) while keeping
+                    # PAH input-driven and fully differentiable. Prior loss adds a
+                    # second pull toward 0.5 to prevent constant-α collapse.
+                    pah_min = self.pah_wrapper.pah.alpha_min
+                    pah_max = self.pah_wrapper.pah.alpha_max
+                    horizon = self.pah_wrapper.normalizer.horizon
+                    n_max   = max(self.pah_wrapper.normalizer.n_drones - 1, 1)
+
+                    with torch.no_grad():
+                        tau_n    = (tau_flat[idx] / horizon).clamp(0.0, 1.0)
+                        nc_n     = (nc_flat[idx]  / n_max  ).clamp(0.0, 1.0)
+                        a_target = pah_min + (pah_max - pah_min) * tau_n * (1.0 - 0.3 * nc_n)
+                        a_target = a_target.unsqueeze(-1).clamp(pah_min, pah_max)
+
+                    pah_regression = nn.functional.mse_loss(alpha, a_target)
+                    pah_prior      = self.pah_wrapper.pah.compute_prior_loss(alpha)
+                    pah_loss       = pah_regression + pah_prior
 
                     loss = loss + pah_loss
                     pah_losses.append(pah_loss.item())
