@@ -1,0 +1,51 @@
+# Stage 2 — 5 drones, moving targets, few obstacles, conflict graph ON
+# PAH: OFF in this config (plain MAPPO baseline first)
+#
+# Sequence: run this first to confirm plain MAPPO works in Stage 2 conditions.
+# Only after success here → run stage2_pah.yaml (PAH ON).
+# Reason: if PAH + Stage 2 both fail together, we can't tell what broke.
+#
+# Changes from Stage 1:
+#   n_drones:       3 → 5
+#   n_obstacles:    0 → 5
+#   target_speed:   0 → 1.0  (targets drift slowly, bounce off walls)
+#   max_steps:      300 → 500  (more time — 5 drones, harder task)
+#   total_episodes: 5000 → 8000
+#   use_pah:        false (plain MAPPO — PAH in stage2_pah.yaml)
+#   use_conflict_graph: false → true (conflict graph ON from Stage 2)
+
+env:
+  n_drones:           5
+  n_obstacles:        5       # few obstacles — Poisson-disk placed
+  world_size:         500.0
+  max_speed:          5.0
+  max_steps:          500     # more budget: 5 drones + moving targets + obstacles
+  target_radius:      25.0    # keep same as Stage 1 training curriculum value
+  collision_radius:   3.0
+  success_bonus:      20.0
+  use_hungarian:      true
+  use_conflict_graph: true    # conflict graph ON — obs_dim = 30
+  target_speed:       1.0     # targets drift at 1 m/step (20% of drone max_speed)
+
+mappo:
+  lr:         0.0003
+  gamma:      0.99
+  lam:        0.95
+  clip_eps:   0.2
+  vf_coef:    0.5
+  ent_coef:   0.003   # validated in Stage 1 — keep until there's a reason to change
+  n_epochs:   10
+  batch_size: 64
+  use_pah:    false   # PAH OFF — plain MAPPO baseline
+
+training:
+  total_episodes:   8000    # harder task → more episodes
+  rollout_steps:    512
+  eval_every:       100
+  eval_episodes:    20
+  save_every:       500
+  seed:             42
+
+paths:
+  results_dir:  code/results
+  run_name:     stage2_plain_seed42
