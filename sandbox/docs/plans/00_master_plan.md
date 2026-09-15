@@ -28,6 +28,17 @@ task does not help prove or disprove that claim, it is out of scope.
    before any policy is trained on it. Most "RL won't learn" bugs are env bugs.
 4. **One change at a time, always against a baseline.** Standard MAPPO → + assignment
    → + conflict graph → + PAH. Each step is a controlled experiment.
+
+   **This also applies inside a single stage, not just across the B1→M progression.**
+   When a training run fails and you're debugging it (wrong hyperparameter, missing
+   reward term, whatever), change **one thing**, re-run, read the result, *then*
+   decide the next change. This has been violated three times already
+   (`sessions/2026-09-14.md`/`2026-09-15.md` — v3 bundled 4 changes including an
+   untested `ent_coef` guess that caused its own new failure; v4 bundled 2 changes
+   that happened to both work, so we still don't know if one alone would have been
+   enough). It has cost at least one full wasted training run so far. Before
+   starting a new run mid-debugging, write down: "this run changes X only, to test
+   hypothesis Y" — if you can't fill that in with a single X, split it into two runs.
 5. **Multi-seed or it didn't happen.** Every reported number is mean ± spread over
    ≥ 5 seeds. A single-seed result is a debugging aid, not a finding.
 6. **Scope discipline.** 2D only. ≤ 8 drones. No features beyond the synopsis.

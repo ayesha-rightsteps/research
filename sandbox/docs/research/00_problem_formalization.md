@@ -55,7 +55,7 @@ Centralized training, decentralized execution (CTDE), standard for MAPPO.
 | `v_max` | 5 u/s | 5 m/s | Conservative cruise speed for a small multirotor (e.g. DJI Mini class) in a constrained urban area |
 | `d_col` | 2 u | 2 m | Separation threshold — roughly 2 × typical small-drone radius |
 | `d_safe` | 3 u | 3 m | ≈ stopping distance at v_max with moderate deceleration |
-| `arrival_radius` | 5 u | 5 m | Target acquired when drone centre within 5 m of target — realistic GPS accuracy margin |
+| `arrival_radius` | 5 u (final eval) / **25 u (training curriculum)** | 5 m / 25 m | 5 m is the realistic GPS-accuracy value for final evaluation. Training uses 25 m (5% of `world_size`) — Stage 1 got 0% success for 3000+ episodes at 5 m (1% of the 500 m world), too tight for an untrained policy to ever reach by chance. Tighten toward 5 m across later curriculum stages as the policy matures. **Must be defended to the supervisor as a curriculum choice, not the final metric** — see `04_open_questions_for_supervisor.md`. |
 | `dt` | 0.1 s | 100 ms control loop | Standard autopilot update rate |
 | `T_max` | 300 steps | 30 s per episode | Enough for a drone at v_max to cross the workspace ~1.5 times |
 
@@ -84,10 +84,14 @@ place them on top of drone start positions. Poisson disk guarantees navigable co
 of width ≥ `r_obs_min` — a physically meaningful constraint. This is the standard
 method in robotics path-planning literature (Bridson 2007).
 
-> Implementation note: `_random_layout()` in `multi_uav_env.py` currently uses
-> rejection sampling with per-entity minimum distance checks. This must be updated to
-> enforce the **inter-obstacle** minimum distance `r_obs_min` explicitly (current code
-> only enforces separation from drones/targets). See next-steps in `sessions/`.
+> **Implemented** (2026-09-15): `MultiUAVEnv._place_obstacles_poisson()` in
+> `multi_uav_env.py` enforces `r_obs_min = 2 × collision_radius` between obstacles
+> and `collision_radius` from every drone/target position, with rejection sampling
+> up to `max_tries = 1000` and silent reduction of `K` if the world is too crowded.
+> Uses `collision_radius` as the stand-in for `d_safe` since the codebase does not
+> currently distinguish `d_safe` from `d_col` (see the parameter table in Section 8) —
+> both map to the single `collision_radius` constructor argument. `n_obstacles = 0`
+> in Stage 1, so this has no effect until Stage 2+.
 
 ---
 
@@ -224,6 +228,35 @@ by a constant (DA-MAPPO divides by 50) to keep magnitudes reasonable.
 **Note on the split:** for the α-weighting to be meaningful, `r_mission` must contain
 *only* task-progress terms and `r_safety` *only* safety terms. Terms like the step
 penalty are mission-side. This clean separation is what lets α trade the two off.
+
+### 7.3 As actually implemented in Stage 1 (2026-09-15) — simplified subset
+
+Sections 7.1/7.2 above are the full proposed design. What Stage 1 (`multi_uav_env.py`,
+no obstacles, no PAH yet) actually runs is a **smaller, empirically-tuned subset** —
+most of 7.1/7.2's terms (arrival bonus, hover, team term, CPA proximity, boundary
+penalty, smoothness) are not yet implemented. Do not assume the fuller table above is
+what produced the Stage-1 results in `code/notebooks/v3/v3-output/`.
+
+```
+r_mission = 0.4 · r_progress + 0.3 · r_dist
+r_progress = (v_i · direction_to_target) / v_max        ∈ [-1, 1]
+r_dist     = -dist_to_target / world_size                ∈ [-1, 0]
+r_safety   = graded proximity penalty (Section 7.2's "Inter-drone hard penalty" +
+             "Obstacle graded penalty" collapsed into one linear ramp, see
+             `_compute_rewards()` in multi_uav_env.py)
+rewards    = r_mission + 0.3 · r_safety                  (no-PAH combination)
+           + success_bonus (20.0) once, when all drones reach their targets
+```
+
+`r_progress` was added 2026-09-15 after the original `r_dist`-only formula (matching
+7.1's "Progress" row structurally, but without the `κ_prog · (d_prev − d_curr)` delta
+form) produced 0% success for 3000+ episodes — see `sessions/2026-09-15.md` Parts 1-2
+for the diagnosis. `success_bonus` was added for the same reason: a pure shaping
+reward gave the policy no distinct signal for *arriving*, only for *being close*.
+
+The fuller 7.1/7.2 design (arrival bonus, CPA term, etc.) is still the target for
+Stage 2+ once obstacles and moving targets are introduced — revisit then, and update
+this section when it changes again instead of letting code and doc drift apart.
 
 ---
 

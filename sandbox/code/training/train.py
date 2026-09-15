@@ -48,6 +48,8 @@ def make_env(cfg: dict, seed: int) -> MultiUAVEnv:
         target_radius=e["target_radius"],
         collision_radius=e["collision_radius"],
         use_conflict_graph=use_cg,
+        success_bonus=e.get("success_bonus", 0.0),
+        use_hungarian=e.get("use_hungarian", True),
         seed=seed,
     )
 

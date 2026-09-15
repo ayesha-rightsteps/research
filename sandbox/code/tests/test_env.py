@@ -215,3 +215,103 @@ def test_timeout_truncates_episode():
             break
         _, _, terminated, truncated, _ = env.step(np.zeros((3, 2)))
     assert truncated, "Episode should have truncated after max_steps"
+
+
+# ──────────────────────────────────────────────
+# 9. Success bonus (added 2026-09-15 — without it, Stage 1 got 0% success)
+# ──────────────────────────────────────────────
+
+def test_success_bonus_awarded_on_arrival():
+    """Reaching the target must add success_bonus to both rewards and r_mission."""
+    env_bonus = MultiUAVEnv(n_drones=1, n_obstacles=0, use_conflict_graph=False,
+                             success_bonus=10.0, seed=0)
+    env_plain = MultiUAVEnv(n_drones=1, n_obstacles=0, use_conflict_graph=False,
+                             success_bonus=0.0, seed=0)
+    for env in (env_bonus, env_plain):
+        env.reset()
+        env.drone_pos[0]  = env.target_pos[env.assignment[0]].copy()
+        env.drone_vel[:]  = 0.0
+
+    _, r_bonus, _, _, info_b = env_bonus.step(np.zeros((1, 2)))
+    _, r_plain, _, _, info_p = env_plain.step(np.zeros((1, 2)))
+
+    assert info_b["all_targets_reached"] and info_p["all_targets_reached"]
+    assert r_bonus[0] - r_plain[0] == pytest.approx(10.0, abs=1e-4), (
+        "success_bonus should add exactly to the reward when all targets are reached"
+    )
+
+
+def test_no_success_bonus_when_not_reached():
+    """success_bonus must not leak into the reward when targets are not reached."""
+    env = MultiUAVEnv(n_drones=1, n_obstacles=0, use_conflict_graph=False,
+                       success_bonus=10.0, seed=0)
+    env.reset()
+    env.drone_pos[0] = env.target_pos[env.assignment[0]] + np.array([50.0, 0.0])
+    _, rewards, _, _, info = env.step(np.zeros((1, 2)))
+    assert not info["all_targets_reached"]
+    assert rewards[0] < 5.0, "No bonus should be applied when the target isn't reached"
+
+
+# ──────────────────────────────────────────────
+# 10. use_hungarian ablation flag (added 2026-09-15, see notebooks/v3/ablation/)
+# ──────────────────────────────────────────────
+
+def test_use_hungarian_true_can_reassign():
+    """With Hungarian ON, the assignment is free to change step to step."""
+    env = MultiUAVEnv(n_drones=3, n_obstacles=0, use_hungarian=True, seed=3)
+    env.reset()
+    first = env.assignment.copy()
+    for _ in range(20):
+        env.step(env.action_space.sample())
+    # Not asserting it DID change (may coincidentally stay the same) — only that
+    # the mechanism is live: it must equal a fresh Hungarian solve on current state.
+    np.testing.assert_array_equal(env.assignment, env._hungarian_assignment())
+
+
+def test_use_hungarian_false_keeps_fixed_assignment():
+    """With Hungarian OFF, the assignment must be the fixed identity pairing,
+    set once at reset() and never re-solved in step()."""
+    env = MultiUAVEnv(n_drones=4, n_obstacles=0, use_hungarian=False, seed=4)
+    env.reset()
+    np.testing.assert_array_equal(env.assignment, np.arange(4))
+    for _ in range(20):
+        env.step(env.action_space.sample())
+        np.testing.assert_array_equal(env.assignment, np.arange(4))
+
+
+# ──────────────────────────────────────────────
+# 11. Poisson-disk obstacle placement (added 2026-09-15)
+# ──────────────────────────────────────────────
+
+def test_obstacles_respect_minimum_separation():
+    """Every pair of obstacles must be >= 2*collision_radius apart, and every
+    obstacle >= collision_radius from every drone/target position at reset."""
+    for seed in range(10):
+        env = MultiUAVEnv(n_drones=3, n_obstacles=5, collision_radius=3.0, seed=seed)
+        env.reset()
+        obstacles = env.obstacle_pos
+        r_obs_min = 2.0 * env.collision_radius
+
+        for i in range(len(obstacles)):
+            for j in range(i + 1, len(obstacles)):
+                d = np.linalg.norm(obstacles[i] - obstacles[j])
+                assert d >= r_obs_min - 1e-6, (
+                    f"seed={seed}: obstacles {i},{j} are {d:.2f} apart, "
+                    f"need >= {r_obs_min}"
+                )
+
+        existing = np.concatenate([env.drone_pos, env.target_pos])
+        for obs_pos in obstacles:
+            d = np.min(np.linalg.norm(existing - obs_pos, axis=-1))
+            assert d >= env.collision_radius - 1e-6, (
+                f"seed={seed}: obstacle too close to a drone/target ({d:.2f})"
+            )
+
+
+def test_obstacle_placement_never_raises_when_crowded():
+    """A tiny world with many obstacles must degrade gracefully (fewer obstacles),
+    never raise — matches the documented 'reduce K silently' behaviour."""
+    env = MultiUAVEnv(n_drones=2, n_obstacles=50, world_size=30.0,
+                       collision_radius=3.0, seed=0)
+    env.reset()   # must not raise
+    assert len(env.obstacle_pos) <= 50

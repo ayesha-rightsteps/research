@@ -17,7 +17,12 @@ hai, aur kya galtiyan nahi karni.
   1. Pehle design likhein (formulation), phir code
   2. Pehle purana result reproduce karein, phir naya banayein
   3. Environment ko test karke pakka karein, phir RL lagayein
-  4. Ek baar mein ek cheez badlein, hamesha baseline ke saath compare karein
+  4. Ek baar mein ek cheez badlein, hamesha baseline ke saath compare karein.
+     Yeh sirf bade stages (B1→M) pe nahi — **ek stage ke andar debugging karte
+     waqt bhi** lagu hota hai. Teen baar tod chuke hain yeh rule (v3 mein 4
+     changes ek saath, ek untested guess ne naya failure banaya). Agla run
+     shuru karne se pehle likho: "yeh run sirf X badalta hai, Y test karne ke
+     liye" — agar ek X mein nahi likh sakte, do runs mein todo.
   5. Har result kam se kam 5 seeds pe (warna wo result nahi hai)
   6. Scope tight — sirf 2D, max 8 drones, koi extra feature nahi
   7. Session log mein sach likhein — fail hue experiments bhi

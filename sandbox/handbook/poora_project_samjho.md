@@ -3,10 +3,19 @@
 
 ---
 
-> **Yeh file kya hai?**
-> Is file mein poora project start se end tak explain kiya gaya hai.
-> Har cheez ka matlab, har cheez ka kisi doosri cheez se kya connection hai.
-> Isko parhne ke baad aapko poori picture mil jaayegi.
+> **Yeh file kya hai, aur `research/concept.md` se kaise alag hai?**
+> `research/concept.md` = **research ka idea** — asli duniya ka problem, PAH kyun
+> zaroori hai, kaise test karenge. Chhota, 5 minute mein padh lo, koi code nahi.
+>
+> **Yeh file** = **code ka guided tour** — har Python file (`multi_uav_env.py`,
+> `mappo.py`, `conflict_graph.py`, `pah.py`, `train.py`) andar se kaise kaam
+> karta hai, sab ek dusre se kaise judte hain. Lamba hai, detail mein hai.
+>
+> **Pehle `concept.md` padho (kyun), phir yeh file (kaise).**
+>
+> *Note (2026-09-15): is file ke kuch hisse purane ho gaye the (Stage 1 status,
+> world size, PAH ka gradient formula) — un sab ko update kar diya gaya hai
+> taaki yahan likha jo abhi code mein hai wahi ho.*
 
 ---
 
@@ -78,7 +87,7 @@ Drones ko sikhane ke liye pehle ek "duniya" chahiye jahan woh khelein.
 
 Sochiye ek video game map — upar se dekhein:
 - Drones upar se dikhte hain (top-down view)
-- World 100×100 units ka square hai
+- World 500×500 units ka square hai (1 unit = 1 metre — 500m × 500m area)
 - Drones move karte hain, targets hain, obstacles hain
 
 Yeh duniya Python mein bani hai — real physics nahi (simple 2D), lekin thesis ke liye kaafi hai.
@@ -117,14 +126,24 @@ Stage 2 mein 20 aur numbers add hote hain (conflict neighbors ke baare mein).
 
 Reward = drone ko "feedback" — acha kiya ya bura?
 
+**Update (2026-09-15):** shuru mein sirf distance-based reward tha — usse Stage 1
+3000+ episodes tak 0% success raha (policy ko "sahi direction" ka koi signal
+nahi milta tha, sirf "kitna door ho"). Do cheezein add ki gayin: `r_progress`
+(velocity target ki taraf hai ya nahi) aur `success_bonus` (target pe pahunchne
+ka ek bada +reward). Ab yehi asli formula hai:
+
 ```python
-r_mission = -distance_to_target / world_size   # jitna door, utna negative
-r_safety  = -1.0  agar collision hua, warna 0.0
+r_progress = dot(velocity, direction_to_target) / max_speed   # -1 se +1
+r_dist     = -distance_to_target / world_size                 # -1 se 0
+r_mission  = 0.4 × r_progress + 0.3 × r_dist
 
-# Combine (PAH ke bina):
-reward = 0.5 × r_mission + 0.5 × r_safety
+r_safety   = graded penalty: 0 (safe) se -1 (collision), beech mein linear ramp
 
-# Combine (PAH ke saath):
+# Combine (PAH ke bina — Stage 1):
+reward = r_mission + 0.3 × r_safety
+reward += success_bonus (20.0)  jab sab drones apne target pe pahunch jaayein
+
+# Combine (PAH ke saath — Stage 2+):
 reward = α × r_mission + (1-α) × r_safety
 ```
 
@@ -463,28 +482,45 @@ Agar α ≈ 0.5 → prior_loss = 0        → koi penalty nahi
 
 Yeh kyun? Reward hacking rokne ke liye. PAH seekh sakta tha ke "hamesha 0.9 do" — mission reward zyada hoti toh PAH exploitative behavior seekhta. Prior loss use rokta hai.
 
-### PAH ko gradient kaise milta hai?
+### PAH ko gradient kaise milta hai? (Option B — 2026-09-14/15 se yehi hai)
 
-PAH seekhta hai in do losses se:
+⚠️ **Purani baat (galat, ab code mein nahi hai):** pehle socha tha `pah_loss =
+-(r_mission - r_safety) × α` use karenge — matlab jo bhi step ka reward zyada
+achha lage, α usi taraf ghuma do. Yeh **reward hacking** nikla — PAH sirf
+apna number achha dikhane ke liye α ghumata, actually behtar behave kiye bina.
+Manish ne yeh pakda (`sessions/2026-09-14.md` Part 2), aur fix kiya (Part 3).
 
-**1. Policy Gradient Loss:**
+**Ab kya hota hai — Option B:**
+
+PAH seekhta hai `r_mission`/`r_safety` se nahi, balke **advantage** se (yaani
+"yeh action expected se kitna behtar tha" — poore future ka hisaab, sirf abhi
+ka reward nahi). Do alag advantages banti hain:
+
 ```
-pah_loss = -(r_mission - r_safety) × α
+A_mission = GAE(r_mission)   ← mission ke liye "yeh kitna behtar tha"
+A_safety  = GAE(r_safety)    ← safety ke liye "yeh kitna behtar tha"
 
-Matlab:
-  Agar r_mission > r_safety:
-    → Mission better hai → alpha badhao → drone target pe focus kare
-  
-  Agar r_safety > r_mission (ya r_safety sirf penalty hai):
-    → Safety zyada urgent → alpha ghatao → drone collision bachaye
+w_adv = α × A_mission + (1-α) × A_safety
+
+Actor loss = PPO-clip(ratio, w_adv)   ← normal PPO jaisa, bas advantage weighted hai
 ```
 
-**2. Prior Loss:**
+**Farak kya hai:** α ab apna khud ka reward inflate nahi kar sakta — wo sirf
+yeh decide karta hai policy **kis direction mein** improve kare (mission ki
+taraf ya safety ki taraf), poore trajectory ke outcome se, ek single step ke
+reward se nahi. Isiliye yeh asli learning hai, cheating nahi.
+
+**Prior Loss** (waisa hi raha):
 ```
 prior_loss = 0.01 × (α - 0.5)²
 ```
+Yeh α ko 0.5 ke paas thoda kheenchta hai — bahut zyada 0.1 ya 0.9 pe atak
+(collapse) na jaaye, isके liye.
 
-Total PAH loss = policy_gradient + prior_loss
+Total PAH loss = prior_loss (Option B mein sirf yehi PAH-specific loss hai;
+`w_adv` ke through gradient normal PPO actor loss mein hi aa jaata hai).
+
+Poora design/reasoning: `docs/research/01_pah_design.md` Section 9.
 
 ---
 
@@ -614,15 +650,21 @@ Yeh poora map samjho — kaun si cheez kaun si cheez ko call karti hai:
 Drones ko seedha mushkil situation mein nahi daala — phased approach:
 
 ```
-Stage 1 (DONE ✅):
+Stage 1 (DONE ✅, par ek check baaki hai):
   - 3 drones, 3 targets
   - Koi obstacles nahi
+  - World 500m × 500m, target_radius=25m (training curriculum value)
   - Conflict graph: OFF
-  - PAH: OFF (fixed α=0.5)
+  - PAH: OFF (fixed reward = r_mission + 0.3×r_safety)
   - Goal: kya MAPPO kuch seekh sakta hai?
-  - Result: 100% success from episode 300!
+  - Result: 100% success, 0% collision — HAR EK checkpoint pe, 5000 episodes
+    (code/notebooks/v3/v3-output/history.json)
+  - ⚠️ Itna perfect result suspicious hai — kya yeh Hungarian assignment ki
+    wajah se hai ya task itna aasaan hai ki kuch bhi kaam kar jaata? Ablation
+    notebook bana hai (`code/notebooks/v3/ablation/`) jo yeh test karega —
+    Manish Kaggle pe chalayenge, result abhi pending hai.
 
-Stage 2 (NEXT):
+Stage 2 (NEXT — ablation result aane ke baad):
   - 5 drones, 5 targets
   - Obstacles hain
   - Conflict graph: ON (obs = 30 numbers)
@@ -690,10 +732,12 @@ sandbox/
     → Actor + Critic + RolloutBuffer + PPO update
     → MPS (M3 GPU) support
 
-✅  Stage 1 Training (Kaggle T4 GPU pe run hua)
-    → 3000 episodes, 3 drones, no obstacles
-    → Result: 100% success from episode 300!
-    → Checkpoints: ep500 se ep3000 tak, final_model.pt
+✅  Stage 1 Training (local + Kaggle, validated v4 version)
+    → 5000 episodes, 3 drones, no obstacles, world 500m×500m
+    → r_progress + success_bonus add karne ke baad hi seekha (pehle 0% tha)
+    → Result: 100% success, 0% collision — har checkpoint pe (code/notebooks/v3/v3-output/)
+    → ⏳ Ablation pending: assignment mechanism actually zaroori hai ya nahi, check baaki
+    → Checkpoints: ep500 se ep5000 tak, final_model.pt
 
 ✅  Conflict Graph bana (conflict_graph.py)
     → CPA math se collision pairs detect karta hai

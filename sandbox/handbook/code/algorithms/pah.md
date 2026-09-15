@@ -73,34 +73,47 @@ r = α × r_mission + (1-α) × r_safety
 
 **`get_diagnostics()`** — thesis figures banane ke liye data: α histogram, α vs τ scatter, etc.
 
-### 4. `split_reward()` — environment se do alag rewards
+### 4. Reward split — ab sirf environment mein hota hai
 
-Environment pehle ek combined reward deta tha. Ab:
-- `r_mission` — drone target se kitna door hai (negative distance)
-- `r_safety` — koi takkar hua? (-1.0) ya safe (0.0)
+Pehle `pah.py` mein ek `split_reward()` function tha jo environment ki reward
+logic **dobara likhta tha** — do jagah ek hi cheez, jo alag-alag ho sakti thi
+(aur ho gayi thi). 2026-09-15 ko hata diya gaya — `r_mission`/`r_safety` sirf
+`multi_uav_env.py::_compute_rewards()` mein bante hain, ek hi jagah, aur PAH
+unhe `step()` ke info dict se seedha leta hai. Do copies rakhna hi bugs ka
+sabse asaan tareeqa hai — ab sirf ek hai.
 
-Yeh dono alag log hote hain toh thesis mein hum show kar sakte hain: "mission reward aisa tha, safety reward aisa tha."
+## PAH kaise train hota hai (Option B, 2026-09-14/15 se)
 
-## PAH kaise train hota hai?
+⚠️ **Purana tareeqa (ab nahi hai):** `r = α × r_mission + (1-α) × r_safety`
+pehle GAE se pehle banaya jaata tha — matlab α seedha reward ko badal deta tha
+jo agent accumulate karta. Yeh reward-hacking tha (dekho `research/01_pah_design.md`).
 
-PAH **MAPPO ke saath** train hota hai — alag nahi. Jab PPO update hota hai:
-1. Old rollout mein stored `r_mission` aur `r_safety` nikaalein
+**Ab kya hota hai:**
+1. `r_mission` aur `r_safety` **alag-alag** GAE se guzarte hain →
+   `A_mission`, `A_safety` (do advantage streams, ek hi critic baseline share karte hain)
 2. Current PAH se alpha recompute karein (with gradients)
-3. `r = α × r_mission + (1-α) × r_safety` banayein
-4. GAE chalayein, PPO loss banayein, prior loss add karein
-5. Ek hi optimizer mein actor + PAH dono update ho jaate hain
+3. `w_adv = α × A_mission + (1-α) × A_safety` banayein
+4. Normal PPO-clip loss isi `w_adv` pe lagta hai (α reward pe nahi, **advantage** pe lagta hai)
+5. Sirf prior loss (`0.01 × (α-0.5)²`) PAH-specific extra loss hai
+6. Ek hi optimizer mein actor + PAH dono update ho jaate hain
+
+**Farak:** α ab yeh decide nahi karta agent ka **accumulated return** kitna
+dikhta hai (jo cheat kiya ja sakta tha) — sirf yeh decide karta hai policy
+**kis taraf improve kare**. Poora reasoning: `docs/research/01_pah_design.md`
+Section 9.
 
 ## Files ka connection
 
 ```
 multi_uav_env.py
-   ↓  r_mission, r_safety (info dict mein)
+   ↓  r_mission, r_safety (info dict mein, step() se)
+mappo.py (RolloutBuffer.compute_gae_components)
+   ↓  A_mission, A_safety (do alag GAE streams)
 pah.py (PAHWrapper)
-   ↓  compute_alpha() → alpha
-   ↓  combine_rewards() → r_combined
-mappo.py (MAPPO update)
-   ↓  compute_alpha_gradient() → prior_loss
-   → actor + PAH jointly updated
+   ↓  compute_alpha_gradient() → alpha (with gradient)
+mappo.py (MAPPO.update — actor loss)
+   ↓  w_adv = α·A_mission + (1-α)·A_safety → PPO-clip loss
+   → actor + PAH jointly updated (prior_loss alag se add hoti hai)
 ```
 
 ## Mushkil lafz

@@ -26,7 +26,8 @@ class MultiUAVEnv(gym.Env):
     def __init__(self, n_drones=3, n_obstacles=3, world_size=100.0,
                  max_speed=5.0, max_steps=300, collision_radius=3.0,
                  target_radius=5.0, use_conflict_graph=True,
-                 horizon=3.0, seed=None):
+                 horizon=3.0, success_bonus=0.0, use_hungarian=True,
+                 seed=None):
 
         super().__init__()
 
@@ -38,6 +39,14 @@ class MultiUAVEnv(gym.Env):
         self.collision_radius    = collision_radius
         self.target_radius       = target_radius
         self.use_conflict_graph  = use_conflict_graph
+        self.success_bonus       = success_bonus
+        # Ablation switch (see docs/research/03_baseline_specs.md, baseline B1):
+        # True  = per-step optimal Hungarian assignment (default, matches DA-MAPPO)
+        # False = fixed identity pairing decided once at reset(), never re-solved —
+        #         used to test whether the assignment mechanism actually matters.
+        # Ported from code/notebooks/v3/ablation/kaggle_stage1_ablation.ipynb (2026-09-15)
+        # so this capability lives in tested code, not only in a throwaway notebook.
+        self.use_hungarian       = use_hungarian
 
         # Observation size depends on whether conflict graph is used
         # Base: pos(2) + vel(2) + rel_target(2) + clearances(4) = 10
@@ -85,16 +94,24 @@ class MultiUAVEnv(gym.Env):
 
         # Place drones and targets randomly, keeping them apart
         all_positions = self._sample_non_overlapping(
-            self.n_drones + self.n_drones + self.n_obstacles,
+            self.n_drones + self.n_drones,
             min_dist=self.collision_radius * 2
         )
 
         self.drone_pos    = all_positions[:self.n_drones].copy()
         self.target_pos   = all_positions[self.n_drones:2*self.n_drones].copy()
-        self.obstacle_pos = all_positions[2*self.n_drones:].copy()
+        self.obstacle_pos = self._place_obstacles_poisson(
+            np.concatenate([self.drone_pos, self.target_pos]), self.n_obstacles
+        )
         self.drone_vel    = np.zeros((self.n_drones, 2), dtype=np.float32)
 
-        self.assignment = self._hungarian_assignment()
+        # Ablation: fixed identity pairing (drone i -> target i) when Hungarian is
+        # off. Positions are sampled in arbitrary order, so this is a genuine
+        # (usually non-optimal) pairing, not a disguised optimal one.
+        self.assignment = (
+            self._hungarian_assignment() if self.use_hungarian
+            else np.arange(self.n_drones)
+        )
 
         if self.cg is not None:
             self.cg.update(self.drone_pos, self.drone_vel)
@@ -115,8 +132,10 @@ class MultiUAVEnv(gym.Env):
         # Keep drones inside the world
         self.drone_pos = np.clip(self.drone_pos, 0.0, self.world_size)
 
-        # Reassign targets every step (DA-MAPPO style)
-        self.assignment = self._hungarian_assignment()
+        # Reassign targets every step (DA-MAPPO style) — unless the ablation
+        # flag is off, in which case the assignment fixed at reset() is kept.
+        if self.use_hungarian:
+            self.assignment = self._hungarian_assignment()
 
         # Update conflict graph with new positions and velocities
         if self.cg is not None:
@@ -131,6 +150,16 @@ class MultiUAVEnv(gym.Env):
         timeout        = self.step_count >= self.max_steps
         terminated     = all_reached or any_collision
         truncated      = timeout
+
+        # Success bonus: a one-time reward when every drone reaches its target.
+        # Validated empirically (2026-09-15, v2->v4 Kaggle runs): without it,
+        # Stage-1 training got 0% success for 3000+ episodes — a purely
+        # distance-shaped reward gives the policy no reason to actually arrive
+        # and hold, vs. hovering nearby. Added to r_mission (a mission outcome,
+        # not a safety one) so it flows into the PAH-weighted reward correctly.
+        if all_reached and self.success_bonus:
+            r_mission = r_mission + self.success_bonus
+            rewards   = rewards + self.success_bonus
 
         info = {
             "all_targets_reached": all_reached,
@@ -188,8 +217,15 @@ class MultiUAVEnv(gym.Env):
         """
         Returns (rewards, r_mission, r_safety) — all shape (n_drones,).
 
-        r_mission : negative normalised distance to assigned target    in [-1, 0]
-        r_safety  : graded collision / proximity penalty               in [-1, 0]
+        r_mission : 0.4 * r_progress + 0.3 * (negative normalised distance)
+                      r_progress = velocity component toward the assigned
+                      target, normalised to [-1, 1]. Added 2026-09-15 after
+                      Stage-1 training got 0% success for 3000+ episodes on a
+                      pure distance penalty: a policy gets no reward for
+                      *moving the right way*, only for *already being close*,
+                      which gives almost no gradient early in training. See
+                      sessions/2026-09-15.md Part 2 for the diagnosis.
+        r_safety  : graded collision / proximity penalty, in [-1, 0]
                       -1.0  on actual collision (hard boundary)
                       linear ramp toward -1 inside the danger zone
                        0    when clear of all threats
@@ -199,7 +235,12 @@ class MultiUAVEnv(gym.Env):
         collision happens — a binary -1-on-contact gives no signal during
         the approach phase, which starves PAH of training signal.
 
-        Combined reward uses fixed α = 0.5 (PAH overrides this from outside).
+        `rewards` is the validated fixed-weight combination used when PAH is
+        OFF (Stage 1): `r_mission + 0.3 * r_safety`, matching the formula
+        empirically validated in code/notebooks/v3/v3-output (100% success,
+        0% collision over 5000 episodes). When PAH is ON, the caller ignores
+        `rewards` and instead combines `r_mission` / `r_safety` with a
+        learned α — see algorithms/pah.py.
         """
         r_mission  = np.zeros(self.n_drones, dtype=np.float32)
         r_safety   = np.zeros(self.n_drones, dtype=np.float32)
@@ -207,10 +248,16 @@ class MultiUAVEnv(gym.Env):
         zone_width = d_danger - self.collision_radius
 
         for i in range(self.n_drones):
-            # ---- mission: negative normalised distance to assigned target ----
-            target_idx   = self.assignment[i]
-            dist         = np.linalg.norm(self.drone_pos[i] - self.target_pos[target_idx])
-            r_mission[i] = -dist / self.world_size
+            # ---- mission: progress toward target + negative distance ----
+            target_idx = self.assignment[i]
+            rel_target = self.target_pos[target_idx] - self.drone_pos[i]
+            dist       = np.linalg.norm(rel_target)
+            r_dist     = -dist / self.world_size
+
+            direction  = rel_target / (dist + 1e-6)   # unit vector to target
+            r_progress = float(np.dot(self.drone_vel[i], direction) / self.max_speed)
+
+            r_mission[i] = 0.4 * r_progress + 0.3 * r_dist
 
             # ---- safety: closest threatening object (drone or obstacle) ----
             min_dist = float('inf')
@@ -230,8 +277,8 @@ class MultiUAVEnv(gym.Env):
             elif min_dist < d_danger:
                 r_safety[i] = -((d_danger - min_dist) / zone_width) # graded proximity
 
-        # Fixed α = 0.5 combined reward (PAH overrides this from outside)
-        rewards = 0.5 * r_mission + 0.5 * r_safety
+        # Validated fixed-weight combination for the no-PAH (Stage 1) path.
+        rewards = r_mission + 0.3 * r_safety
         return rewards, r_mission, r_safety
 
     # ------------------------------------------------------------------
@@ -318,6 +365,7 @@ class MultiUAVEnv(gym.Env):
 
     # ------------------------------------------------------------------
     # HELPER: sample positions that are not too close to each other
+    # (used for drones + targets)
     # ------------------------------------------------------------------
     def _sample_non_overlapping(self, n, min_dist):
         positions = []
@@ -333,3 +381,46 @@ class MultiUAVEnv(gym.Env):
             if not too_close:
                 positions.append(candidate)
         return np.array(positions, dtype=np.float32)
+
+    # ------------------------------------------------------------------
+    # HELPER: Poisson-disk obstacle placement
+    # (docs/research/00_problem_formalization.md Section 2.2)
+    # ------------------------------------------------------------------
+    def _place_obstacles_poisson(self, existing_points, n_obstacles,
+                                  margin=10.0, max_tries=1000):
+        """
+        Place `n_obstacles` circles such that every obstacle is at least
+        `2 * collision_radius` from every other obstacle, and at least
+        `collision_radius` from every drone/target position already placed.
+
+        Uses `collision_radius` as the stand-in for the design doc's `d_safe`
+        (the codebase does not currently distinguish d_safe from d_col — see
+        docs/research/00_problem_formalization.md Section 8 parameter table).
+
+        Rejection-samples each obstacle up to `max_tries` times. If a valid
+        spot can't be found (world too crowded), that obstacle is skipped
+        rather than raising — matches the documented "reduce K silently"
+        behaviour. Returns an (n, 2) array with n <= n_obstacles.
+        """
+        if n_obstacles <= 0:
+            return np.zeros((0, 2), dtype=np.float32)
+
+        r_obs_min = 2.0 * self.collision_radius
+        obstacles = []
+
+        for _ in range(n_obstacles):
+            for _attempt in range(max_tries):
+                candidate = self.rng.uniform(margin, self.world_size - margin, size=2)
+                if any(np.linalg.norm(candidate - o) < r_obs_min for o in obstacles):
+                    continue
+                if any(np.linalg.norm(candidate - p) < self.collision_radius
+                       for p in existing_points):
+                    continue
+                obstacles.append(candidate)
+                break
+            else:
+                break   # couldn't place this one within max_tries — stop, don't raise
+
+        if not obstacles:
+            return np.zeros((0, 2), dtype=np.float32)
+        return np.array(obstacles, dtype=np.float32)

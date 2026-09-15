@@ -18,9 +18,11 @@ Drones ko seekhna hai — bina kisi se takray — apne apne target tak pahunchna
 Sab settings yahan set hoti hain:
 - Kitne drones? (default: 3)
 - Kitne obstacles? (default: 3)
-- World kitni badi? (default: 100×100)
+- World kitni badi? (default: 100×100 — Stage 1 config mein 500×500 use hota hai)
 - Max speed kitni? (default: 5)
 - Max steps kitne? (default: 300)
+- `success_bonus` (default 0.0) — target pe pahunchne pe ek baar ka bada +reward (2026-09-15 add)
+- `use_hungarian` (default True) — False karo to target assignment reset pe fix ho jaata hai, kabhi badalta nahi (ablation ke liye, dekho `code/notebooks/v3/ablation/`)
 
 ### `reset()` — Naya episode shuru karta hai
 Jab bhi naya game shuru ho — drones, targets, obstacles sab random jagah rakh do.
@@ -52,10 +54,19 @@ SciPy library ka `linear_sum_assignment` use hota hai — ek line ka code!
 Yeh function **teen cheezein return karta hai** (pehle sirf ek thi):
 
 ```
-reward    = 0.5 × r_mission + 0.5 × r_safety   (default jab PAH nahi)
-r_mission = target se distance (negative number)
-r_safety  = graded proximity penalty (neeche explain hai)
+r_progress = velocity target ki taraf hai kitna (-1 se +1)   [2026-09-15 add]
+r_dist     = -distance/world_size (negative number)
+r_mission  = 0.4 × r_progress + 0.3 × r_dist
+r_safety   = graded proximity penalty (neeche explain hai)
+
+reward = r_mission + 0.3 × r_safety                     (default jab PAH nahi)
+reward += success_bonus  jab sab drones target pe pahunch jaayein
 ```
+
+**`r_progress` aur `success_bonus` kyun add kiye?** Pehle sirf `r_dist` tha —
+Stage 1 3000+ episodes tak 0% success raha, kyunki policy ko sirf "kitna door
+hoon" pata chalta tha, "sahi direction mein ja raha hoon" ka koi seedha signal
+nahi tha. Details: `sessions/2026-09-15.md` Parts 1-2.
 
 **r_safety graded kyun hai?**
 Pehle sirf collision pe -1 milta tha — lekin tab tak bohot der ho jaati hai.
@@ -97,6 +108,16 @@ Har step ke baad environment yeh extra information deta hai:
 - **Drone vs Drone:** do drones 3 units se paas aayein toh collision
 - **Drone vs Obstacle:** drone obstacle ke 3 units mein aaye toh collision
 - **Boundary:** drone world ke bahar nahi ja sakta (clip hota hai)
+
+### `_place_obstacles_poisson()` — Obstacles kahan rakhein (2026-09-15 add)
+Pehle obstacles bilkul random jagah rakhe jaate the — kabhi-kabhi do obstacle
+itne paas aa jaate ki beech mein se koi drone nikal hi nahi sakta tha. Ab
+**Poisson disk sampling** use hota hai: har obstacle doosre obstacles se kam se
+kam `2 × collision_radius` door, aur drones/targets se kam se kam
+`collision_radius` door. 1000 baar try karta hai; agar jagah na mile to kam
+obstacles rakh deta hai (crash nahi karta). Stage 1 mein `n_obstacles=0` hai to
+abhi iska koi effect nahi — Stage 2+ ke liye zaroori hoga.
+Detail: `docs/research/00_problem_formalization.md` Section 2.2.
 
 ## Hard words (Glossary mein bhi hain)
 - **Gymnasium:** Python mein RL environment banane ka standard tarika — jaise ek blueprint

@@ -2,27 +2,38 @@
 Priority Arbitration Head (PAH) — the novel contribution of this thesis.
 
 At every decision step, PAH takes three safety-relevant scalars for each drone
-and outputs a dynamic weight α ∈ [0.1, 0.9].
+and outputs a dynamic weight α ∈ [0.1, 0.9], used inside MAPPO's actor loss as:
 
-    r_combined = α · r_mission + (1 − α) · r_safety
+    w_adv = α · A_mission + (1 − α) · A_safety      (Option B, see below)
 
-α → 1  means "focus on reaching the target"
-α → 0  means "focus on avoiding collisions"
+α → 1  means "follow the mission advantage" (push toward reaching the target)
+α → 0  means "follow the safety advantage" (push toward avoiding collisions)
 
-A fixed baseline uses α = 0.5 always.  The thesis claim is that a *learned*,
-*state-dependent* α produces better coordination.  PAH is the mechanism that
-makes α state-dependent.
+A fixed baseline uses α = constant (e.g. 0.5) always.  The thesis claim is
+that a *learned*, *state-dependent* α produces better coordination.  PAH is
+the mechanism that makes α state-dependent.
 
-Implementation follows Option A from docs/research/01_pah_design.md:
-  - α weights the scalar reward (matches the approved synopsis exactly)
-  - α prior pulls toward 0.5 (reduces reward-hacking risk)
+Implementation is Option B from docs/research/01_pah_design.md Section 9
+(decided 2026-09-14, after Option A's naive form and an Option C detour both
+turned out unsound — see that section and sessions/2026-09-14.md Part 2-3 for
+why):
+  - α weights two separate GAE advantage streams (A_mission, A_safety), not
+    the raw scalar reward — this is what actually removes the reward-hacking
+    path, because α now reweights *which direction the policy improves in*,
+    not a return the agent can inflate by moving α
+  - the advantage streams share one critic baseline ("Option B lite" — no
+    second critic head, matches the synopsis's "no extra critic params")
+  - α prior pulls toward 0.5 (prevents constant-α collapse)
   - α clipped to [α_min, α_max] so neither objective is ever fully ignored
   - Inputs normalized before entering the MLP (critical for conditioning)
   - Full diagnostics built in (thesis figures come from here)
+  - `code/algorithms/mappo.py::MAPPO.update()` is where the actual α-weighted
+    loss and GAE-component computation live — this file only defines PAH
+    itself (the network) and the input normalizer/wrapper around it.
 
-If reward hacking is observed during training, switch to Option B
-(two-head advantage weighting) per the design doc.  That change is isolated
-to MAPPO's update method — PAH itself stays the same.
+The classes below (PAHNormalizer, PriorityArbitrationHead, PAHWrapper) are
+unchanged by the Option A -> B switch; only how mappo.py *uses* their output
+changed.
 
 Reference: docs/research/01_pah_design.md
 """
@@ -265,54 +276,3 @@ class PAHWrapper:
     def get_diagnostics(self) -> dict:
         """Return a snapshot of logged α data for plotting."""
         return {k: np.array(v) for k, v in self._diag.items()}
-
-
-# ══════════════════════════════════════════════════════════════════════
-# 4. REWARD SPLITTER — environment returns two separate components
-# ══════════════════════════════════════════════════════════════════════
-
-def split_reward(drone_pos, target_pos, assignment,
-                 obstacle_pos, world_size, collision_radius) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Compute r_mission and r_safety separately for each drone.
-
-    r_mission : progress reward — negative distance to target (normalized)
-    r_safety  : collision penalty — −1 if any collision, else 0
-
-    This function is called by the environment when PAH is active.
-    Keeping the two components separate lets PAH combine them with learned α,
-    and lets us log per-objective curves for thesis analysis.
-
-    Returns
-    -------
-    r_mission : (n_drones,)
-    r_safety  : (n_drones,)   graded in [-1, 0], matches _compute_rewards() in env
-    """
-    n          = len(drone_pos)
-    r_mission  = np.zeros(n, dtype=np.float32)
-    r_safety   = np.zeros(n, dtype=np.float32)
-    d_danger   = collision_radius * 3.0
-    zone_width = d_danger - collision_radius
-
-    for i in range(n):
-        # Mission: negative normalised distance to assigned target
-        dist = np.linalg.norm(drone_pos[i] - target_pos[assignment[i]])
-        r_mission[i] = -dist / world_size
-
-        # Safety: graded proximity — mirrors _compute_rewards() in multi_uav_env.py
-        min_dist = float('inf')
-
-        for j in range(n):
-            if j == i:
-                continue
-            min_dist = min(min_dist, np.linalg.norm(drone_pos[i] - drone_pos[j]))
-
-        for obs_pos in obstacle_pos:
-            min_dist = min(min_dist, np.linalg.norm(drone_pos[i] - obs_pos))
-
-        if min_dist < collision_radius:
-            r_safety[i] = -1.0
-        elif min_dist < d_danger:
-            r_safety[i] = -((d_danger - min_dist) / zone_width)
-
-    return r_mission, r_safety
