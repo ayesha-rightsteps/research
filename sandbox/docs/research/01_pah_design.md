@@ -291,12 +291,54 @@ move it") — the only change is that the prior's target is now informed by τ i
 being a constant, which is necessary because a constant target cannot express "there is a
 real reason to move it based on danger."
 
-**Status:** implemented in `code/algorithms/pah.py`, `code/algorithms/mappo.py`, and
-ported into `code/notebooks/v3/stage2/stage2-pah/{var-alpha,fixed-alpha}/kaggle_stage2_pah.ipynb`.
-Not yet empirically verified at scale (no local training run was done — see
-`sessions/2026-09-16.md` Section 15) — the next Kaggle run is what actually confirms
-whether this closes the gap. If the danger-vs-safe direction is still wrong after this
-fix, the next escalation is a full two-head critic (Section 5B's non-"lite" version) so
-`A_safety` is fit on its own value baseline instead of sharing one with `A_mission` —
-a shared baseline may itself be part of why `A_safety` reads as unreliable/noisy near
-danger.
+**Status: tested, FAILED.** A full 8000-episode Kaggle run with this fix (see
+`sessions/2026-09-17.md`) showed **no improvement** — 11 of 19 danger-close eval
+samples still had α higher than the matched safe-sample α (58%, statistically the same
+rate as the 10/17 = 59% before this fix), still repeatedly saturating at `alpha_max`.
+See Section 9.3 for the root cause and the fix that actually worked.
+
+---
+
+## 9.3 Fix (2026-09-17) — weight the prior toward danger-close samples
+
+**Why 9.2 didn't work.** Comparing logged loss magnitudes from the 9.2 run:
+`actor_loss` ranged -0.10 to 0.02, `pah_loss` (the 9.2 prior, coef 0.05) ranged only
+0.001 to 0.007 — 10-20x smaller. Danger-close states are also a small fraction of any
+training batch (only 19/76 eval checkpoints had *any* valid danger-close sample at
+all). The 9.2 prior averaged `(α − α_target)²` uniformly over the whole batch, so the
+rare danger-close samples' error got diluted by the much larger volume of safe
+samples — the correction barely reached the exact samples it was meant to fix.
+
+**Fix.** `compute_prior_loss` now weights each sample's squared error by how
+dangerous it is, instead of averaging all samples equally:
+
+```
+alpha_target = alpha_min + (alpha_max − alpha_min) · tau_norm
+weight        = 0.1 + 0.9 · (1 − tau_norm)     # 1.0 at danger, 0.1 when safe
+loss          = prior_coef · mean(weight · (α − α_target)²)
+```
+
+`prior_coef` raised `0.05 → 0.15`. Same Option-B-not-C reasoning as 9.2 applies
+unchanged — this is still a regularizer added to the same gradient-trained loss, not
+a replacement for it.
+
+**Status: tested, SUCCESS.** Full 8000-episode Kaggle run (`sessions/2026-09-17.md`),
+same warm-start, same seed=42:
+
+| | 9.2 (unweighted, coef 0.05) | 9.3 (weighted, coef 0.15) |
+|---|---|---|
+| Danger-close samples with wrong direction | 11/19 (58%) | **0/14 (0%)** |
+| Avg success | 89.7% | **91.2%** |
+| Avg collision | 10.3% | **8.8%** |
+
+All 14 valid danger-close eval points showed α correctly *lower* than the matched
+safe-sample α — several saturating at `alpha_min` (0.1) specifically near danger,
+the intended behavior. Success/collision also both modestly improved over the 9.2 run
+and over the B4 (fixed-α=0.5) baseline (89.9% / 10.1%, same seed).
+
+**This does not yet mean "PAH jeeta."** Single seed only — `docs/plans/
+02_experiment_protocol.md`'s pre-registered win condition requires ≥5 seeds with
+non-overlapping error bars before any verdict. Next step: repeat on multiple seeds
+(both PAH and B4) to see if this pattern holds. If it does, this is the first run
+where the core thesis mechanism (α responding correctly to danger) is actually
+demonstrated working, not just hoped for.

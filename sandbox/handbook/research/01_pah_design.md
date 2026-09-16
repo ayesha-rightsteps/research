@@ -55,9 +55,22 @@ Isliye pehle ache se sochiye.
   taraf (mission-focus) ja raha tha, kyunki safety-advantage danger mein aksar zyada
   negative hoti hai aur loss ise "avoid" karne ki koshish karta hai. **Fix:** regularizer
   ab τ (time-to-collision) ke hisaab se target rakhta hai — danger mein α ko low ki
-  taraf khींchta hai, safe mein high ki taraf — na ki hamesha 0.5. Ye Option C nahi
+  taraf kheenchta hai, safe mein high ki taraf — na ki hamesha 0.5. Ye Option C nahi
   bana (jahan α sirf formula copy karta) — policy gradient abhi bhi α ko train karta
   hai, ye regularizer sirf ek soft nudge hai. Agla Kaggle run isko verify karega.
+
+- **Update (2026-09-17) — pehla fix kaam nahi kiya, dusra kiya:** Pehla fix (upar)
+  Kaggle pe test kiya — kaam nahi kiya, wahi ulti-direction problem (58%) waisi hi
+  rahi. Wajah: naya regularizer bhi actor-loss se 10-20x kamzor tha, aur danger
+  wale moments training data ka bahut chhota hissa hote hain — isliye average mein
+  dab jaate the. **Dusra fix:** regularizer ab danger-close samples ko zyada
+  "weight" deta hai (jitna zyada khatra, utna zyada zor), safe samples ko kam.
+  Ye Kaggle pe test kiya — **is baar kaam kiya**: 14 mein se 14 danger-close
+  samples mein α sahi direction mein gaya (pehle 11/19 ulta tha). Success bhi
+  thoda behtar (91.2% vs 89.7%), collision thoda kam (8.8% vs 10.3%). **Abhi bhi
+  single seed hai** — pakka verdict ke liye multi-seed chahiye, lekin ye pehli
+  baar hai jab PAH ka core idea (danger mein safety ki taraf jhukna) genuinely
+  kaam karta dikha, sirf hope nahi.
 
 ## Mushkil lafz
 - **Reward hacking** = reward badhana bina actually achha kaam kiye (cheating)
