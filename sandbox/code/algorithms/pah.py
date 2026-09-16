@@ -113,8 +113,14 @@ class PriorityArbitrationHead(nn.Module):
     hidden_dim : width of the single hidden layer
     alpha_min  : lower clip for α (default 0.1 — always some safety weight)
     alpha_max  : upper clip for α (default 0.9 — always some mission weight)
-    prior_coef : coefficient for the α→0.5 regularizer in the loss
-                 (set to 0 to disable; see compute_prior_loss)
+    prior_coef : coefficient for the τ-informed α regularizer in the loss
+                 (set to 0 to disable; see compute_prior_loss). Raised from
+                 0.01 to 0.05 on 2026-09-16 alongside the flat-0.5 -> τ-target
+                 fix — the old value was tuned against an uninformative prior
+                 and needs to be strong enough to counteract the actor loss's
+                 wrong-direction incentive near danger (see compute_prior_loss
+                 docstring). Re-check against the verification run; this is a
+                 reasoned starting point, not a swept value.
     """
 
     def __init__(
@@ -122,7 +128,7 @@ class PriorityArbitrationHead(nn.Module):
         hidden_dim: int   = 32,
         alpha_min:  float = 0.1,
         alpha_max:  float = 0.9,
-        prior_coef: float = 0.01,
+        prior_coef: float = 0.05,
     ):
         super().__init__()
 
@@ -161,18 +167,42 @@ class PriorityArbitrationHead(nn.Module):
         alpha = self.alpha_min + (self.alpha_max - self.alpha_min) * alpha
         return alpha                                  # (B, 1)
 
-    def compute_prior_loss(self, alpha: torch.Tensor) -> torch.Tensor:
+    def compute_prior_loss(self, alpha: torch.Tensor, tau_norm: torch.Tensor) -> torch.Tensor:
         """
-        Mild regularizer: pull α toward 0.5.
+        Regularizer: pull α toward a τ-informed target, not a flat 0.5.
 
-        Prevents α from collapsing to a constant extreme (a sign of
-        reward hacking).  The coefficient prior_coef controls strength.
+        Why this changed (2026-09-16, see docs/research/01_pah_design.md §9.2
+        and sessions/2026-09-16.md Section 14): with only a flat α→0.5 prior,
+        the *only* signal telling α which way to move near danger was the
+        advantage-mixing actor loss in mappo.py. That loss is minimized by
+        moving α toward whichever advantage component is currently more
+        favorable at a state — and A_safety is routinely more negative than
+        A_mission in near-collision states, because the collision penalty is
+        the sharpest negative signal in the reward. So the undirected prior
+        let the actor loss push α UP (toward mission-focus) specifically near
+        danger — confirmed empirically: 10/17 danger-close eval samples had α
+        higher than the matched safe-sample α, worsening over training,
+        repeatedly saturating at alpha_max right when it should drop toward
+        alpha_min.
 
-        Loss term added to the PPO loss: prior_coef · mean((α − 0.5)²)
+        alpha_target = alpha_min + (alpha_max − alpha_min) · tau_norm
+            tau_norm = 0 (colliding now)  -> target = alpha_min (safety-focus)
+            tau_norm = 1 (no danger)      -> target = alpha_max (mission-focus)
+
+        This keeps α policy-gradient-trained through the Option B pathway
+        (still not Option C — the advantage-mixing loss still shapes α every
+        step, and d_target/n_conflict influence α purely through that learned
+        pathway, unconstrained by this prior). The prior only anchors α's
+        rough direction against τ so the perverse incentive above cannot
+        dominate; the network still has room to refine behavior around that
+        anchor using all three inputs.
+
+        Loss term added to the PPO loss: prior_coef · mean((α − α_target)²)
         """
         if self.prior_coef == 0.0:
             return torch.tensor(0.0, device=alpha.device)
-        return self.prior_coef * (alpha - 0.5).pow(2).mean()
+        alpha_target = self.alpha_min + (self.alpha_max - self.alpha_min) * tau_norm
+        return self.prior_coef * (alpha.squeeze(-1) - alpha_target).pow(2).mean()
 
 
 # ══════════════════════════════════════════════════════════════════════
@@ -261,13 +291,19 @@ class PAHWrapper:
         tau_t:        torch.Tensor,   # (B,)
         d_target_t:   torch.Tensor,   # (B,)
         n_conflict_t: torch.Tensor,   # (B,)
-    ) -> torch.Tensor:
+    ) -> tuple[torch.Tensor, torch.Tensor]:
         """
         Training-time alpha computation (with gradients — for PPO update).
-        Returns alpha of shape (B, 1).
+
+        Returns (alpha, tau_norm):
+            alpha    : (B, 1) — the arbitration weight
+            tau_norm : (B,)   — the normalized tau used to compute it, needed
+                       by PriorityArbitrationHead.compute_prior_loss's
+                       τ-informed target. Returned rather than recomputed so
+                       the caller doesn't duplicate the normalizer call.
         """
         x = self.normalizer.normalize(tau_t, d_target_t, n_conflict_t)
-        return self.pah(x)   # (B, 1)
+        return self.pah(x), x[..., 0]   # (B, 1), (B,)
 
     def reset_diagnostics(self):
         for key in self._diag:

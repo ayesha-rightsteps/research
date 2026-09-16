@@ -47,6 +47,18 @@ Isliye pehle ache se sochiye.
 - **Thesis ke figures:** α vs time-to-collision ka graph, α vs n_conflict, ek episode
   mein α kaise badalta hai. Ye dikhate hain ki α "sahi jagah" priority switch kar raha.
 
+- **Update (2026-09-16) — ek real problem mili aur fix ki:** Option B ban gaya (do
+  advantage streams, ek shared critic) — hacking ka seedha rasta band ho gaya. Lekin
+  8000-episode run check karne pe pata chala ek dusri, chhoti problem hai: α ka sirf
+  "0.5 ki taraf kheencho" wala regularizer tha, jo **direction** kuch nahi batata —
+  sirf collapse rokta hai. Isliye jahan danger tha wahan bhi α kabhi-kabhi **ulti**
+  taraf (mission-focus) ja raha tha, kyunki safety-advantage danger mein aksar zyada
+  negative hoti hai aur loss ise "avoid" karne ki koshish karta hai. **Fix:** regularizer
+  ab τ (time-to-collision) ke hisaab se target rakhta hai — danger mein α ko low ki
+  taraf khींchta hai, safe mein high ki taraf — na ki hamesha 0.5. Ye Option C nahi
+  bana (jahan α sirf formula copy karta) — policy gradient abhi bhi α ko train karta
+  hai, ye regularizer sirf ek soft nudge hai. Agla Kaggle run isko verify karega.
+
 ## Mushkil lafz
 - **Reward hacking** = reward badhana bina actually achha kaam kiye (cheating)
 - **Normalize** = alag-alag scale ke numbers ko ek jaise range (0-1) mein laana

@@ -437,9 +437,9 @@ class MAPPO:
                     # High α → follow mission advantage (get to target)
                     # Low  α → follow safety advantage (avoid collision)
                     # The critic baseline V is shared — α cannot inflate it.
-                    alpha    = self.pah_wrapper.compute_alpha_gradient(
+                    alpha, tau_norm = self.pah_wrapper.compute_alpha_gradient(
                         tau_flat[idx], d_flat[idx], nc_flat[idx]
-                    )  # (B, 1)
+                    )  # (B, 1), (B,)
                     alpha_sq = alpha.squeeze(-1)   # (B,)
 
                     w_adv  = alpha_sq * adv_m_flat[idx] + (1.0 - alpha_sq) * adv_s_flat[idx]
@@ -448,8 +448,12 @@ class MAPPO:
                     surr2  = ratio.clamp(1 - self.clip_eps, 1 + self.clip_eps) * w_adv
                     a_loss = -torch.min(surr1, surr2).mean()
 
-                    # Prior loss — mild pull toward α=0.5, prevents constant-α collapse
-                    pah_prior = self.pah_wrapper.pah.compute_prior_loss(alpha)
+                    # Prior loss — pulls α toward a τ-informed target (low near
+                    # danger, high when safe), not a flat 0.5. See
+                    # PriorityArbitrationHead.compute_prior_loss for why this
+                    # changed — the flat prior let the advantage-mixing loss
+                    # above push α the wrong way near danger.
+                    pah_prior = self.pah_wrapper.pah.compute_prior_loss(alpha, tau_norm)
                     pah_losses.append(pah_prior.item())
 
                     loss = a_loss + self.vf_coef * v_loss + self.ent_coef * e_loss + pah_prior

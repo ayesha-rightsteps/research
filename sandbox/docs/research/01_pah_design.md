@@ -241,3 +241,62 @@ two-head extension is the natural next step.
 **Option C becomes ablation:** train a PAH variant with supervised regression to
 `α* = α_min + (α_max−α_min)·τ_norm·(1−0.3·n_norm)`, compare it to Option B in
 evaluation. This is a valid thesis figure ("learned PAH vs heuristic PAH").
+
+---
+
+## 9.2 Fix (2026-09-16) — flat 0.5 prior let α drift the wrong way near danger
+
+**Empirical finding.** The `stage2-pah/var-alpha` 8000-episode Kaggle run (Section 12/13
+of `sessions/2026-09-16.md`) showed α was *not* collapsing to a constant (0.640–0.871
+across training — the Section 9 prior was doing its one job), but its *direction* was
+often wrong. Checking `eval_alpha_low_tau` (danger-close) against `eval_alpha_high_tau`
+(safe) at the 17 eval points with enough danger-close samples to compare: **10 of 17 had
+α higher near danger than when safe** — the opposite of the intended "α → 0 near danger"
+behavior — and from ~episode 4800 onward α repeatedly saturated at `alpha_max` (0.9)
+exactly in the danger-close bucket, a pattern that strengthened over training rather than
+fading.
+
+**Root cause.** `compute_prior_loss` (Section 9, item 3) only pulled α toward a flat 0.5.
+That made it directionally neutral — it discourages collapse but says nothing about which
+way α should move near danger. The *only* signal that did say something about direction
+was the advantage-mixing actor loss (Section 9, item 2): that loss is minimized by moving
+α toward whichever of `A_mission`/`A_safety` is currently larger at a given state. Near a
+collision, `A_safety` is routinely more negative than `A_mission` — the collision penalty
+is the sharpest negative term in the reward, and the agent is often still making mission
+progress right up to the moment of impact. So the loss's gradient pushed α *up* (toward
+`A_mission`, away from weighting the large negative `A_safety`) exactly in the states
+where it should have pushed down. This is a subtler cousin of the Section 4 reward-hacking
+risk: Option B closes the path where α inflates the *reward the agent accumulates*, but it
+does not by itself stop α from drifting toward whichever advantage term is locally more
+favorable to the *surrogate loss being maximized* — which is a related but distinct
+failure mode, and the flat prior did nothing to counter it.
+
+**Fix.** `compute_prior_loss` now takes `tau_norm` and pulls α toward
+`alpha_target = alpha_min + (alpha_max - alpha_min) · tau_norm` — low near danger
+(`tau_norm → 0`), high when safe (`tau_norm → 1`) — instead of a flat 0.5. `prior_coef`
+raised `0.01 → 0.05` (the old value was tuned against an uninformative target and is not
+assumed strong enough here; re-check against the next run, it is a reasoned starting
+point, not a swept value).
+
+**Why this is still Option B, not a reversion to Option C.** Option C (Section 5C, and
+the ablation above) trains α *only* by regression to a hand-crafted `α*`, with no policy
+gradient into PAH at all — α just copies a formula. Here, the advantage-mixing actor loss
+(Section 9, item 2) still flows gradient into PAH every step, using all three inputs
+(`τ`, `d_target`, `n_conflict`); the τ-informed term is a *regularizer added to that same
+loss*, not a replacement training signal, and it only sees `τ`, not `d_target` or
+`n_conflict` — those two still shape α purely through the learned pathway, unconstrained
+by this prior. This is exactly the mitigation Section 5A already anticipated ("a
+prior/regularizer on α... pulls α toward neutral unless the state gives a real reason to
+move it") — the only change is that the prior's target is now informed by τ instead of
+being a constant, which is necessary because a constant target cannot express "there is a
+real reason to move it based on danger."
+
+**Status:** implemented in `code/algorithms/pah.py`, `code/algorithms/mappo.py`, and
+ported into `code/notebooks/v3/stage2/stage2-pah/{var-alpha,fixed-alpha}/kaggle_stage2_pah.ipynb`.
+Not yet empirically verified at scale (no local training run was done — see
+`sessions/2026-09-16.md` Section 15) — the next Kaggle run is what actually confirms
+whether this closes the gap. If the danger-vs-safe direction is still wrong after this
+fix, the next escalation is a full two-head critic (Section 5B's non-"lite" version) so
+`A_safety` is fit on its own value baseline instead of sharing one with `A_mission` —
+a shared baseline may itself be part of why `A_safety` reads as unreliable/noisy near
+danger.
