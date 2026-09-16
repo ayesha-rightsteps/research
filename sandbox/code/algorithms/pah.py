@@ -113,14 +113,13 @@ class PriorityArbitrationHead(nn.Module):
     hidden_dim : width of the single hidden layer
     alpha_min  : lower clip for α (default 0.1 — always some safety weight)
     alpha_max  : upper clip for α (default 0.9 — always some mission weight)
-    prior_coef : coefficient for the τ-informed α regularizer in the loss
-                 (set to 0 to disable; see compute_prior_loss). Raised from
-                 0.01 to 0.05 on 2026-09-16 alongside the flat-0.5 -> τ-target
-                 fix — the old value was tuned against an uninformative prior
-                 and needs to be strong enough to counteract the actor loss's
-                 wrong-direction incentive near danger (see compute_prior_loss
-                 docstring). Re-check against the verification run; this is a
-                 reasoned starting point, not a swept value.
+    prior_coef : coefficient for the τ-informed, danger-weighted α regularizer
+                 in the loss (set to 0 to disable; see compute_prior_loss).
+                 0.01 (flat-0.5 prior) -> 0.05 (τ-target, 2026-09-16, tested,
+                 NOT enough — see compute_prior_loss docstring §2) -> 0.15
+                 (danger-weighted, 2026-09-17). Each change is a reasoned
+                 starting point, not a swept value — re-check against the
+                 next verification run before trusting it.
     """
 
     def __init__(
@@ -128,7 +127,7 @@ class PriorityArbitrationHead(nn.Module):
         hidden_dim: int   = 32,
         alpha_min:  float = 0.1,
         alpha_max:  float = 0.9,
-        prior_coef: float = 0.05,
+        prior_coef: float = 0.15,
     ):
         super().__init__()
 
@@ -169,40 +168,64 @@ class PriorityArbitrationHead(nn.Module):
 
     def compute_prior_loss(self, alpha: torch.Tensor, tau_norm: torch.Tensor) -> torch.Tensor:
         """
-        Regularizer: pull α toward a τ-informed target, not a flat 0.5.
+        Regularizer: pull α toward a τ-informed target, weighted toward
+        danger-close samples — not a flat 0.5, and not a uniform-weight
+        τ-target either (see the 2026-09-17 update below).
 
-        Why this changed (2026-09-16, see docs/research/01_pah_design.md §9.2
-        and sessions/2026-09-16.md Section 14): with only a flat α→0.5 prior,
-        the *only* signal telling α which way to move near danger was the
-        advantage-mixing actor loss in mappo.py. That loss is minimized by
-        moving α toward whichever advantage component is currently more
-        favorable at a state — and A_safety is routinely more negative than
-        A_mission in near-collision states, because the collision penalty is
-        the sharpest negative signal in the reward. So the undirected prior
-        let the actor loss push α UP (toward mission-focus) specifically near
-        danger — confirmed empirically: 10/17 danger-close eval samples had α
-        higher than the matched safe-sample α, worsening over training,
-        repeatedly saturating at alpha_max right when it should drop toward
-        alpha_min.
+        History (see docs/research/01_pah_design.md §9.2/§9.3,
+        sessions/2026-09-16.md Sections 14-16):
+
+        1. Originally (before 2026-09-16) this pulled α toward a flat 0.5.
+           That left the advantage-mixing actor loss in mappo.py as the only
+           signal shaping α's direction near danger, and that loss can push α
+           the WRONG way there — A_safety is routinely more negative than
+           A_mission in a near-collision state (the collision penalty is the
+           sharpest negative signal in the reward), so minimizing the loss
+           pushed α UP (mission-focus) exactly when it should drop.
+
+        2. First fix (2026-09-16): switched the target from flat 0.5 to a
+           τ-informed one (see alpha_target below) and raised prior_coef
+           0.01 -> 0.05. Tested on a full 8000-episode Kaggle run — did NOT
+           work: 11/19 danger-close eval samples were still wrong (vs 10/17
+           before, statistically the same rate), still saturating at
+           alpha_max. Root cause found by comparing logged loss magnitudes:
+           pah_loss was consistently ~10-20x smaller than actor_loss. Danger-
+           close states are also a small fraction of any training batch
+           (only 19/76 eval checkpoints had ANY valid danger-close sample at
+           all), so an unweighted mean((α − α_target)²) over the whole batch
+           lets the rare danger samples get washed out by the much larger
+           volume of safe samples — the correction barely reaches the exact
+           samples it's meant to fix.
+
+        3. This fix (2026-09-17): weight each sample's squared error by how
+           dangerous it is, so danger-close samples dominate the mean instead
+           of being diluted by it. prior_coef also raised 0.05 -> 0.15.
+           NOT YET VERIFIED — this is reasoned from the logged-magnitude
+           evidence above, not confirmed by a new run. If this still isn't
+           enough, the next escalation is a full two-head critic (separate
+           value baseline for A_safety — see §9.2's closing note).
 
         alpha_target = alpha_min + (alpha_max − alpha_min) · tau_norm
             tau_norm = 0 (colliding now)  -> target = alpha_min (safety-focus)
             tau_norm = 1 (no danger)      -> target = alpha_max (mission-focus)
 
+        weight = 0.1 + 0.9 · (1 − tau_norm)
+            tau_norm = 0 (colliding now)  -> weight = 1.0  (full correction)
+            tau_norm = 1 (no danger)      -> weight = 0.1  (light touch — safe
+                                              samples were not the problem)
+
         This keeps α policy-gradient-trained through the Option B pathway
         (still not Option C — the advantage-mixing loss still shapes α every
         step, and d_target/n_conflict influence α purely through that learned
-        pathway, unconstrained by this prior). The prior only anchors α's
-        rough direction against τ so the perverse incentive above cannot
-        dominate; the network still has room to refine behavior around that
-        anchor using all three inputs.
+        pathway, unconstrained by this prior).
 
-        Loss term added to the PPO loss: prior_coef · mean((α − α_target)²)
+        Loss term added to the PPO loss: prior_coef · mean(weight · (α − α_target)²)
         """
         if self.prior_coef == 0.0:
             return torch.tensor(0.0, device=alpha.device)
         alpha_target = self.alpha_min + (self.alpha_max - self.alpha_min) * tau_norm
-        return self.prior_coef * (alpha.squeeze(-1) - alpha_target).pow(2).mean()
+        weight = 0.1 + 0.9 * (1.0 - tau_norm)
+        return self.prior_coef * (weight * (alpha.squeeze(-1) - alpha_target).pow(2)).mean()
 
 
 # ══════════════════════════════════════════════════════════════════════
