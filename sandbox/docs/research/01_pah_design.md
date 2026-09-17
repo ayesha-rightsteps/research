@@ -322,23 +322,45 @@ loss          = prior_coef · mean(weight · (α − α_target)²)
 unchanged — this is still a regularizer added to the same gradient-trained loss, not
 a replacement for it.
 
-**Status: tested, SUCCESS.** Full 8000-episode Kaggle run (`sessions/2026-09-17.md`),
-same warm-start, same seed=42:
+**Status: tested on seed=42, initially looked like SUCCESS — 5-seed follow-up shows
+PARTIAL / seed-dependent.** First run (8000-episode Kaggle, same warm-start, seed=42,
+`sessions/2026-09-17.md`):
 
-| | 9.2 (unweighted, coef 0.05) | 9.3 (weighted, coef 0.15) |
+| | 9.2 (unweighted, coef 0.05) | 9.3 (weighted, coef 0.15), seed=42 |
 |---|---|---|
 | Danger-close samples with wrong direction | 11/19 (58%) | **0/14 (0%)** |
 | Avg success | 89.7% | **91.2%** |
 | Avg collision | 10.3% | **8.8%** |
 
-All 14 valid danger-close eval points showed α correctly *lower* than the matched
-safe-sample α — several saturating at `alpha_min` (0.1) specifically near danger,
-the intended behavior. Success/collision also both modestly improved over the 9.2 run
-and over the B4 (fixed-α=0.5) baseline (89.9% / 10.1%, same seed).
+All 14 valid danger-close eval points on seed=42 showed α correctly *lower* than the
+matched safe-sample α. This looked like a clean fix — but it was a single seed, and
+the master plan's own rule (≥5 seeds before any result counts) turned out to matter
+here specifically:
 
-**This does not yet mean "PAH jeeta."** Single seed only — `docs/plans/
-02_experiment_protocol.md`'s pre-registered win condition requires ≥5 seeds with
-non-overlapping error bars before any verdict. Next step: repeat on multiple seeds
-(both PAH and B4) to see if this pattern holds. If it does, this is the first run
-where the core thesis mechanism (α responding correctly to danger) is actually
-demonstrated working, not just hoped for.
+**5-seed follow-up (seeds 42–46, `sessions/2026-09-17.md` Sections 10–14):**
+
+| Seed | Direction wrong | Avg success | Avg collision |
+|---|---|---|---|
+| 42 | 0/14 (0%) | 91.2% | 8.8% |
+| 43 | 0/14 (0%) | 91.2% | 8.8% |
+| 44 | 0/16 (0%) | 90.2% | 9.8% |
+| 45 | 11/17 (65%) | 92.6% | 7.4% |
+| 46 | 16/18 (89%) | 90.1% | 9.9% |
+| **Combined** | **27/79 (34%)** | 91.1% avg | 8.9% avg |
+
+**Success/collision are consistently good across all 5 seeds (90–93% range) — that
+part of the fix is solid.** But the direction check — the actual mechanism the fix
+was meant to repair — fails badly in 2 of 5 seeds, and in both failing seeds the
+wrong cases repeatedly saturate at exactly `alpha_max` (0.9), the same clip-ceiling
+pattern from the original bug. `prior_coef=0.15` is evidently not uniformly strong
+enough to win the tug-of-war against the advantage-mixing actor loss (Section 9.2's
+root-cause explanation) — it wins most of the time, not reliably.
+
+**This is not "PAH jeeta," and it is not a clean "PAH haara" either — it's an
+open reliability problem in the current fix.** Next escalation path (already
+anticipated in Section 9.2's closing note): a full two-head critic, so `A_safety`
+gets its own value baseline instead of sharing one with `A_mission` — the shared
+baseline may be why `A_safety`'s signal is unreliable enough, in some seeds, for the
+actor loss to win that tug-of-war. This has not been implemented yet; it requires
+re-running the full seed grid once done, and is a synopsis deviation worth flagging
+to the supervisor before starting (`04_open_questions_for_supervisor.md` Q5).
