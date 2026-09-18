@@ -1,13 +1,17 @@
-# 06 — PAH Validation Pre-Registration (DRAFT — needs Ayesha + Manish sign-off)
+# 06 — PAH Validation Pre-Registration
 
-**Status: proposal, not yet adopted.** Written 2026-09-18 after a session of
-`prior_coef` tuning (0.15 → 0.30 → 0.45) and a two-head-critic attempt both
-failed to reliably fix a seed-dependent bug in PAH's danger-close behavior
-(full history: `sessions/2026-09-18.md`). Reframes the immediate PAH
-validation question narrower and more defensibly, per outside review. This
-document itself changes nothing in `code/` — it is the plan to agree on
-*before* the next code/experiment changes, per `docs/plans/00_master_plan.md`
-("No change to the PAH core idea without asking Ayesha and Manish").
+**Status: ADOPTED — 2026-09-18.**
+Ayesha sign-off: ✓ (2026-09-18, `sessions/2026-09-18.md` Section 22)
+Manish sign-off: ✓ (2026-09-18, same session)
+
+Written 2026-09-18 after a session of `prior_coef` tuning (0.15 → 0.30 →
+0.45) and a two-head-critic attempt both failed to reliably fix a
+seed-dependent bug in PAH's danger-close behavior (full history:
+`sessions/2026-09-18.md`). Reframes the immediate PAH validation question
+narrower and more defensibly, per outside review. This document itself changes
+nothing in `code/` — it is the plan agreed on *before* the next
+code/experiment changes, per `docs/plans/00_master_plan.md` ("No change to the
+PAH core idea without asking Ayesha and Manish").
 
 ---
 
@@ -168,12 +172,11 @@ move the goalposts after seeing results:
 
 ## 8. Open items for Ayesha
 
-- Sign-off on the residual reframing (`α = clip(α_H(τ) + Δα_φ(s), ...)`)
-  as PAH's formulation going forward — this is a change to the core idea
-  and needs her agreement, not just Manish's (`docs/plans/00_master_plan.md`).
-  See `docs/research/04_open_questions_for_supervisor.md` — this may also
-  be worth flagging to the supervisor given it is a deviation from the
-  originally-described "α weights the reward" formulation.
-- Agreement on the narrowed claim in Section 2 — it is honest and
-  defensible, but it is a smaller claim than "PAH learns α from the
-  situation" as originally pitched in the synopsis language.
+- [x] **Sign-off on the residual reframing** (`α = clip(α_H(τ) + Δα_φ(s), ...)`)
+  — **DONE 2026-09-18** (`sessions/2026-09-18.md` Section 22). This is now
+  PAH's official formulation going forward.
+  - Note still open: worth flagging to the supervisor given it deviates from
+    the originally-described "free-form learned α" — see
+    `docs/research/04_open_questions_for_supervisor.md`.
+- [x] **Agreement on the narrowed claim in Section 2** — **DONE 2026-09-18**.
+  Claim is honest and defensible; Ayesha approved the narrower framing.
