@@ -100,11 +100,22 @@ def collect_rollout(env, agent, buffer, rollout_steps, pah_wrapper=None):
     """
     Play rollout_steps steps in the environment and store experience in buffer.
     Returns the last observation (needed for GAE bootstrapping).
-    When pah_wrapper is provided, uses learned α to combine rewards.
+
+    TWO-HEAD CRITIC (2026-09-17): when pah_wrapper is active, get_actions()
+    returns two value estimates (one per critic head) instead of one, and the
+    buffer stores r_mission/r_safety directly — there is no combined reward
+    to build anymore (see mappo.py module docstring). pah_wrapper.compute_alpha
+    is still called here for its side effect of logging into the running
+    diagnostics (pah_wrapper.get_diagnostics(), used for history['alpha_mean']),
+    even though its return value is no longer used to blend a reward.
     """
     obs, _ = env.reset()
     for _ in range(rollout_steps):
-        actions, log_probs, value = agent.get_actions(obs)
+        if pah_wrapper is not None:
+            actions, log_probs, value_m, value_s = agent.get_actions(obs)
+        else:
+            actions, log_probs, value = agent.get_actions(obs)
+
         next_obs, rewards, terminated, truncated, info = env.step(actions)
         done = terminated or truncated
 
@@ -113,13 +124,15 @@ def collect_rollout(env, agent, buffer, rollout_steps, pah_wrapper=None):
         pah_inputs  = info.get("pah_inputs")
 
         if pah_wrapper is not None and pah_inputs is not None:
-            alpha   = pah_wrapper.compute_alpha(
+            pah_wrapper.compute_alpha(
                 pah_inputs["tau"], pah_inputs["d_target"], pah_inputs["n_conflict"]
             )
-            rewards = pah_wrapper.combine_rewards(r_mission, r_safety, alpha)
+            buffer.add(obs, actions, log_probs, done,
+                       r_mission=r_mission, r_safety=r_safety, pah_inputs=pah_inputs,
+                       value_m=value_m, value_s=value_s)
+        else:
+            buffer.add(obs, actions, log_probs, done, rewards=rewards, value=value)
 
-        buffer.add(obs, actions, rewards, value, log_probs, done,
-                   r_mission=r_mission, r_safety=r_safety, pah_inputs=pah_inputs)
         obs = next_obs
         if done:
             obs, _ = env.reset()
@@ -137,7 +150,10 @@ def evaluate(env, agent, n_episodes: int) -> dict:
     for _ in range(n_episodes):
         obs, _ = env.reset()
         while True:
-            actions, _, _ = agent.get_actions(obs)
+            if agent.pah_wrapper is not None:
+                actions, _, _, _ = agent.get_actions(obs)
+            else:
+                actions, _, _ = agent.get_actions(obs)
             obs, _, terminated, truncated, info = env.step(actions)
             if terminated or truncated:
                 if info["all_targets_reached"]:

@@ -33,6 +33,15 @@ Drones bhi yahi karte hain — baar baar play karte hain, coach evaluate karta h
 - Output: **ek number** — yeh situation kitni achi hai?
 - Centralized = training mein sab drones ki info dekh sakta hai
 
+**Update (2026-09-17) — ab Stage 2+ mein DO critics hain, ek nahi:**
+Stage 1 mein (PAH off) abhi bhi ek hi critic hai, pehle jaisa. Lekin Stage 2+
+mein (PAH on) ab **do alag critics** hain — `critic_m` (mission ke liye) aur
+`critic_s` (safety ke liye), har ek apna reward alag se seekhta hai. Pehle
+dono ek hi critic share karte the — check karne pe pata chala ki ye sharing
+kabhi-kabhi problem create kar rahi thi (α galat direction mein ja raha tha
+kuch seeds mein, 5 mein se 2 mein). Ab dono critics independent hain, is
+problem ko root se fix karne ke liye.
+
 ### RolloutBuffer
 - Training ke dauran experience store karta hai
 - `use_pah=True` hoga toh **extra cheezein bhi store karta hai:**
@@ -52,9 +61,10 @@ Drones bhi yahi karte hain — baar baar play karte hain, coach evaluate karta h
 - **PPO clip:** update itna bada mat karein ke policy bigad jaye
 - **Entropy bonus:** thodi randomness rakhein — nahi toh drone ek hi cheez karta rahega
 - **Gradient clipping:** ek bada update sab kuch barbaad kar sakta hai — roko
-- **PAH loss (jab PAH ON ho) — Option B:**
-  1. *Component advantages:* `A_mission` aur `A_safety` alag alag compute hote hain (GAE, same critic baseline). PAH ka α inhe weight karta hai: `w_adv = α·A_mission + (1−α)·A_safety`. Isi weighted advantage pe PPO clip loss lagti hai. Gradient naturally α ke through jaata hai — koi hand-crafted formula nahi, seedha experience se seekhta hai.
-  2. *Prior loss:* alpha ko 0.5 ke paas rakhne ki chhoti pull — collapse rokne ke liye
+- **PAH loss (jab PAH ON ho) — Option B, two-head critic (2026-09-17):**
+  1. *Component advantages:* `A_mission` aur `A_safety` alag alag compute hote hain (GAE), **ab apna-apna critic baseline use karte hain** (`critic_m`, `critic_s` — pehle ek hi shared critic tha). PAH ka α inhe weight karta hai: `w_adv = α·A_mission + (1−α)·A_safety`. Isi weighted advantage pe PPO clip loss lagti hai. Gradient naturally α ke through jaata hai — koi hand-crafted formula nahi, seedha experience se seekhta hai.
+  2. *Do value losses:* `critic_m` aur `critic_s` dono apna-apna loss compute karte hain, dono add hoke total critic loss banta hai
+  3. *Prior loss:* alpha ko τ (danger ka signal) ke hisaab se target ki taraf kheenchti hai — danger mein low, safe mein high. Danger-close samples ko zyada weight milti hai (pehle sirf 0.5 ke paas kheenchta tha, jo direction nahi batata tha)
 
 ### MAPPO — PAH ke saath ya bina
 
@@ -67,8 +77,13 @@ PAH aur actor/critic ek hi optimizer mein hain — ek saath seekhte hain.
 
 ### save() / load()
 - Stage 1: file mein `actor` aur `critic` weights save hote hain
-- Stage 2+: `pah` weights bhi save hote hain
-- Checkpoint keys: `['actor', 'critic', 'pah']`
+- Stage 2+ (PAH on): `critic_m`, `critic_s`, aur `pah` weights save hote hain
+  (`critic` ki jagah do alag critics)
+- Checkpoint keys: Stage 1 → `['actor', 'critic']`, Stage 2+ → `['actor', 'critic_m', 'critic_s', 'pah']`
+- **`load_actor_only()`** — naya method, sirf actor load karta hai (warm-start
+  ke liye, jaise Stage 2b se Stage 2 mein). Dono critics aur PAH hamesha fresh
+  shuru hote hain — purana checkpoint ka `critic` key naye `critic_m`/`critic_s`
+  pe fit nahi baithta
 
 ## Numbers (sanity test se)
 - Actor: **4,996 parameters** (chota network — intentional)

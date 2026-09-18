@@ -21,19 +21,32 @@ why):
     the raw scalar reward — this is what actually removes the reward-hacking
     path, because α now reweights *which direction the policy improves in*,
     not a return the agent can inflate by moving α
-  - the advantage streams share one critic baseline ("Option B lite" — no
-    second critic head, matches the synopsis's "no extra critic params")
-  - α prior pulls toward 0.5 (prevents constant-α collapse)
+  - the advantage streams each have their OWN critic baseline (critic_m,
+    critic_s in mappo.py) as of the 2026-09-17 two-head critic escalation —
+    see docs/research/01_pah_design.md Section 9.2's closing note and
+    sessions/2026-09-17.md Sections 13-15. They originally shared one critic
+    ("Option B lite"), which matched the synopsis's "no extra critic params"
+    more closely, but across 5 seeds that shared baseline let A_safety read
+    as unreliable enough, in some seeds, for the actor loss to push α the
+    wrong way near danger 34% of the time even with the prior below fighting
+    it — so the second critic head was added despite the synopsis deviation
+    (flagged to the supervisor per docs/research/04_open_questions_for_
+    supervisor.md Q5)
+  - α prior (compute_prior_loss below) pulls toward a τ-informed,
+    danger-weighted target — NOT a flat 0.5 anymore. See that method's
+    docstring for the full history (flat 0.5 → τ-informed → danger-weighted,
+    2026-09-16/17) of why each version changed.
   - α clipped to [α_min, α_max] so neither objective is ever fully ignored
   - Inputs normalized before entering the MLP (critical for conditioning)
   - Full diagnostics built in (thesis figures come from here)
-  - `code/algorithms/mappo.py::MAPPO.update()` is where the actual α-weighted
-    loss and GAE-component computation live — this file only defines PAH
-    itself (the network) and the input normalizer/wrapper around it.
+  - `code/algorithms/mappo.py::MAPPO.update()` (and its `_update_pah` helper)
+    is where the actual α-weighted loss and two-head GAE computation live —
+    this file only defines PAH itself (the network) and the input
+    normalizer/wrapper around it.
 
 The classes below (PAHNormalizer, PriorityArbitrationHead, PAHWrapper) are
-unchanged by the Option A -> B switch; only how mappo.py *uses* their output
-changed.
+unchanged by the two-head critic escalation — only how mappo.py's critic(s)
+and GAE computation work around them changed.
 
 Reference: docs/research/01_pah_design.md
 """

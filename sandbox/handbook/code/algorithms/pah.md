@@ -53,8 +53,14 @@ Input (B, 3) → Linear(3→32) → ReLU → Linear(32→1) → Sigmoid → clip
 - Sigmoid se output 0 se 1 ke beech aata hai
 - Phir clip karte hain 0.1 se 0.9 — matlab mission ya safety kabhi bhi **bilkul** ignore nahi hogi
 
-**`compute_prior_loss()`** — ek chhoti si "pull": alpha ko 0.5 ke qareeb rakhti hai training mein.
-Agar yeh nahi hota toh PAH seekh sakta tha ke "hamesha 0.9 do" ya "hamesha 0.1 do" — yeh reward hacking hai.
+**`compute_prior_loss()`** — ek "pull" jo training ko guide karti hai. **Update
+(2026-09-16/17):** pehle ye alpha ko hamesha 0.5 ke qareeb rakhti thi (collapse
+rokne ke liye — PAH "hamesha 0.9 do" seekh na le). Lekin check karne pe pata
+chala ki flat 0.5 sirf collapse rokta hai, **direction** kuch nahi batata —
+isliye danger ke waqt bhi α kabhi-kabhi ulta (mission-focus) ja raha tha. Ab
+ye pull **τ (danger kitna kareeb hai)** ke hisaab se target rakhti hai — danger
+mein low, safe mein high — aur danger-close samples ko zyada weight deti hai
+(warna wo rare samples average mein dab jaate).
 
 ### 3. `PAHWrapper` — PAH ko environment se connect karta hai
 
@@ -90,12 +96,15 @@ jo agent accumulate karta. Yeh reward-hacking tha (dekho `research/01_pah_design
 
 **Ab kya hota hai:**
 1. `r_mission` aur `r_safety` **alag-alag** GAE se guzarte hain →
-   `A_mission`, `A_safety` (do advantage streams, ek hi critic baseline share karte hain)
+   `A_mission`, `A_safety` (do advantage streams). **Update (2026-09-17):** ab
+   dono apna-apna critic baseline use karte hain (`critic_m`, `critic_s`) — pehle
+   ek hi shared critic tha, jo 5 seeds mein se 2 mein α ko galat direction mein
+   bhejne ki wajah ban raha tha (`mappo.md` mein poora detail hai)
 2. Current PAH se alpha recompute karein (with gradients)
 3. `w_adv = α × A_mission + (1-α) × A_safety` banayein
 4. Normal PPO-clip loss isi `w_adv` pe lagta hai (α reward pe nahi, **advantage** pe lagta hai)
-5. Sirf prior loss (`0.01 × (α-0.5)²`) PAH-specific extra loss hai
-6. Ek hi optimizer mein actor + PAH dono update ho jaate hain
+5. Prior loss (danger-weighted, τ-informed target — upar dekhein) PAH-specific extra loss hai
+6. Ek hi optimizer mein actor + dono critics + PAH sab update ho jaate hain
 
 **Farak:** α ab yeh decide nahi karta agent ka **accumulated return** kitna
 dikhta hai (jo cheat kiya ja sakta tha) — sirf yeh decide karta hai policy
@@ -127,6 +136,6 @@ mappo.py (MAPPO.update — actor loss)
 | **Batch (B)** | Ek saath kitne examples process ho rahe hain |
 | **Gradient** | Woh math jo network ko seekhne mein madad karta hai |
 | **No-grad** | Rollout mein gradient nahi chahiye — sirf value chahiye |
-| **Prior coef** | Alpha ke regularizer ka strength — kitni zyada pull toward 0.5 |
+| **Prior coef** | Alpha ke regularizer ka strength — kitni zyada pull hoti hai τ-informed target ki taraf (danger mein low, safe mein high) |
 | **Reward hacking** | Jab PAH seekhe ke ek extreme alpha se zyada reward milta hai aur wahi karna shuru kar de |
 | **Fixed-α baseline** | Comparison model jahan alpha 0.5 par fix hai — PAH ko justify karta hai |
