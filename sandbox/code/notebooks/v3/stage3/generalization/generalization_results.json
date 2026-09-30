@@ -1,0 +1,48 @@
+{
+  "log_std": {
+    "M": [
+      -0.7871148586273193,
+      -0.19545337557792664
+    ],
+    "B4": [
+      -0.4466373324394226,
+      -0.4684571325778961
+    ]
+  },
+  "in_distribution": {
+    "M": {
+      "success": 79.0,
+      "collision": 21.0,
+      "n_episodes": 100,
+      "action_std": 5.0797529220581055
+    },
+    "B4": {
+      "success": 75.0,
+      "collision": 25.0,
+      "n_episodes": 100,
+      "action_std": 4.923488616943359
+    }
+  },
+  "out_of_distribution": {
+    "M": {
+      "success": 67.0,
+      "collision": 33.0,
+      "n_episodes": 100,
+      "action_std": 5.356906890869141
+    },
+    "B4": {
+      "success": 61.0,
+      "collision": 39.0,
+      "n_episodes": 100,
+      "action_std": 5.2132768630981445
+    }
+  },
+  "eval_seeds": [
+    2001,
+    2002,
+    2003,
+    2004,
+    2005
+  ],
+  "note": "Deterministic (mean-action) eval -- NOT the same methodology as this session's training-time stochastic eval logging. See Cell 0."
+}
