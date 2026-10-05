@@ -30,6 +30,12 @@ with 95% Wilson intervals. Follows `docs/plans/02_experiment_protocol.md`.
 | `fig3_stage2_time_path`, `fig4_stage3_time_path` | T_ave and L_ave |
 | `fig5_effect_sizes` | α effect (Stage 2 and Stage 3) vs removing optimal assignment |
 | `fig6_training_curves` | IGAT-MARL Fig. 3 style panels: success, collision and entropy over training, Stage 2 and Stage 3 (training-time eval, see caveat below) |
+| `fig7_comparison_vs_literature` | our results next to DA-MAPPO's Table V (success + collision bars, per-bar config labels) |
+| `fig8_comparison_curves` | fig6-style: our success-rate training curves with the papers' reported levels as horizontal reference bands |
+| `fig9_pah_alpha_behavior` | PAH's mechanism: α in danger vs when safe, Stage 2 and Stage 3 (0/586 wrong direction) |
+| `fig9b_pah_response_curve` | the learned α as a continuous function of time-to-collision (sweep through the head) |
+| `fig10_generalization` | M vs B4, in-distribution vs harder out-of-distribution (held-out seeds) |
+| `table_comparison.md` | the same comparison as a table, with an Environment column |
 | `raw/` | every episode of every model (outcome, steps, path length) |
 
 Figures are saved as `.png` (for documents) and `.svg` (vector).
@@ -71,6 +77,24 @@ Stage 3 (8 drones, 10 obstacles), seed 42:
   not with the paper's `T_ave`/`L_ave`.
 - The ablation here (target stays in the observation, optimal assignment replaced by a fixed pairing) is
   **not** the same manipulation as DA-MAPPO's Table VI (target removed from the observation).
+- **`fig7_comparison_vs_literature` is a context comparison, not head-to-head.** DA-MAPPO runs N=3 drones /
+  30–50 obstacles; ours is N=5–8 / 5–10. More drones vs fewer obstacles pull difficulty in opposite
+  directions, so the raw success bars cannot be ranked directly — the per-bar config labels and the title
+  say so. It shows our Stage 2 sits inside DA-MAPPO's reported band (a pipeline sanity check), nothing more.
+- **`fig8_comparison_curves` cannot show DA-MAPPO's learning curve** — the paper gives only final numbers,
+  so their result is drawn as a horizontal reference band, not a curve. Our curves there are the
+  training-time stochastic eval (same as fig6), so their levels are approximate; the bands are the papers'
+  final numbers at a different scale. Orientation only.
+- **`fig9_pah_alpha_behavior`** is PAH's real contribution: the mechanism adapts α correctly (safety-first
+  in danger, mission-first when safe), 0/586 wrong direction. This is separate from the outcome, where M
+  ties B4 — do not let the figure imply M beats B4 on success. Its danger-state values come from
+  training-time logging (eval_alpha_low_tau); at eval the converged policy rarely enters danger.
+- **`fig9b_pah_response_curve`** is a synthetic sweep of the trained head (not real eval states, which
+  cluster at τ=max because the policy avoids danger). It shows the learned function: α rises smoothly with
+  τ, the learned head is slightly more safety-conservative than the α_safe prior, and conflict count barely
+  moves it (τ dominates). Label it as a response curve, not a measurement of visited states.
+- **`fig10_generalization`** is a single training run (100-episode deterministic eval on held-out seeds).
+  M's edge (−12 vs −14 pts under shift) is a trend, not a win; the gap is small and unreplicated.
 - Still open: Stage 3 has one seed, and the Stage 2 Hungarian ablation has not been run.
 
 ## Models evaluated
