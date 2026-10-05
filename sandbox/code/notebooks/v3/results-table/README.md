@@ -29,6 +29,7 @@ with 95% Wilson intervals. Follows `docs/plans/02_experiment_protocol.md`.
 | `fig2_stage3_success_collision` | grouped bars, Stage 3, error bars = 95% CI |
 | `fig3_stage2_time_path`, `fig4_stage3_time_path` | T_ave and L_ave |
 | `fig5_effect_sizes` | α effect (Stage 2 and Stage 3) vs removing optimal assignment |
+| `fig6_training_curves` | IGAT-MARL Fig. 3 style panels: success, collision and entropy over training, Stage 2 and Stage 3 (training-time eval, see caveat below) |
 | `raw/` | every episode of every model (outcome, steps, path length) |
 
 Figures are saved as `.png` (for documents) and `.svg` (vector).
@@ -60,6 +61,11 @@ Stage 3 (8 drones, 10 obstacles), seed 42:
   episodes that still succeed (L_ave 151 → 276). Single seed; the intervals do not overlap.
 - **These numbers differ from the training logs.** Training-time evaluation sampled stochastic actions on
   20-episode batches. Here the policy is deterministic on 200 episodes. Do not mix the two in one table.
+- **`fig6_training_curves` uses the training-time evaluation** (stochastic actions, 20 episodes per
+  checkpoint, 5-checkpoint moving average), not the deterministic 200-episode protocol, so its levels
+  differ from the tables. Use it for curve shape only. Stage 2 curves overlap; at Stage 3 the
+  no-Hungarian run is lower from the start. Entropy is not quality: the ablation has the lowest
+  entropy at Stage 3 and the worst outcomes.
 - `L_ave` is the per-drone mean path length over successful episodes; DA-MAPPO's write-up says "total by
   all UAVs", and our world units and drone counts differ from theirs. Compare our methods with each other,
   not with the paper's `T_ave`/`L_ave`.

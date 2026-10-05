@@ -103,6 +103,10 @@ our Hungarian ablation at Stage 3, and our α-source comparison at Stage 2.
 
 ![Effect sizes, measured under one protocol](../../code/notebooks/v3/results-table/output/fig5_effect_sizes.png)
 
+**Training curves (IGAT-MARL Fig. 3 style).** Training-time evaluation (stochastic actions, 20 episodes per checkpoint), so levels differ from the deterministic tables; read the shapes only. Stage 2 curves overlap; at Stage 3 the no-Hungarian run is lower from the start; entropy is lowest for the ablation yet its outcomes are worst (entropy is not quality).
+
+![Training curves](../../code/notebooks/v3/results-table/output/fig6_training_curves.png)
+
 *(Corrected: the earlier dark-theme chart in `img/chart_effect_sizes.svg` put DA-MAPPO's 99-point target-removal result next to our assignment ablation as if they were one effect, and used the 0.2-pt α figure from the training logs. It is superseded by the chart above and should not be cited.)*
 
 *(Corrected.)* The chart above shows only effects we measured ourselves under one protocol. Removing
