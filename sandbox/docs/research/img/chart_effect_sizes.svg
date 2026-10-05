@@ -1,0 +1,96 @@
+<svg viewBox="0 0 980 540" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', Courier, monospace">
+
+  <!-- Dark background -->
+  <rect width="980" height="540" rx="12" fill="#1a1f2e"/>
+
+  <!-- Y-axis labels -->
+  <text x="46" y="104" font-size="12" text-anchor="end" fill="#7a8499">100%</text>
+  <text x="46" y="269" font-size="12" text-anchor="end" fill="#7a8499">50%</text>
+  <text x="46" y="434" font-size="12" text-anchor="end" fill="#7a8499">0%</text>
+
+  <!-- Grid lines -->
+  <line x1="52" y1="100" x2="940" y2="100" stroke="#2d3550" stroke-width="1" stroke-dasharray="5,4"/>
+  <line x1="52" y1="265" x2="940" y2="265" stroke="#2d3550" stroke-width="1" stroke-dasharray="5,4"/>
+  <line x1="52" y1="430" x2="940" y2="430" stroke="#4a5568" stroke-width="1.5"/>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- PANEL 1 — DA-MAPPO assignment      -->
+  <!-- ═══════════════════════════════════ -->
+
+  <text x="195" y="58" font-size="15" font-weight="700" text-anchor="middle" fill="#e87070">Δ 99 pts</text>
+
+  <!-- "with" bar: 99% → h=327, top=103 -->
+  <text x="150" y="97" font-size="12" text-anchor="middle" fill="#f8fafc">99%</text>
+  <rect x="115" y="103" width="70" height="327" fill="#d4956e"/>
+
+  <!-- "without" bar: 0% → thin indicator -->
+  <rect x="205" y="427" width="70" height="3" fill="#e87070"/>
+  <text x="240" y="421" font-size="12" text-anchor="middle" fill="#e87070">0%</text>
+
+  <!-- x-axis labels -->
+  <text x="150" y="452" font-size="12" text-anchor="middle" fill="#8892a4">with</text>
+  <text x="240" y="452" font-size="12" text-anchor="middle" fill="#8892a4">without</text>
+
+  <!-- Panel title -->
+  <text x="195" y="480" font-size="12" font-weight="700" text-anchor="middle" fill="#d1d5db">DA-MAPPO — assignment removed</text>
+
+  <!-- Separator -->
+  <line x1="312" y1="58" x2="312" y2="443" stroke="#2d3550" stroke-width="1"/>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- PANEL 2 — Our Hungarian ablation   -->
+  <!-- ═══════════════════════════════════ -->
+
+  <text x="450" y="58" font-size="15" font-weight="700" text-anchor="middle" fill="#f5a623">Δ ~21 pts</text>
+
+  <!-- "ON" bar: 74.8% → h=247, top=183 -->
+  <text x="390" y="177" font-size="12" text-anchor="middle" fill="#f8fafc">74.8%</text>
+  <rect x="355" y="183" width="70" height="247" fill="#3b82f6"/>
+
+  <!-- "OFF" bar: 54.2% → h=179, top=251 -->
+  <text x="510" y="245" font-size="12" text-anchor="middle" fill="#f8fafc">54.2%</text>
+  <rect x="475" y="251" width="70" height="179" fill="#7c3aed"/>
+
+  <!-- x-axis labels -->
+  <text x="390" y="452" font-size="12" text-anchor="middle" fill="#8892a4">ON</text>
+  <text x="510" y="452" font-size="12" text-anchor="middle" fill="#8892a4">OFF</text>
+
+  <!-- Panel title -->
+  <text x="450" y="480" font-size="12" font-weight="700" text-anchor="middle" fill="#d1d5db">Ours — Stage 3, Hungarian ablation</text>
+
+  <!-- Separator -->
+  <line x1="582" y1="58" x2="582" y2="443" stroke="#2d3550" stroke-width="1"/>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- PANEL 3 — Our three α-sources      -->
+  <!-- ═══════════════════════════════════ -->
+
+  <text x="760" y="58" font-size="15" font-weight="700" text-anchor="middle" fill="#5dba8e">Δ 0.2 pts</text>
+
+  <!-- B4: 91.0% → h=300, top=130 -->
+  <text x="665" y="124" font-size="12" text-anchor="middle" fill="#f8fafc">91.0%</text>
+  <rect x="635" y="130" width="60" height="300" fill="#62b4a4"/>
+
+  <!-- H: 90.8% → h=300, top=130 -->
+  <text x="760" y="124" font-size="12" text-anchor="middle" fill="#f8fafc">90.8%</text>
+  <rect x="730" y="130" width="60" height="300" fill="#62b4a4"/>
+
+  <!-- M: 90.9% → h=300, top=130 -->
+  <text x="855" y="124" font-size="12" text-anchor="middle" fill="#f8fafc">90.9%</text>
+  <rect x="825" y="130" width="60" height="300" fill="#62b4a4"/>
+
+  <!-- x-axis labels -->
+  <text x="665" y="452" font-size="12" text-anchor="middle" fill="#8892a4">B4</text>
+  <text x="760" y="452" font-size="12" text-anchor="middle" fill="#8892a4">H</text>
+  <text x="855" y="452" font-size="12" text-anchor="middle" fill="#8892a4">M</text>
+
+  <!-- Panel title -->
+  <text x="760" y="480" font-size="12" font-weight="700" text-anchor="middle" fill="#d1d5db">Ours — Stage 2, three α-sources</text>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- Caption                            -->
+  <!-- ═══════════════════════════════════ -->
+  <text x="490" y="508" font-size="11" text-anchor="middle" fill="#7a8499">DA-MAPPO's ablation moves success by 99 points. Our Hungarian ablation (Stage 3) moves it by ~21 points.</text>
+  <text x="490" y="524" font-size="11" text-anchor="middle" fill="#7a8499">Switching α-source (fixed → formula → learned) moves it by 0.2 — a 500× smaller effect, on the same scale.</text>
+
+</svg>

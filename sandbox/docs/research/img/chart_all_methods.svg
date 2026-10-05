@@ -1,0 +1,78 @@
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,Arial,sans-serif">
+
+  <!-- Background -->
+  <rect width="700" height="420" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="16" y="28" font-size="14" font-weight="600" fill="#111827">Mission success rate — all methods on one scale</text>
+
+  <!-- Vertical axis line -->
+  <line x1="220" y1="40" x2="220" y2="372" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- Grid lines at 25%, 50%, 75%, 100% -->
+  <line x1="330" y1="40" x2="330" y2="372" stroke="#f3f4f6" stroke-width="1"/>
+  <line x1="440" y1="40" x2="440" y2="372" stroke="#f3f4f6" stroke-width="1"/>
+  <line x1="550" y1="40" x2="550" y2="372" stroke="#f3f4f6" stroke-width="1"/>
+  <line x1="660" y1="40" x2="660" y2="372" stroke="#f3f4f6" stroke-width="1"/>
+  <text x="330" y="38" font-size="9" text-anchor="middle" fill="#d1d5db">25%</text>
+  <text x="440" y="38" font-size="9" text-anchor="middle" fill="#d1d5db">50%</text>
+  <text x="550" y="38" font-size="9" text-anchor="middle" fill="#d1d5db">75%</text>
+  <text x="660" y="38" font-size="9" text-anchor="middle" fill="#d1d5db">100%</text>
+
+  <!-- Row 1: EGO-Planner v2: 53% | w=232.1 -->
+  <text x="214" y="66" font-size="11" text-anchor="end" fill="#9ca3af">EGO-Planner v2</text>
+  <rect x="220" y="48" width="233" height="26" rx="3" fill="#9ca3af" fill-opacity="0.5"/>
+  <text x="457" y="66" font-size="11" fill="#9ca3af">53%</text>
+
+  <!-- Row 2: Stage 3 — No Hungarian: 54.2% | w=238.5 — OUR ABLATION -->
+  <text x="214" y="102" font-size="11" text-anchor="end" fill="#7c3aed" font-weight="700">Stage 3 — No Hungarian</text>
+  <rect x="220" y="84" width="238" height="26" rx="3" fill="#7c3aed"/>
+  <text x="462" y="102" font-size="11" fill="#7c3aed" font-weight="600">54.2%</text>
+
+  <!-- Row 3: NavRL: 63% | w=277.2 -->
+  <text x="214" y="138" font-size="11" text-anchor="end" fill="#9ca3af">NavRL</text>
+  <rect x="220" y="120" width="277" height="26" rx="3" fill="#9ca3af" fill-opacity="0.5"/>
+  <text x="501" y="138" font-size="11" fill="#9ca3af">63%</text>
+
+  <!-- Row 4: Stage 3 — M: 74.8% | w=329.1 — OURS -->
+  <text x="214" y="174" font-size="11" text-anchor="end" fill="#1d4ed8" font-weight="700">Stage 3 — M (seed 42)</text>
+  <rect x="220" y="156" width="329" height="26" rx="3" fill="#2563eb"/>
+  <text x="553" y="174" font-size="11" fill="#1d4ed8" font-weight="600">74.8%</text>
+
+  <!-- Row 5: IPPO: 78% | w=343.2 -->
+  <text x="214" y="210" font-size="11" text-anchor="end" fill="#9ca3af">IPPO</text>
+  <rect x="220" y="192" width="343" height="26" rx="3" fill="#9ca3af" fill-opacity="0.5"/>
+  <text x="567" y="210" font-size="11" fill="#9ca3af">78%</text>
+
+  <!-- Row 6: MAPPO: 83% | w=365.2 -->
+  <text x="214" y="246" font-size="11" text-anchor="end" fill="#9ca3af">MAPPO (literature)</text>
+  <rect x="220" y="228" width="365" height="26" rx="3" fill="#9ca3af" fill-opacity="0.5"/>
+  <text x="589" y="246" font-size="11" fill="#9ca3af">83%</text>
+
+  <!-- Row 7: RMAPPO: 85% | w=374 -->
+  <text x="214" y="282" font-size="11" text-anchor="end" fill="#9ca3af">RMAPPO</text>
+  <rect x="220" y="264" width="374" height="26" rx="3" fill="#9ca3af" fill-opacity="0.5"/>
+  <text x="598" y="282" font-size="11" fill="#9ca3af">85%</text>
+
+  <!-- Row 8: Stage 2 — B4/H/M: 91% | w=400.4 — OURS -->
+  <text x="214" y="318" font-size="11" text-anchor="end" fill="#1d4ed8" font-weight="700">Stage 2 — B4 / H / M</text>
+  <rect x="220" y="300" width="400" height="26" rx="3" fill="#2563eb"/>
+  <text x="624" y="318" font-size="11" fill="#1d4ed8" font-weight="600">91.0%</text>
+
+  <!-- Row 9: DA-MAPPO: 99% | w=435.6 -->
+  <text x="214" y="354" font-size="11" text-anchor="end" fill="#065f46" font-weight="700">DA-MAPPO ★</text>
+  <rect x="220" y="336" width="436" height="26" rx="3" fill="#059669"/>
+  <text x="660" y="354" font-size="11" fill="#065f46" font-weight="600">99%</text>
+
+  <!-- Legend -->
+  <rect x="220" y="380" width="10" height="10" rx="2" fill="#2563eb"/>
+  <text x="234" y="389" font-size="10" fill="#6b7280">Our results</text>
+  <rect x="310" y="380" width="10" height="10" rx="2" fill="#7c3aed"/>
+  <text x="324" y="389" font-size="10" fill="#6b7280">Our ablation (Hungarian OFF)</text>
+  <rect x="510" y="380" width="10" height="10" rx="2" fill="#059669"/>
+  <text x="524" y="389" font-size="10" fill="#6b7280">DA-MAPPO</text>
+
+  <!-- Footnote -->
+  <text x="16" y="410" font-size="9" fill="#d1d5db">★ DA-MAPPO: N=3 drones, 30–50 obstacles. Ours: N=5–8 drones, 5–10 obstacles. Scale mismatch — context only, not head-to-head.</text>
+
+</svg>
