@@ -1,5 +1,14 @@
 # 08 — Literature Comparison Artifact (presentation record)
 
+> **Accuracy note, 2026-10-05.** The artifact described below contains two statements that are now
+> known to be misleading: (1) chart 2 and the finding callout set DA-MAPPO's 99-point swing (target
+> removed from the observation) beside our α spread as if both were assignment ablations, and
+> (2) the "0.2 points / 500× smaller" figure came from stochastic training logs; the deterministic
+> 200-episode evaluation gives 1.5–2.0 points (about 10× smaller than the 20.5-point Hungarian
+> effect). Corrected numbers and wording: `09_literature_comparison_report.md` and
+> `code/notebooks/v3/results-table/`. The artifact could not be re-opened for editing from the
+> session that found this, so the link above still shows the old version.
+
 **Link:** https://claude.ai/artifact/GQTD3VBaacCbfNuvEh3cB6
 **Title:** Multi-UAV Literature Comparison
 **Built:** 2026-09-30, for Manish's supervisor meeting the same week.

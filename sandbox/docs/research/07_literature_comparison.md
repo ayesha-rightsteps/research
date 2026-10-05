@@ -1,5 +1,10 @@
 # 07 — Literature Comparison: Our Results vs Two Base Papers
 
+> **Superseded in part, 2026-10-05.** The final numbers and the corrected ablation framing are in
+> `09_literature_comparison_report.md` (see its corrections note) and
+> `code/notebooks/v3/results-table/`. This file's "~0.2 pts" α-spread and its "same kind of
+> ablation" wording are out of date.
+
 **Presentation version:** a visual, chart-based version of this doc exists
 as a private Artifact — https://claude.ai/artifact/GQTD3VBaacCbfNuvEh3cB6
 ("Multi-UAV Literature Comparison"). Built 2026-09-30 for Manish to show
@@ -96,15 +101,21 @@ success or collision within the time limit, same as ours.)
 ### What DA-MAPPO's ablation (Table VI) suggests for us
 
 Their most telling result: **removing the assignment-augmented observation
-drops their success rate to 0%.** This is a much stronger effect than
-anything we have seen from varying `α` (adaptive vs fixed vs formula) — our
-three methods differ by ~0.2 percentage points, nowhere near a 0%-vs-90%
-gap. This lines up with `docs/plans/02_experiment_protocol.md`'s B1/B2/B3
+drops their success rate to 0%.** *(Corrected 2026-10-05: this removes the
+assigned-target information from the observation, so the policy is blind and
+0% is expected by construction. It is a different manipulation from ours,
+which keeps the target in the observation and swaps the optimal per-step
+assignment for a fixed pairing — see `09_literature_comparison_report.md`.)*
+The direction of the lesson still holds: varying `α` (adaptive vs fixed vs
+formula) moves success by only 1.5–2.0 points in our final deterministic
+evaluation (the 0.2 points quoted in earlier drafts came from the stochastic
+training logs), while removing optimal assignment moves it by 20.5 points at
+Stage 3. This lines up with `docs/plans/02_experiment_protocol.md`'s B1/B2/B3
 plan: **the Hungarian-assignment and conflict-graph components are likely
 where the large effect sizes are, not the α-arbitration mechanism** — which
-is exactly what the Stage 2/3 null result (Section 24) already suggested,
-and now has independent support from a paper doing the equivalent ablation
-on the assignment piece specifically.
+is what the Stage 2/3 null result already suggested. DA-MAPPO and our
+ablation agree in direction; they are two experiments, not one effect
+measured twice.
 
 ---
 
