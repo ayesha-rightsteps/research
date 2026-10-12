@@ -1,0 +1,2 @@
+Plain MAPPO | stage 2 | seed 50 | curriculum False
+   101 | succ 40.0% | coll 25.0% (obst 5/5) | timeout 35.0% | alpha 0.500 | 1.0m

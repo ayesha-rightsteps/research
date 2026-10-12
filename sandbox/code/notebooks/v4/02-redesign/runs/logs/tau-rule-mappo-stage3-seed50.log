@@ -1,0 +1,3 @@
+Hand-coded τ-rule MAPPO | stage 3 | seed 50 | curriculum False
+   110 | succ  0.0% | coll 80.0% (obst 16/16) | timeout 20.0% | alpha 0.893 | 0.9m
+   210 | succ  0.0% | coll 80.0% (obst 16/16) | timeout 20.0% | alpha 0.897 | 1.5m
