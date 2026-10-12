@@ -1,0 +1,15 @@
+│ Algorithm    │ MAPPO (PPO)              │ DQN + graph attention             │ MAPPO + PAH                  │
+hum graph attention mechanism kyun sue nahin kar rahay?
+ │ Metrics      │ Success, collision,      │ Reward, loss-of-separation,       │ Success, collision, T_ave,   │
+  │              │ timeout, T_ave, L_ave    │ action bias, edges                │ L_ave                
+  again same igat nahin use hua toh uski metric nahin hain 
+
+
+
+
+
+  abhi jo b kar rahay ho usko likh kar rakho ek dafa hum manish k claude say verify karain gay and us k baad run
+  waghira karain gay
+  pehlay tumhain jo b karna hai plan kar k likh lo implementation hum ek dafa verify karnay k baad karain gay
+  or bat or next time say b4 m h ye sab use karnay ki zarorat nahin jis cheez ka jo naam hai usi say refer karo
+  usko na k nickname bana lokhud say main yad nahin kar sakti  

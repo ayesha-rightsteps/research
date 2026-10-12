@@ -8,6 +8,8 @@ Jab bhi koi word samajh na aaye, yahan dekhein. Alphabet order.
 dekhte hain ki performance kitni giri. Isse pata chalta hai ki wo hissa actually kitna
 zaroori tha. Jaise gaadi se ek pehiya nikaal ke dekhna.
 
+**Active edges** — conflict graph mein ek "edge" matlab do drones jo agle 3 steps mein takraane ke raaste pe hain. Active edges = har step pe aise kitne jore hain, uska average. IGAT-MARL ki ek metric. Kam = drones ek doosre ke raaste mein kam aate hain.
+
 **Actor (MAPPO mein)** — har drone ka "decision-maker" neural network. Input: drone ko
 kya dikh raha hai. Output: ab kahan move karna hai.
 
@@ -35,6 +37,8 @@ session band ho jaaye to dobara zero se shuru na karna pade.
 kuch second mein takkar ho sakti hai**. Baaki sab ignore. Isse cheezein simple rehti
 hain jab drones zyada ho.
 
+**Correlation** — do cheezein saath saath kitna badalti hain, −1 se +1 tak. +1 = ek badhe to doosri bhi badhe; −1 = ek badhe to doosri ghate; 0 = koi rishta nahi. Misaal: v4 diagnostics mein α aur target ki doori ka correlation −0.92 nikla — target door ho to α kam.
+
 **CPA (Closest Point of Approach)** — do drones apne raaste pe chalte rahein to wo
 ek dusre ke **sabse kareeb** kis waqt aur kitni doori pe aayenge. Do numbers:
 DCPA (doori) aur TCPA/`t*` (kitni der mein).
@@ -49,14 +53,20 @@ pehle jodna, phir guna. Hum: pehle 3 drones no obstacles, phir 8 drones dense ob
 **Dec-POMDP** — "multiple agents, sab ko sirf apni aadhi-adhoori info dikhti hai" wale
 problem ka formal naam. Poora: Decentralized Partially Observable Markov Decision Process.
 
+**Deterministic vs stochastic policy** — actor har action ke liye ek bell-curve (Normal distribution) deta hai. *Deterministic* = hamesha curve ka beech wala (mean) action lo — evaluation mein yahi karte hain, taaki nateeja har baar same aaye. *Stochastic* = curve se random action nikaalo — training mein yahi hota hai (exploration). Dono ke numbers alag aate hain, isliye ek table mein mix nahi karte.
+
 **Discount factor (γ, gamma)** — "future reward abhi ke reward se kitna kam important".
 0.99 = future kaafi important. RL ka standard parameter.
+
+**Drone-step** — ek drone ka ek time-step. 8 drones × 50 steps = 400 drone-steps. "1% drone-steps" = har 100 mein se 1 baar kisi drone ke saath woh cheez hui.
 
 **Episode** — ek poora "game" — reset se lekar (sab drones apne target pe pahunch gaye
 YA koi takra gaya YA time khatam) tak.
 
 **GAE (Generalized Advantage Estimation)** — advantage (upar dekhein) ko smooth tarike se
 calculate karne ka tareeqa. Kam shor, better training.
+
+**Gate check** — kuch naya nikaalne se pehle check karna ke code purana, jaana-pehchana nateeja bilkul wahi deta hai. Agar match na ho to wahin ruk jao. v4 ka har notebook isi se shuru hota hai (jaise: nayi copy ne v3 ke 200 mein se 200 episodes bilkul wahi diye).
 
 **Gymnasium** — Python ki ek library jo RL environments ka ek **standard shape** deti
 hai (`reset()`, `step()` functions). Pehle iska naam "OpenAI Gym" tha.
@@ -91,14 +101,16 @@ off-policy hai, hum on-policy.
 (takkar mein kitni der hai, target kitna door, kitne drones kareeb). Output: α.
 Thesis ka novel contribution.
 
-**PPO (Proximal Policy Optimization)** — ek popular, stable RL algorithm. "Policy ko ek
-baar mein zyada mat badlein" — isi rule se stability aati hai (clipping).
+**Percentile** — sab values ko chhote se bade line mein lagao. 10th percentile = woh value jiske neeche 10% values hain; 50th (median) = beech wali; 90th = jiske neeche 90%. "10–90% band" = beech ki 80% values kahan tak phaili hain.
 
 **Point-mass model** — drone ko ek **bindu (dot)** maan lena jiski sirf position aur
 velocity hai — koi size, weight, tilt nahi. 2D research ke liye kaafi.
 
 **Policy (π)** — drone ka "rulebook": is situation mein kya karna hai. Neural network
 ke andar seekha hua hota hai.
+
+**PPO (Proximal Policy Optimization)** — ek popular, stable RL algorithm. "Policy ko ek
+baar mein zyada mat badlein" — isi rule se stability aati hai (clipping).
 
 **PyBullet** — 3D physics engine (gravity, weight, wind). Synopsis mein likha tha lekin
 2D research ke liye zaroorat nahi — hum custom simple env banayenge.

@@ -31,11 +31,12 @@ with 95% Wilson intervals. Follows `docs/plans/02_experiment_protocol.md`.
 | `fig5_effect_sizes` | α effect (Stage 2 and Stage 3) vs removing optimal assignment |
 | `fig6_training_curves` | IGAT-MARL Fig. 3 style panels: success, collision and entropy over training, Stage 2 and Stage 3 (training-time eval, see caveat below) |
 | `fig7_comparison_vs_literature` | our results next to DA-MAPPO's Table V (success + collision bars, per-bar config labels) |
-| `fig8_comparison_curves` | fig6-style: our success-rate training curves with the papers' reported levels as horizontal reference bands |
+| `fig8_comparison_curves` | **superseded by fig11** — drew the paper as 90–99% / 78–85% bands; do not show |
+| `fig11_actual_values_vs_paper` | **main base-paper comparison**: every DA-MAPPO Table V value (ENV-1/2/3) as its own bar, next to ours (Stage 2/3); success + collision |
 | `fig9_pah_alpha_behavior` | PAH's mechanism: α in danger vs when safe, Stage 2 and Stage 3 (0/586 wrong direction) |
 | `fig9b_pah_response_curve` | the learned α as a continuous function of time-to-collision (sweep through the head) |
 | `fig10_generalization` | M vs B4, in-distribution vs harder out-of-distribution (held-out seeds) |
-| `table_comparison.md` | the same comparison as a table, with an Environment column |
+| `table_comparison.md` | the same comparison as a table: actual ENV-1/2/3 values for every paper method, plus ours |
 | `raw/` | every episode of every model (outcome, steps, path length) |
 
 Figures are saved as `.png` (for documents) and `.svg` (vector).
@@ -95,6 +96,9 @@ Stage 3 (8 drones, 10 obstacles), seed 42:
   moves it (τ dominates). Label it as a response curve, not a measurement of visited states.
 - **`fig10_generalization`** is a single training run (100-episode deterministic eval on held-out seeds).
   M's edge (−12 vs −14 pts under shift) is a trend, not a win; the gap is small and unreplicated.
+- **No ranges for the paper (teacher, 2026-10-12).** Plot each reported value, never a "90–99%" band.
+  `fig11` does this; `fig8` (bands) is superseded. All `fig11` paper values were extracted with
+  `pdftotext` from `bin/91` Table V, not typed from memory.
 - Still open: Stage 3 has one seed, and the Stage 2 Hungarian ablation has not been run.
 
 ## Models evaluated

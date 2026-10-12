@@ -1,0 +1,200 @@
+{
+ "D1_collision_kinds": [
+  {
+   "stage": 2,
+   "method": "B4 (fixed \u03b1)",
+   "collisions": 108,
+   "drone_obstacle": 107,
+   "drone_drone": 1,
+   "both": 0,
+   "obstacle_pct": 99.1,
+   "near_goal_pct": 20.4
+  },
+  {
+   "stage": 2,
+   "method": "H (\u03c4-formula)",
+   "collisions": 125,
+   "drone_obstacle": 124,
+   "drone_drone": 1,
+   "both": 0,
+   "obstacle_pct": 99.2,
+   "near_goal_pct": 20.8
+  },
+  {
+   "stage": 2,
+   "method": "M (PAH)",
+   "collisions": 105,
+   "drone_obstacle": 104,
+   "drone_drone": 1,
+   "both": 0,
+   "obstacle_pct": 99.0,
+   "near_goal_pct": 21.9
+  },
+  {
+   "stage": 3,
+   "method": "B4 (fixed \u03b1)",
+   "collisions": 53,
+   "drone_obstacle": 50,
+   "drone_drone": 3,
+   "both": 0,
+   "obstacle_pct": 94.3,
+   "near_goal_pct": 30.2
+  },
+  {
+   "stage": 3,
+   "method": "M (PAH)",
+   "collisions": 56,
+   "drone_obstacle": 56,
+   "drone_drone": 0,
+   "both": 0,
+   "obstacle_pct": 100.0,
+   "near_goal_pct": 39.3
+  },
+  {
+   "stage": 3,
+   "method": "M, no Hungarian",
+   "collisions": 97,
+   "drone_obstacle": 78,
+   "drone_drone": 19,
+   "both": 0,
+   "obstacle_pct": 80.4,
+   "near_goal_pct": 19.6
+  }
+ ],
+ "D4_igat_metrics": [
+  {
+   "stage": 2,
+   "method": "B4 (fixed \u03b1)",
+   "los_per_episode": 0.098,
+   "los_err": 0.0382,
+   "los_per_step": 0.0018,
+   "edges_per_step": 0.0016,
+   "edges_err": 0.0007,
+   "note": "mean \u00b1 std over 5 seeds"
+  },
+  {
+   "stage": 2,
+   "method": "H (\u03c4-formula)",
+   "los_per_episode": 0.064,
+   "los_err": 0.0297,
+   "los_per_step": 0.0012,
+   "edges_per_step": 0.001,
+   "edges_err": 0.0003,
+   "note": "mean \u00b1 std over 5 seeds"
+  },
+  {
+   "stage": 2,
+   "method": "M (PAH)",
+   "los_per_episode": 0.1,
+   "los_err": 0.0489,
+   "los_per_step": 0.0022,
+   "edges_per_step": 0.0014,
+   "edges_err": 0.0007,
+   "note": "mean \u00b1 std over 5 seeds"
+  },
+  {
+   "stage": 3,
+   "method": "B4 (fixed \u03b1)",
+   "los_per_episode": 0.215,
+   "los_err": 0.1661,
+   "los_per_step": 0.0046,
+   "edges_per_step": 0.0039,
+   "edges_err": 0.0028,
+   "note": "mean \u00b1 95% CI over 200 episodes"
+  },
+  {
+   "stage": 3,
+   "method": "M (PAH)",
+   "los_per_episode": 0.185,
+   "los_err": 0.1627,
+   "los_per_step": 0.0034,
+   "edges_per_step": 0.003,
+   "edges_err": 0.0026,
+   "note": "mean \u00b1 95% CI over 200 episodes"
+  },
+  {
+   "stage": 3,
+   "method": "M, no Hungarian",
+   "los_per_episode": 0.87,
+   "los_err": 0.2432,
+   "los_per_step": 0.0366,
+   "edges_per_step": 0.0514,
+   "edges_err": 0.0182,
+   "note": "mean \u00b1 95% CI over 200 episodes"
+  }
+ ],
+ "D2_safety_on_pct_over_training": {
+  "B4-S2": {
+   "min": 0.19,
+   "max": 0.51,
+   "final": 0.49,
+   "obstacle_part_final": 0.49,
+   "drone_part_final": 0.0
+  },
+  "H-S2": {
+   "min": 0.24,
+   "max": 0.48,
+   "final": 0.44,
+   "obstacle_part_final": 0.41,
+   "drone_part_final": 0.03
+  },
+  "M-S2": {
+   "min": 0.23,
+   "max": 0.62,
+   "final": 0.3,
+   "obstacle_part_final": 0.3,
+   "drone_part_final": 0.0
+  },
+  "B4-S3": {
+   "min": 0.81,
+   "max": 1.31,
+   "final": 1.27,
+   "obstacle_part_final": 0.86,
+   "drone_part_final": 0.41
+  },
+  "M-S3": {
+   "min": 0.85,
+   "max": 1.26,
+   "final": 1.07,
+   "obstacle_part_final": 0.97,
+   "drone_part_final": 0.1
+  },
+  "M-noHungarian-S3": {
+   "min": 1.2,
+   "max": 1.71,
+   "final": 1.35,
+   "obstacle_part_final": 0.74,
+   "drone_part_final": 0.61
+  }
+ },
+ "D3_alpha_final": {
+  "H-S2": {
+   "p10": 0.9,
+   "p50": 0.9,
+   "p90": 0.9,
+   "lt_05_pct": 0.0,
+   "lt_08_pct": 0.02
+  },
+  "M-S2": {
+   "p10": 0.742,
+   "p50": 0.892,
+   "p90": 0.9,
+   "lt_05_pct": 0.0,
+   "lt_08_pct": 13.13
+  },
+  "M-S3": {
+   "p10": 0.7,
+   "p50": 0.871,
+   "p90": 0.9,
+   "lt_05_pct": 0.03,
+   "lt_08_pct": 26.16
+  },
+  "M-noHungarian-S3": {
+   "p10": 0.703,
+   "p50": 0.9,
+   "p90": 0.9,
+   "lt_05_pct": 0.7,
+   "lt_08_pct": 17.76
+  }
+ }
+}
