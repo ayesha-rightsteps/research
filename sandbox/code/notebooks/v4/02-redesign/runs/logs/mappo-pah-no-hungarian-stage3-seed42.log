@@ -1,0 +1,17 @@
+MAPPO + PAH (Hungarian off) | stage 3 | seed 42 | curriculum False
+   103 | succ  0.0% | coll 95.0% (obst 16/19) | timeout  5.0% | alpha 0.895 | 0.7m
+   215 | succ  0.0% | coll 95.0% (obst 19/19) | timeout  5.0% | alpha 0.876 | 1.0m
+   320 | succ  0.0% | coll 95.0% (obst 16/19) | timeout  5.0% | alpha 0.776 | 1.2m
+   425 | succ  0.0% | coll 100.0% (obst 19/20) | timeout  0.0% | alpha 0.770 | 1.4m
+   543 | succ  0.0% | coll 100.0% (obst 20/20) | timeout  0.0% | alpha 0.822 | 1.6m
+   669 | succ  0.0% | coll 100.0% (obst 17/20) | timeout  0.0% | alpha 0.822 | 1.8m
+   802 | succ  0.0% | coll 95.0% (obst 18/19) | timeout  5.0% | alpha 0.836 | 2.1m
+   915 | succ  0.0% | coll 100.0% (obst 20/20) | timeout  0.0% | alpha 0.799 | 2.3m
+  1027 | succ  0.0% | coll 95.0% (obst 19/19) | timeout  5.0% | alpha 0.815 | 2.6m
+  1127 | succ  0.0% | coll 95.0% (obst 19/19) | timeout  5.0% | alpha 0.833 | 2.7m
+  1232 | succ  0.0% | coll 95.0% (obst 19/19) | timeout  5.0% | alpha 0.770 | 3.0m
+  1353 | succ  0.0% | coll 100.0% (obst 19/20) | timeout  0.0% | alpha 0.834 | 3.1m
+  1470 | succ  0.0% | coll 100.0% (obst 20/20) | timeout  0.0% | alpha 0.818 | 3.3m
+  1582 | succ 10.0% | coll 90.0% (obst 18/18) | timeout  0.0% | alpha 0.805 | 3.5m
+  1696 | succ  5.0% | coll 95.0% (obst 18/19) | timeout  0.0% | alpha 0.805 | 3.6m
+  1803 | succ 10.0% | coll 90.0% (obst 18/18) | timeout  0.0% | alpha 0.768 | 3.8m

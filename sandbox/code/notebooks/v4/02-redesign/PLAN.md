@@ -136,3 +136,27 @@ v4/02-redesign/
 
 Nothing to run by hand. During Steps 3–4 the laptop stays on the charger with the lid open (~15 min, then
 ~4–5 h — can run overnight).
+
+---
+
+## 10. Step 3 outcome — settings frozen for every method (2026-10-12, before any non-Plain run)
+
+Sanity / tuning on **Plain MAPPO only**, sanity seeds 101/102 (disjoint from main seeds 42–51); details and every
+attempt in `sessions/2026-10-12.md` Sections 21.1–21.5.
+
+1. **Environment bug found and fixed:** targets reflected at the disc radius (12) while drones collide at 15, so
+   hovering drones were dragged into discs. Targets now reflect at 12 + 3 + 5 = 20; the env test now checks the
+   property that matters and fails on the old code. All sanity runs before the fix are discarded.
+2. **Solvability check:** a hand-written LiDAR rule (policy's observation only) reaches 82% success with zero
+   obstacle collisions at Stage 2 / 20 discs → the environment and sensing work.
+3. **Density (changed from Section 1):** with 20 / 40 discs Plain MAPPO learns too slowly (Stage 2 31–41%,
+   Stage 3 13.5–15%; longer training, entropy 0.01, hidden 256 each help little or are unstable). With
+   **Stage 2: 10 discs, Stage 3: 20 discs** it learns real avoidance: deterministic 200-episode evaluation
+   61.5–71% (Stage 2) and 42–53.5% (Stage 3) vs a beeline policy's 36.5% and 10%. Failures are still obstacle
+   collisions, so mission-vs-safety conflict is real. The denser settings (20 / 40 discs) are kept for the
+   Phase 3 density sweep.
+4. **Safety reward (changed from v3):** shaping starts 20 units from the nearest drone or disc surface (v3: 9),
+   collision r_safety = −10 (v3: −1). Chosen because it helped Plain MAPPO at every density tested.
+5. **Unchanged:** entropy 0.003, hidden 64, 8000 episodes, no curriculum, all other PPO settings.
+
+These settings are now fixed for all five methods (fairness rule, Section 3). Main training = Step 4.
