@@ -148,7 +148,7 @@ class Agent:
                  fixed_alpha=0.5, pah_hidden=32, alpha_min=0.1, alpha_max=0.9, pah_delta_scale=0.2,
                  pah_prior_coef=0.15, pah_horizon=3.0, pah_d_max=500.0 * 1.4142136,
                  lr=3e-4, gamma=0.99, lam=0.95, clip_eps=0.2, vf_coef=0.5, ent_coef=0.003,
-                 n_epochs=10, batch_size=64):
+                 n_epochs=10, batch_size=64, hidden=64):
         assert heads in (1, 2) and actor_adv in ('mixed', 'plain') and alpha_source in ('fixed', 'taurule', 'pah')
         self.n_drones, self.heads, self.actor_adv, self.alpha_source = n_drones, heads, actor_adv, alpha_source
         self.fixed_alpha = fixed_alpha
@@ -157,8 +157,8 @@ class Agent:
         self.n_epochs, self.batch_size = n_epochs, batch_size
 
         global_dim = n_drones * obs_dim
-        self.actor = Actor(obs_dim, act_dim).to(DEVICE)
-        self.critic = (Critic(global_dim) if heads == 1 else Critic2(global_dim)).to(DEVICE)
+        self.actor = Actor(obs_dim, act_dim, hidden).to(DEVICE)          # hidden=64 is the v3 size
+        self.critic = (Critic(global_dim, hidden) if heads == 1 else Critic2(global_dim, hidden)).to(DEVICE)
         params = list(self.actor.parameters()) + list(self.critic.parameters())
         self.normalizer = PAHNormalizer(pah_horizon, pah_d_max, n_drones)
         if alpha_source == 'pah':

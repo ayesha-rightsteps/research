@@ -15,6 +15,7 @@ Usage:
   STAGE:  2 (5 drones, 20 discs) | 3 (8 drones, 40 discs)
   --curriculum: base-paper obstacle curriculum (only if Step 3 needs it; off by default)
   --danger R, --collision-penalty P: safety-reward shape (Step 3 tuning; defaults = v3: 9, 1)
+  --obstacles N, --ent-coef C, --hidden H: Step 3 tuning (defaults: stage's disc count, 0.003, 64)
 """
 import os, sys, json, time
 import numpy as np
@@ -106,6 +107,12 @@ def main():
     out_dir = sys.argv[sys.argv.index('--out') + 1] if '--out' in sys.argv else \
         os.path.join(HERE, 'runs', 'stage{}'.format(stage), method, 'seed-{}'.format(seed))
     curriculum = '--curriculum' in sys.argv
+    n_obstacles_override = int(sys.argv[sys.argv.index('--obstacles') + 1]) if '--obstacles' in sys.argv else None
+    if n_obstacles_override is not None:
+        STAGES[stage] = dict(STAGES[stage], n_obstacles=n_obstacles_override)
+    if '--ent-coef' in sys.argv:
+        CFG['ent_coef'] = float(sys.argv[sys.argv.index('--ent-coef') + 1])
+    CFG['hidden'] = int(sys.argv[sys.argv.index('--hidden') + 1]) if '--hidden' in sys.argv else 64
     if '--danger' in sys.argv:
         CFG['safety_danger_radius'] = float(sys.argv[sys.argv.index('--danger') + 1])
     if '--collision-penalty' in sys.argv:
@@ -120,7 +127,8 @@ def main():
                     alpha_max=CFG['alpha_max'], pah_delta_scale=CFG['pah_delta_scale'],
                     pah_prior_coef=CFG['pah_prior_coef'], pah_horizon=CFG['pah_horizon'], pah_d_max=CFG['pah_d_max'],
                     lr=CFG['lr'], gamma=CFG['gamma'], lam=CFG['lam'], clip_eps=CFG['clip_eps'], vf_coef=CFG['vf_coef'],
-                    ent_coef=CFG['ent_coef'], n_epochs=CFG['n_epochs'], batch_size=CFG['batch_size'])
+                    ent_coef=CFG['ent_coef'], n_epochs=CFG['n_epochs'], batch_size=CFG['batch_size'],
+                    hidden=CFG['hidden'])
     json.dump(dict(method=method, stage=stage, seed=seed, episodes=episodes, curriculum=curriculum,
                    use_hungarian=use_hungarian, agent=cfg, **STAGES[stage], **CFG),
               open(os.path.join(out_dir, 'config.json'), 'w'), indent=1)

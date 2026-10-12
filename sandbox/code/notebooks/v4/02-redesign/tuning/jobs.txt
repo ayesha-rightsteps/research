@@ -1,0 +1,10 @@
+moderate-stage2-seed101 2 101 --obstacles 10
+moderate-stage2-seed102 2 102 --obstacles 10
+moderate-stage3-seed101 3 101 --obstacles 20
+moderate-stage3-seed102 3 102 --obstacles 20
+long32k-stage2-seed101 2 101 --episodes 32000
+long32k-stage2-seed102 2 102 --episodes 32000
+ent001-stage2-seed101 2 101 --ent-coef 0.01
+ent001-stage2-seed102 2 102 --ent-coef 0.01
+hidden256-stage2-seed101 2 101 --hidden 256
+hidden256-stage2-seed102 2 102 --hidden 256
