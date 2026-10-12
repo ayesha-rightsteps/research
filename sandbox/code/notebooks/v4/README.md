@@ -13,7 +13,8 @@ not before. Each phase is decided from the previous phase's results by Ayesha, M
 | Phase | Folder | What | Status |
 |---|---|---|---|
 | 0 | `00-diagnostics/` | Read-only checks on the v3 models: collision kinds, how often safety matters, how much α moves, IGAT-MARL metrics | **done** — results in its README |
-| 1 | — | Depends on Phase 0. Candidates: environment changes (obstacle sensing, PAH input, conflict density) | to discuss |
+| 1a | `01-plain-mappo-check/` | Train Plain MAPPO (no mission/safety split) vs Fixed-weight MAPPO on the laptop, Stage 2, 5 seeds — tests Phase 0's explanation of the tie | **done** — inconclusive by the pre-set rule (Plain MAPPO 89.9 ± 1.4 vs Fixed-weight 88.2 ± 2.2, CI [−1.1, +4.5]); the mixing gives no measurable benefit; laptop reproduces Kaggle |
+| 1b | `02-redesign/` | Environment / PAH redesign: separate mission and safety value heads, obstacle danger as PAH input, LiDAR-like sensing, sized and denser obstacles | **plan written** (`02-redesign/PLAN.md`) |
 | 2 | — | Base papers' methods in our environment (plain MAPPO, IPPO, DA-MAPPO-style, IGAT-style) | to discuss |
 | 3 | — | Base papers' experiments (obstacle-density sweep, swarm-size sweep, static vs dynamic targets, their metrics) | to discuss |
 
