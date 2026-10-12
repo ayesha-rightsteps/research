@@ -85,15 +85,18 @@ def test_discs_keep_clear_of_starts_and_targets():
         assert dd.min() >= 2 * R + 2.0 - 1e-4
 
 
-def test_targets_never_inside_a_disc():
+def test_drone_sitting_on_its_target_never_touches_a_disc():
+    """The property that matters (the first version only checked 'target not inside a disc' and missed that
+    hovering drones were dragged into discs): a drone kept exactly on its moving target never collides."""
     env = E.MultiUAVEnvV4(n_drones=8, n_obstacles=40, target_speed=1.0, seed=3)
     env.reset()
-    zero = np.zeros((8, 2))
-    for _ in range(2000):                                  # drones stand still; only targets move
+    for _ in range(3000):
         env.t = 0                                          # keep the episode from timing out
-        env.step(zero)
-        d = np.linalg.norm(env.target_pos[:, None, :] - env.obstacle_pos[None, :, :], axis=-1)
-        assert d.min() >= R - 1e-3, d.min()
+        env.drone_pos = env.target_pos[env.assignment].copy()
+        env.step(np.zeros((8, 2)))
+        env.drone_pos = env.target_pos[env.assignment].copy()
+        clear = np.linalg.norm(env.drone_pos[:, None, :] - env.obstacle_pos[None, :, :], axis=-1).min() - R
+        assert clear >= env.col_r - 1e-3, clear
 
 
 def test_same_seed_same_episode():

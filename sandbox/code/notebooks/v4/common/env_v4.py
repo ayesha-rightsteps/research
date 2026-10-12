@@ -10,7 +10,8 @@ Starts from the v3 MultiUAVEnv (v4/common/v3_env.py, frozen) and changes only fo
   3. PAH's time-to-collision tau covers every hazard: tau = min(tau_drone, tau_obstacle), capped at the
      horizon. tau_drone is the v3 conflict-graph value; tau_obstacle is the number of steps until the
      drone, at its current velocity, reaches a disc's collision boundary.
-  4. Targets bounce off discs as they bounce off walls, so a goal never sits inside an obstacle.
+  4. Targets bounce off discs as they bounce off walls, at disc radius + collision radius + 5, so a drone
+     sitting on its target can never touch a disc.
 Everything else is the v3 code: world size, speeds, collision radius, target radius, Hungarian
 assignment every step, the drone-drone conflict graph (neighbour features and n_conflict), the reward
 terms (the safety distance now uses the nearest drone OR disc surface), success definition.
@@ -239,15 +240,19 @@ class MultiUAVEnvV4:
                 elif self.target_pos[k, dim] > self.W - 10.0:
                     self.target_pos[k, dim] = self.W - 10.0
                     self.target_vel[k, dim] *= -1.0
-            for c in self.obstacle_pos:                       # discs (new): reflect and push to the surface
+            # discs (new): reflect at a clearance big enough that a drone sitting ON its target can never touch
+            # the disc (disc radius + collision radius + 5). Fix 2026-10-12: the first version reflected at
+            # the disc radius only, so targets dragged hovering drones into discs.
+            clear_r = self.obs_r + self.col_r + 5.0
+            for c in self.obstacle_pos:
                 off = self.target_pos[k] - c
                 dist = float(np.linalg.norm(off))
-                if dist < self.obs_r:
+                if dist < clear_r:
                     nrm = off / dist if dist > 1e-6 else np.array([1.0, 0.0], dtype=np.float32)
                     vn = float(self.target_vel[k] @ nrm)
                     if vn < 0:
                         self.target_vel[k] = self.target_vel[k] - 2 * vn * nrm
-                    self.target_pos[k] = c + nrm * self.obs_r
+                    self.target_pos[k] = c + nrm * clear_r
 
     def _hungarian(self):
         cost = np.linalg.norm(self.drone_pos[:, None, :] - self.target_pos[None, :, :], axis=-1)
