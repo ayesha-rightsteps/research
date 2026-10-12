@@ -1,0 +1,2 @@
+Fixed-weight MAPPO | stage 3 | seed 49 | curriculum False
+   107 | succ  0.0% | coll 65.0% (obst 13/13) | timeout 35.0% | alpha 0.500 | 1.1m

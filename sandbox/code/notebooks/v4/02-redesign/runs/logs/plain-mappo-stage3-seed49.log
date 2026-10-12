@@ -1,0 +1,4 @@
+Plain MAPPO | stage 3 | seed 49 | curriculum False
+   100 | succ  0.0% | coll 55.0% (obst 11/11) | timeout 45.0% | alpha 0.500 | 1.5m
+   208 | succ  5.0% | coll 55.0% (obst 11/11) | timeout 40.0% | alpha 0.500 | 2.2m
+   311 | succ 15.0% | coll 80.0% (obst 15/16) | timeout  5.0% | alpha 0.500 | 2.7m

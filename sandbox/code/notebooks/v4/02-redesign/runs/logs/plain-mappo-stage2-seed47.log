@@ -44,3 +44,34 @@ Plain MAPPO | stage 2 | seed 47 | curriculum False
   4544 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.500 | 7.3m
   4644 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 7.4m
   4753 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 7.5m
+  4860 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 7.7m
+  4966 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 7.8m
+  5067 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.500 | 8.0m
+  5168 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 8.1m
+  5284 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 8.3m
+  5391 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 8.5m
+  5498 | succ 55.0% | coll 45.0% (obst 9/9) | timeout  0.0% | alpha 0.500 | 8.6m
+  5604 | succ 55.0% | coll 45.0% (obst 9/9) | timeout  0.0% | alpha 0.500 | 8.7m
+  5708 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 8.8m
+  5820 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 8.9m
+  5921 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 9.1m
+  6031 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 9.2m
+  6135 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 9.3m
+  6246 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.500 | 9.4m
+  6346 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.500 | 9.5m
+  6451 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.500 | 9.6m
+  6557 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.500 | 9.7m
+  6659 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 9.8m
+  6760 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 9.9m
+  6860 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.500 | 10.1m
+  6969 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 10.2m
+  7079 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 10.3m
+  7182 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 10.4m
+  7282 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 10.5m
+  7384 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 10.6m
+  7486 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 10.8m
+  7591 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 10.9m
+  7697 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 11.1m
+  7807 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 11.2m
+  7916 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 11.4m
+RUN_DONE plain-mappo stage 2 seed 47 in 11.5 min
