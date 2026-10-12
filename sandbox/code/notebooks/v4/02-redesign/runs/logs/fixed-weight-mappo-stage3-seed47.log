@@ -1,0 +1,17 @@
+Fixed-weight MAPPO | stage 3 | seed 47 | curriculum False
+   101 | succ  0.0% | coll 90.0% (obst 18/18) | timeout 10.0% | alpha 0.500 | 0.9m
+   212 | succ 25.0% | coll 70.0% (obst 14/14) | timeout  5.0% | alpha 0.500 | 1.5m
+   325 | succ 15.0% | coll 70.0% (obst 14/14) | timeout 15.0% | alpha 0.500 | 1.9m
+   430 | succ 20.0% | coll 75.0% (obst 15/15) | timeout  5.0% | alpha 0.500 | 2.2m
+   530 | succ  0.0% | coll 85.0% (obst 14/17) | timeout 15.0% | alpha 0.500 | 2.6m
+   631 | succ 20.0% | coll 75.0% (obst 15/15) | timeout  5.0% | alpha 0.500 | 2.9m
+   733 | succ  0.0% | coll 85.0% (obst 17/17) | timeout 15.0% | alpha 0.500 | 3.2m
+   836 | succ 10.0% | coll 90.0% (obst 18/18) | timeout  0.0% | alpha 0.500 | 3.5m
+   940 | succ 15.0% | coll 85.0% (obst 17/17) | timeout  0.0% | alpha 0.500 | 3.8m
+  1043 | succ 40.0% | coll 60.0% (obst 12/12) | timeout  0.0% | alpha 0.500 | 4.0m
+  1143 | succ 15.0% | coll 75.0% (obst 14/15) | timeout 10.0% | alpha 0.500 | 4.5m
+  1244 | succ 25.0% | coll 70.0% (obst 13/14) | timeout  5.0% | alpha 0.500 | 4.7m
+  1347 | succ 35.0% | coll 65.0% (obst 13/13) | timeout  0.0% | alpha 0.500 | 5.1m
+  1456 | succ 25.0% | coll 75.0% (obst 15/15) | timeout  0.0% | alpha 0.500 | 5.4m
+  1556 | succ 25.0% | coll 70.0% (obst 14/14) | timeout  5.0% | alpha 0.500 | 5.7m
+  1656 | succ 25.0% | coll 70.0% (obst 12/14) | timeout  5.0% | alpha 0.500 | 6.0m
