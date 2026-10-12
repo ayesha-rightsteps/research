@@ -35,7 +35,28 @@ Table mein wahi columns hain jo DA-MAPPO ki Table V mein hain:
 - Stage 3 mein sirf **ek seed** hai, isliye wahan ke claims "ek seed pe" likhne hain.
 - DA-MAPPO ne observation se *target ki jaankari hata di* thi; humne target ki jaankari rakhi aur sirf
   achhi assignment ko ek fixed jodi se badla. **Dono alag experiments hain**, ek hi asar nahi.
-- M aur H ka 2 point ka fark (p = 0.039) 3 comparisons ke baad pakka nahi hai — ise finding mat likhna.
+- MAPPO + PAH aur Hand-coded τ-rule MAPPO ka 2 point ka fark (p = 0.039) 3 comparisons ke baad pakka nahi hai — ise finding mat likhna.
+
+## Base paper (DA-MAPPO) ke saath comparison — fig11 (Cell 15, 12 Oct 2026)
+
+Teacher ne kaha tha: base paper ko graph mein kabhi "90–99%" jaisi **range** ki tarah nahi dikhate — paper
+ki **asli values** plot karte hain. Isliye Cell 15 ne `fig11_actual_values_vs_paper.png` banaya:
+
+- **Left:** DA-MAPPO ki Table V (moving targets, 3 drones) ki har asli value — 6 methods (IPPO, RMAPPO,
+  MAPPO, NavRL, EGO-Planner v2, DA-MAPPO), har ek ke 3 bars (30 / 40 / 50 obstacles). Values paper ki PDF se
+  program ke zariye (`pdftotext`) nikaali gayin, yaad se nahi likhi.
+- **Right:** hamare methods (Fixed-weight MAPPO, Hand-coded τ-rule MAPPO, MAPPO + PAH, MAPPO + PAH
+  Hungarian off), Stage 2 aur Stage 3 pe, har bar pe asli value.
+- Upar success rate, neeche collision rate.
+
+`output/table_comparison.md` mein yahi sab ek table mein hai.
+
+**Dhyan rahe:** dono taraf ke environments alag hain (paper: 3 drones, 30–50 obstacles; hum: 5–8 drones,
+5–10 obstacles). Graph pattern dikhata hai (obstacles / drones badhne pe success girti hai), "kaun jeeta"
+nahi.
+
+**Purana `fig8_comparison_curves`** paper ko 90–99% / 78–85% bands ki tarah dikhata tha — teacher ki baat
+ke baad woh **superseded** hai, use mat dikhaiye.
 
 ## Hard words
 - **Deterministic policy** — model hamesha apna sabse likely action leta hai, random nahi

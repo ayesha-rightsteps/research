@@ -21,15 +21,19 @@ Definitions (written once, used everywhere in Phase 0):
 
 import numpy as np
 
-from v3_env import (MultiUAVEnv, load_checkpoint, deterministic_action,
+import torch
+
+from v3_env import (MultiUAVEnv, RolloutBuffer, load_checkpoint, load_critic, deterministic_action,
                     stochastic_action, pah_alpha, PAH_HORIZON)
 
 D_DANGER_FACTOR = 3.0
 
 
-def make_env(entry, seed):
+def make_env(entry, seed, success_bonus=0.0):
+    """success_bonus: 0 for the evaluation-style checks (does not change dynamics or outcomes);
+    20 for the advantage-correlation check, because there rewards must be exactly as in training."""
     return MultiUAVEnv(n_drones=entry['n_drones'], n_obstacles=entry['n_obstacles'],
-                       success_bonus=0.0, use_hungarian=entry['use_hungarian'], seed=seed)
+                       success_bonus=success_bonus, use_hungarian=entry['use_hungarian'], seed=seed)
 
 
 def alpha_values(method, pah, pah_inputs, n_drones):
@@ -130,3 +134,65 @@ def run_episode(env, actor, pah, method, mode, gen=None):
         edges_mean=edges_sum / steps,                    # mean active conflict-graph edges per step
     )
     return summary, np.concatenate(alphas)
+
+
+# ---------------------------------------------------------------------------
+# Advantage-correlation check (PLAN-after-review.md, Step 2, revised after Manish's review)
+# ---------------------------------------------------------------------------
+GAMMA, LAM, ROLLOUT_STEPS, TRAIN_BONUS = 0.99, 0.95, 512, 20.0   # v3 training CFG
+
+
+def _z(x):
+    """z-normalization exactly as in v3 update(): torch .std() is the unbiased (ddof=1) std."""
+    return (x - x.mean()) / (x.std(ddof=1) + 1e-8)
+
+
+def _cos(a, b):
+    return float(a @ b / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-12))
+
+
+@torch.no_grad()
+def advantage_batch(entry, ckpt_path, env_seed, gen_seed):
+    """Collects ONE training-style batch (512 env steps, stochastic actions, success bonus 20, episodes
+    reset inside the batch) with the checkpoint's actor, critic and alpha source, then computes the
+    advantages with the verbatim v3 RolloutBuffer code. Returns a dict of measurements."""
+    n, method = entry['n_drones'], entry['method']
+    actor, pah = load_checkpoint(ckpt_path)
+    critic = load_critic(ckpt_path, n)
+    env = make_env(entry, env_seed, success_bonus=TRAIN_BONUS)
+    gen = torch.Generator().manual_seed(gen_seed)
+    buf = RolloutBuffer(n)
+    alphas = []
+    obs = env.reset()
+    for _ in range(ROLLOUT_STEPS):
+        acts = stochastic_action(actor, obs, gen)
+        val = critic(torch.tensor(obs, dtype=torch.float32).flatten().unsqueeze(0)).item()
+        next_obs, _, terminated, truncated, info = env.step(acts)
+        done = terminated or truncated
+        alpha = alpha_values(method, pah, info['pah_inputs'], n)        # same pairing as training
+        rews = alpha * info['r_mission'] + (1.0 - alpha) * info['r_safety']
+        buf.add(obs, acts, rews, val, np.zeros(n, dtype=np.float32), done,
+                info['r_mission'], info['r_safety'], info['pah_inputs'])
+        alphas.append(alpha)
+        obs = env.reset() if done else next_obs
+    last_val = critic(torch.tensor(obs, dtype=torch.float32).flatten().unsqueeze(0)).item()
+    A, _ = buf.compute_gae(last_val, GAMMA, LAM)
+    A_m, A_s = buf.compute_gae_components(last_val, GAMMA, LAM)
+    a = np.array(alphas, dtype=np.float64).ravel()
+    A, A_m, A_s = (np.asarray(x, dtype=np.float64).ravel() for x in (A, A_m, A_s))
+
+    z_m, z_s = _z(A_m), _z(A_s)
+    w = lambda al: al * z_m + (1.0 - al) * z_s                       # what update() feeds the actor
+    w_own, w_05, w_09 = w(a), w(0.5), w(0.9)
+    mix_raw = a * A_m + (1.0 - a) * A_s                               # identity check: equals A if alpha constant
+    return dict(
+        alpha_mean=float(a.mean()), alpha_std=float(a.std()),
+        corr_m_s=float(np.corrcoef(A_m, A_s)[0, 1]),                  # sign matters (Manish, 16.2)
+        std_m_raw=float(A_m.std(ddof=1)), std_s_raw=float(A_s.std(ddof=1)), std_comb_raw=float(A.std(ddof=1)),
+        cos_own_05=_cos(w_own, w_05), norm_own_over_05=float(np.linalg.norm(w_own) / np.linalg.norm(w_05)),
+        cos_own_09=_cos(w_own, w_09), norm_own_over_09=float(np.linalg.norm(w_own) / np.linalg.norm(w_09)),
+        corr_own_comb=float(np.corrcoef(w_own, A)[0, 1]),            # is the mixed signal just plain MAPPO's?
+        identity_rel_err=float(np.linalg.norm(mix_raw - A) / (np.linalg.norm(A) + 1e-12)),
+        safety_on_frac=float((np.asarray(buf.r_safety).ravel() != 0).mean()),
+        episodes_done=int(sum(buf.dones)), drone_steps=int(A.size),
+    )

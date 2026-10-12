@@ -10,6 +10,10 @@ Provenance (extracted programmatically, not retyped, on 2026-10-12):
     kaggle_stage3_pah_seed42test.ipynb cell 4 (Stage 2 v3-pah-change uses the
     same class and the same settings: horizon 3.0, d_max 500*sqrt(2), alpha 0.1-0.9,
     delta_scale 0.2).
+  * Critic, RolloutBuffer (added 2026-10-12 for the advantage-correlation check) <- the same
+    stage3/var-alpha cell 4, verbatim. All six v3 training notebooks share this RolloutBuffer logic and
+    the same update() (checked: identical update() source; the Stage 2 Fixed-weight notebook's buffer
+    differs only in comment punctuation).
 
 Do not edit the copied classes. If v4 changes the environment, that goes in a
 new file, so v3 models keep being evaluated on exactly the code they trained on.
@@ -373,6 +377,96 @@ class PriorityArbitrationHead(nn.Module):
         return self.prior_coef * delta.pow(2).mean()
 
 
+# ---- Critic (verbatim) ----
+class Critic(nn.Module):
+    """Centralized critic -- one value per timestep from the flattened joint state."""
+    def __init__(self, global_dim, hidden=64):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(global_dim, hidden), nn.Tanh(),
+            nn.Linear(hidden, hidden),     nn.Tanh(),
+            nn.Linear(hidden, 1),
+        )
+
+    def forward(self, global_state):
+        return self.net(global_state).squeeze(-1)
+
+
+# ---- RolloutBuffer (verbatim) ----
+class RolloutBuffer:
+    """Per-drone rewards/log-probs/PAH-inputs kept separate throughout -- nothing
+    here is averaged across drones (see sessions/2026-09-15.md Part 12 for why
+    that was a bug in an earlier version of the Stage 2 notebook)."""
+    def __init__(self, n_drones):
+        self.n_drones = n_drones
+        self.clear()
+
+    def clear(self):
+        self.obs, self.acts, self.rews = [], [], []
+        self.vals, self.lps, self.dones = [], [], []
+        self.r_mission, self.r_safety = [], []
+        self.tau, self.d_target, self.n_conflict = [], [], []
+
+    def add(self, obs, act, rew, val, lp, done, r_mission, r_safety, pah_inputs):
+        self.obs.append(obs.copy())
+        self.acts.append(act.copy())
+        self.rews.append(rew.copy())
+        self.vals.append(float(val))
+        self.lps.append(lp.copy())
+        self.dones.append(bool(done))
+        self.r_mission.append(r_mission.copy())
+        self.r_safety.append(r_safety.copy())
+        self.tau.append(pah_inputs['tau'].copy())
+        self.d_target.append(pah_inputs['d_target'].copy())
+        self.n_conflict.append(pah_inputs['n_conflict'].copy())
+
+    def __len__(self):
+        return len(self.rews)
+
+    def compute_gae(self, last_val, gamma, lam):
+        """Combined-reward GAE -- used for the critic's return target."""
+        T = len(self.rews)
+        n = self.n_drones
+        rewards = np.array(self.rews,  dtype=np.float32)
+        values  = np.array(self.vals,  dtype=np.float32)
+        dones   = np.array(self.dones, dtype=np.float32)
+        adv      = np.zeros((T, n), dtype=np.float32)
+        last_gae = np.zeros(n, dtype=np.float32)
+        for t in reversed(range(T)):
+            next_val = last_val if t == T - 1 else values[t + 1]
+            mask     = 1.0 - dones[t]
+            delta    = rewards[t] + gamma * next_val * mask - values[t]
+            last_gae = delta + gamma * lam * mask * last_gae
+            adv[t]   = last_gae
+        returns = adv + values[:, np.newaxis]
+        return adv, returns
+
+    def compute_gae_components(self, last_val, gamma, lam):
+        """Separate GAE for r_mission and r_safety, sharing the combined-reward
+        critic as baseline ("Option B lite" -- see docs/research/01_pah_design.md
+        Section 9). Used for the alpha-weighted actor loss."""
+        T = len(self.rews)
+        n = self.n_drones
+        rm      = np.array(self.r_mission, dtype=np.float32)
+        rs      = np.array(self.r_safety,  dtype=np.float32)
+        values  = np.array(self.vals,      dtype=np.float32)
+        dones   = np.array(self.dones,     dtype=np.float32)
+        adv_m = np.zeros((T, n), dtype=np.float32)
+        adv_s = np.zeros((T, n), dtype=np.float32)
+        gae_m = np.zeros(n, dtype=np.float32)
+        gae_s = np.zeros(n, dtype=np.float32)
+        for t in reversed(range(T)):
+            next_val = last_val if t == T - 1 else values[t + 1]
+            mask     = 1.0 - dones[t]
+            delta_m  = rm[t] + gamma * next_val * mask - values[t]
+            delta_s  = rs[t] + gamma * next_val * mask - values[t]
+            gae_m    = delta_m + gamma * lam * mask * gae_m
+            gae_s    = delta_s + gamma * lam * mask * gae_s
+            adv_m[t] = gae_m
+            adv_s[t] = gae_s
+        return adv_m, adv_s
+
+
 # ---------------------------------------------------------------------------
 # Loaders + action helpers (new code, not copied)
 # ---------------------------------------------------------------------------
@@ -418,3 +512,13 @@ def pah_alpha(pah, pah_inputs, n_drones):
                        torch.tensor(pah_inputs['n_conflict'], dtype=torch.float32))
     alpha, _ = pah(x)
     return alpha.numpy()
+
+
+def load_critic(path, n_drones):
+    """The checkpoint's centralized critic. Input = all drones' observations flattened
+    (n_drones * OBS_DIM), exactly as in training (obs.flatten())."""
+    ck = torch.load(path, map_location=DEVICE, weights_only=True)
+    critic = Critic(n_drones * OBS_DIM).to(DEVICE)
+    critic.load_state_dict(ck['critic'], strict=True)   # raises on any missing / unexpected key
+    critic.eval()
+    return critic

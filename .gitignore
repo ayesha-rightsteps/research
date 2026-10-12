@@ -1,0 +1,9 @@
+# Python bytecode (created automatically when code is imported; never commit)
+__pycache__/
+*.pyc
+
+# Jupyter autosave
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store

@@ -20,15 +20,19 @@ yahi file import hoti hai — koi naya paste nahi.
     reproduce kar chuka tha)
   - PAH → `v3/stage3/var-alpha` notebook se (Stage 2 mein bhi bilkul same settings hain)
 - Phir check kiya: is copy ne 5 models pe v3 ke **200 mein se 200 episodes bilkul wahi** nateeje diye.
+- 12 Oct ko isi tareeqe se **critic** aur **RolloutBuffer** (advantage ka hisaab) bhi jode, taaki
+  advantage-correlation check training ke bilkul asli code se ho. Saare 6 training notebooks ka advantage
+  wala code check kiya — sab same hai.
 
 ## Naya code jo add kiya (copy ka hissa nahi)
 
 | Function | Kya karta hai |
 |---|---|
-| `load_checkpoint(path)` | model file se actor aur PAH load karta hai (B4 aur H mein PAH nahi hota) |
+| `load_checkpoint(path)` | model file se actor aur PAH load karta hai (Fixed-weight MAPPO aur Hand-coded τ-rule MAPPO ki files mein PAH nahi hota) |
 | `deterministic_action` | actor ka beech wala (mean) action — evaluation ke liye |
 | `stochastic_action` | random action, bilkul training jaisa — fixed seed ke saath, taaki dobara chalane pe same aaye |
 | `pah_alpha` | kisi state pe PAH kya α deta, bilkul training ke tareeqe se |
+| `load_critic(path, n_drones)` | model file se critic load karta hai (input = saare drones ke observations ek line mein) |
 
 ## Zaroori usool
 

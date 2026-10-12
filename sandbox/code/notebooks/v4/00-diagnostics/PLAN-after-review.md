@@ -1,6 +1,7 @@
 # Plan — fixes and next checks after the Phase 0 self-review
 
-**Status: PLAN ONLY. Nothing in this file has been implemented.**
+**Status:** verified by Manish's Claude (session Section 16); Step 2 revised per his review; implementation
+started 2026-10-12 after Ayesha's go-ahead. Progress is logged in the session file.
 Written 2026-10-12. Ayesha's instruction: write everything down first; Manish's Claude verifies it;
 only after that do we implement and run anything.
 
@@ -98,25 +99,36 @@ explain why they tie.
    reward `α·r_mission + (1−α)·r_safety`, critic value `V(flatten(obs of all drones))`, done.
 3. Compute, exactly as `compute_gae_components` does (γ = 0.99, λ = 0.95, shared value V): mission
    advantage and safety advantage per drone-step; z-normalize each over the batch.
-4. Measure:
-   - correlation(mission advantage, safety advantage) over the batch;
-   - for the run's own α and for the alternatives (0.5, 0.9, and the PAH α where available):
-     `w(α) = α·A_mission + (1−α)·A_safety`, and the correlation between `w(own α)` and `w(0.5)` /
-     `w(0.9)` — "how different is the learning signal if α were chosen differently".
+4. Measure — **revised 2026-10-12 after Manish's review (session Section 16.2); thresholds dropped,
+   report first, decide after:**
+   - **sign and size of corr(mission advantage, safety advantage)**, on the raw advantages (before
+     z-normalization). Manish's point: with a well-fitted critic the two are expected to be *opposite*
+     (safety ≈ −α/(1−α) × mission); with a poor critic they can move together. Which one holds decides how
+     to read everything else.
+   - **raw std of each advantage before z-normalization** (normalization hides the scale difference).
+   - **cosine and magnitude, separately,** between `w(own α)` and `w(0.5)` (and `w(0.9)`), where
+     `w(α) = α·z(A_mission) + (1−α)·z(A_safety)` exactly as in training. Correlation alone is misleading
+     because it ignores scale.
+   - **(addition from the algebra check)** corr(`w(own α)`, plain combined-reward advantage). Exact identity,
+     checked to machine precision on synthetic data: for constant α,
+     `α·A_mission + (1−α)·A_safety = A_combined` (the ordinary MAPPO advantage of the combined reward).
+     So the α-mixing adds nothing by itself; any effect must come from the separate z-normalization or from α
+     inside the combined reward. If corr(`w(own α)`, `A_combined`) ≈ 1, the mixing step is redundant in
+     practice.
+   - Note: comparing `w(own α)` with `w(0.5)` changes α only in the mixing, not in the reward the critic
+     learned — it is a counterfactual about the mixing step only, and is reported as such.
 5. Repeat for 10 batches per checkpoint (different env seeds), report mean ± std.
 
 **Runs:** Stage 2 (all three methods, seeds 42–46, final models) and Stage 3 (Fixed-weight MAPPO,
 MAPPO + PAH, MAPPO + PAH Hungarian off; seed 42; final model plus 3 checkpoints across training).
 
-**Gate before trusting it:** (a) recomputed combined-reward returns (`compute_gae`) for one batch must
-match a hand-calculated GAE on a 5-step toy sequence; (b) the critic loaded from a checkpoint must give
-the same value for the same input as the v3 critic class (load the state dict into both, compare).
+**Gate before trusting it:** (a) the GAE code is the v3 `RolloutBuffer.compute_gae` /
+`compute_gae_components`, extracted verbatim (not retyped); (b) on real Fixed-weight MAPPO batches (α constant
+= 0.5) the identity `0.5·A_mission + 0.5·A_safety = A_combined` must hold to float precision — if it does not,
+the extraction or the batch construction is wrong; (c) the critic weights load without missing/unexpected keys.
 
-**Decision rule — to be agreed with Manish before running (proposal):**
-- correlation(w(own α), w(0.5)) ≥ 0.9 on average → "α barely changes the learning signal" → supports the
-  shared-backbone explanation of the tie;
-- ≤ 0.5 → explanation rejected; the tie needs another explanation;
-- in between → inconclusive, reported as such.
+**Decision rule:** none fixed in advance (Manish, 16.2: report first, set thresholds after seeing the
+sign and scale). The original "≥ 0.9 / ≤ 0.5 correlation" rule is withdrawn.
 
 **Output:** `00-diagnostics/output/advantage_correlation.csv`, one figure, README section.
 **Where:** new cells in `diagnostics.ipynb` (or a separate `advantage_check.ipynb` if Manish prefers),

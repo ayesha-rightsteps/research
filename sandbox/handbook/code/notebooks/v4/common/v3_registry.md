@@ -7,8 +7,10 @@ Asal file: `code/notebooks/v4/common/v3_registry.py`
 v3 ke saare 18 trained models ki list — kaunsa stage, kaunsa method, kaunsa seed, aur uska folder kahan
 hai — ek jagah.
 
-- Stage 2: B4, H, M × 5 seeds (42–46) = 15 models
-- Stage 3: B4, M, M without Hungarian × seed 42 = 3 models
+- Stage 2 (5 drones, 5 obstacles): Fixed-weight MAPPO, Hand-coded τ-rule MAPPO, MAPPO + PAH × 5 seeds (42–46) = 15 models
+- Stage 3 (8 drones, 10 obstacles): Fixed-weight MAPPO, MAPPO + PAH, MAPPO + PAH Hungarian off × seed 42 = 3 models
+
+(Code ke andar inki keys abhi bhi `B4`, `H`, `M`, `M-noHungarian` hain, kyunki v3 ke data mein yahi naam hain — lekin likhte waqt hamesha poore naam.)
 
 ## Kyun zaroori thi?
 

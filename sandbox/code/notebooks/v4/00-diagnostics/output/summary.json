@@ -1,200 +1,338 @@
 {
- "D1_collision_kinds": [
+ "collision_type_check": [
   {
-   "stage": 2,
-   "method": "B4 (fixed \u03b1)",
-   "collisions": 108,
-   "drone_obstacle": 107,
-   "drone_drone": 1,
-   "both": 0,
-   "obstacle_pct": 99.1,
-   "near_goal_pct": 20.4
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "Fixed-weight MAPPO",
+   "Collision episodes": 108,
+   "Drone–obstacle": 107,
+   "Drone–drone": 1,
+   "Both": 0,
+   "% obstacle": 99.1,
+   "% near goal": 20.4
   },
   {
-   "stage": 2,
-   "method": "H (\u03c4-formula)",
-   "collisions": 125,
-   "drone_obstacle": 124,
-   "drone_drone": 1,
-   "both": 0,
-   "obstacle_pct": 99.2,
-   "near_goal_pct": 20.8
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "Hand-coded τ-rule MAPPO",
+   "Collision episodes": 125,
+   "Drone–obstacle": 124,
+   "Drone–drone": 1,
+   "Both": 0,
+   "% obstacle": 99.2,
+   "% near goal": 20.8
   },
   {
-   "stage": 2,
-   "method": "M (PAH)",
-   "collisions": 105,
-   "drone_obstacle": 104,
-   "drone_drone": 1,
-   "both": 0,
-   "obstacle_pct": 99.0,
-   "near_goal_pct": 21.9
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "MAPPO + PAH",
+   "Collision episodes": 105,
+   "Drone–obstacle": 104,
+   "Drone–drone": 1,
+   "Both": 0,
+   "% obstacle": 99.0,
+   "% near goal": 21.9
   },
   {
-   "stage": 3,
-   "method": "B4 (fixed \u03b1)",
-   "collisions": 53,
-   "drone_obstacle": 50,
-   "drone_drone": 3,
-   "both": 0,
-   "obstacle_pct": 94.3,
-   "near_goal_pct": 30.2
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "Fixed-weight MAPPO",
+   "Collision episodes": 53,
+   "Drone–obstacle": 50,
+   "Drone–drone": 3,
+   "Both": 0,
+   "% obstacle": 94.3,
+   "% near goal": 30.2
   },
   {
-   "stage": 3,
-   "method": "M (PAH)",
-   "collisions": 56,
-   "drone_obstacle": 56,
-   "drone_drone": 0,
-   "both": 0,
-   "obstacle_pct": 100.0,
-   "near_goal_pct": 39.3
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "MAPPO + PAH",
+   "Collision episodes": 56,
+   "Drone–obstacle": 56,
+   "Drone–drone": 0,
+   "Both": 0,
+   "% obstacle": 100.0,
+   "% near goal": 39.3
   },
   {
-   "stage": 3,
-   "method": "M, no Hungarian",
-   "collisions": 97,
-   "drone_obstacle": 78,
-   "drone_drone": 19,
-   "both": 0,
-   "obstacle_pct": 80.4,
-   "near_goal_pct": 19.6
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "MAPPO + PAH, Hungarian off",
+   "Collision episodes": 97,
+   "Drone–obstacle": 78,
+   "Drone–drone": 19,
+   "Both": 0,
+   "% obstacle": 80.4,
+   "% near goal": 19.6
   }
  ],
- "D4_igat_metrics": [
+ "igat_marl_metrics_check": [
   {
-   "stage": 2,
-   "method": "B4 (fixed \u03b1)",
-   "los_per_episode": 0.098,
-   "los_err": 0.0382,
-   "los_per_step": 0.0018,
-   "edges_per_step": 0.0016,
-   "edges_err": 0.0007,
-   "note": "mean \u00b1 std over 5 seeds"
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "Fixed-weight MAPPO",
+   "Loss-of-separation pair-steps per episode": "0.098 ± 0.038",
+   "Active conflict edges per step": "0.0016 ± 0.0007"
   },
   {
-   "stage": 2,
-   "method": "H (\u03c4-formula)",
-   "los_per_episode": 0.064,
-   "los_err": 0.0297,
-   "los_per_step": 0.0012,
-   "edges_per_step": 0.001,
-   "edges_err": 0.0003,
-   "note": "mean \u00b1 std over 5 seeds"
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "Hand-coded τ-rule MAPPO",
+   "Loss-of-separation pair-steps per episode": "0.064 ± 0.030",
+   "Active conflict edges per step": "0.0010 ± 0.0003"
   },
   {
-   "stage": 2,
-   "method": "M (PAH)",
-   "los_per_episode": 0.1,
-   "los_err": 0.0489,
-   "los_per_step": 0.0022,
-   "edges_per_step": 0.0014,
-   "edges_err": 0.0007,
-   "note": "mean \u00b1 std over 5 seeds"
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "MAPPO + PAH",
+   "Loss-of-separation pair-steps per episode": "0.100 ± 0.049",
+   "Active conflict edges per step": "0.0014 ± 0.0007"
   },
   {
-   "stage": 3,
-   "method": "B4 (fixed \u03b1)",
-   "los_per_episode": 0.215,
-   "los_err": 0.1661,
-   "los_per_step": 0.0046,
-   "edges_per_step": 0.0039,
-   "edges_err": 0.0028,
-   "note": "mean \u00b1 95% CI over 200 episodes"
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "Fixed-weight MAPPO",
+   "Loss-of-separation pair-steps per episode": "0.215 ± 0.166",
+   "Active conflict edges per step": "0.0039 ± 0.0028"
   },
   {
-   "stage": 3,
-   "method": "M (PAH)",
-   "los_per_episode": 0.185,
-   "los_err": 0.1627,
-   "los_per_step": 0.0034,
-   "edges_per_step": 0.003,
-   "edges_err": 0.0026,
-   "note": "mean \u00b1 95% CI over 200 episodes"
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "MAPPO + PAH",
+   "Loss-of-separation pair-steps per episode": "0.185 ± 0.163",
+   "Active conflict edges per step": "0.0030 ± 0.0026"
   },
   {
-   "stage": 3,
-   "method": "M, no Hungarian",
-   "los_per_episode": 0.87,
-   "los_err": 0.2432,
-   "los_per_step": 0.0366,
-   "edges_per_step": 0.0514,
-   "edges_err": 0.0182,
-   "note": "mean \u00b1 95% CI over 200 episodes"
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "MAPPO + PAH, Hungarian off",
+   "Loss-of-separation pair-steps per episode": "0.870 ± 0.243",
+   "Active conflict edges per step": "0.0514 ± 0.0182"
   }
  ],
- "D2_safety_on_pct_over_training": {
-  "B4-S2": {
-   "min": 0.19,
-   "max": 0.51,
-   "final": 0.49,
-   "obstacle_part_final": 0.49,
-   "drone_part_final": 0.0
+ "safety_reward_frequency_and_alpha_spread": [
+  {
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "Fixed-weight MAPPO",
+   "Safety reward on, % drone-steps (range over training)": "0.18–0.55",
+   "final: drone within 9": "0.01 ± 0.02",
+   "final: obstacle within 9": "0.36 ± 0.08",
+   "Conflict flagged, % (final)": "0.04 ± 0.02",
+   "α median (final)": "0.50 ± 0.00",
+   "α 10th pct (final)": "0.50 ± 0.00",
+   "% steps α < 0.5 (final)": "0.00 ± 0.00"
   },
-  "H-S2": {
-   "min": 0.24,
-   "max": 0.48,
-   "final": 0.44,
-   "obstacle_part_final": 0.41,
-   "drone_part_final": 0.03
+  {
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "Hand-coded τ-rule MAPPO",
+   "Safety reward on, % drone-steps (range over training)": "0.19–0.57",
+   "final: drone within 9": "0.01 ± 0.02",
+   "final: obstacle within 9": "0.37 ± 0.09",
+   "Conflict flagged, % (final)": "0.03 ± 0.02",
+   "α median (final)": "0.90 ± 0.00",
+   "α 10th pct (final)": "0.90 ± 0.00",
+   "% steps α < 0.5 (final)": "0.00 ± 0.01"
   },
-  "M-S2": {
-   "min": 0.23,
-   "max": 0.62,
-   "final": 0.3,
-   "obstacle_part_final": 0.3,
-   "drone_part_final": 0.0
+  {
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "MAPPO + PAH",
+   "Safety reward on, % drone-steps (range over training)": "0.17–0.62",
+   "final: drone within 9": "0.00 ± 0.01",
+   "final: obstacle within 9": "0.32 ± 0.04",
+   "Conflict flagged, % (final)": "0.02 ± 0.01",
+   "α median (final)": "0.88 ± 0.05",
+   "α 10th pct (final)": "0.71 ± 0.02",
+   "% steps α < 0.5 (final)": "0.01 ± 0.01"
   },
-  "B4-S3": {
-   "min": 0.81,
-   "max": 1.31,
-   "final": 1.27,
-   "obstacle_part_final": 0.86,
-   "drone_part_final": 0.41
+  {
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "Fixed-weight MAPPO",
+   "Safety reward on, % drone-steps (range over training)": "0.81–1.31",
+   "final: drone within 9": "0.41",
+   "final: obstacle within 9": "0.86",
+   "Conflict flagged, % (final)": "0.20",
+   "α median (final)": "0.50",
+   "α 10th pct (final)": "0.50",
+   "% steps α < 0.5 (final)": "0.00"
   },
-  "M-S3": {
-   "min": 0.85,
-   "max": 1.26,
-   "final": 1.07,
-   "obstacle_part_final": 0.97,
-   "drone_part_final": 0.1
+  {
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "MAPPO + PAH",
+   "Safety reward on, % drone-steps (range over training)": "0.85–1.26",
+   "final: drone within 9": "0.10",
+   "final: obstacle within 9": "0.97",
+   "Conflict flagged, % (final)": "0.10",
+   "α median (final)": "0.87",
+   "α 10th pct (final)": "0.70",
+   "% steps α < 0.5 (final)": "0.03"
   },
-  "M-noHungarian-S3": {
-   "min": 1.2,
-   "max": 1.71,
-   "final": 1.35,
-   "obstacle_part_final": 0.74,
-   "drone_part_final": 0.61
+  {
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "MAPPO + PAH, Hungarian off",
+   "Safety reward on, % drone-steps (range over training)": "1.20–1.71",
+   "final: drone within 9": "0.61",
+   "final: obstacle within 9": "0.74",
+   "Conflict flagged, % (final)": "1.06",
+   "α median (final)": "0.90",
+   "α 10th pct (final)": "0.70",
+   "% steps α < 0.5 (final)": "0.70"
   }
- },
- "D3_alpha_final": {
-  "H-S2": {
-   "p10": 0.9,
-   "p50": 0.9,
-   "p90": 0.9,
-   "lt_05_pct": 0.0,
-   "lt_08_pct": 0.02
+ ],
+ "alpha_vs_target_distance": [
+  {
+   "stage": 2,
+   "method": "MAPPO + PAH",
+   "seed": 42,
+   "drone_steps": 11415,
+   "no_conflict_pct": 99.9825,
+   "alpha_min": 0.7,
+   "alpha_max": 0.9,
+   "corr_alpha_dtarget": -0.7279,
+   "median_alpha_d0_50": 0.8833,
+   "median_alpha_d50_150": 0.9,
+   "median_alpha_d150_300": 0.7332,
+   "median_alpha_d300_1000": 0.7
   },
-  "M-S2": {
-   "p10": 0.742,
-   "p50": 0.892,
-   "p90": 0.9,
-   "lt_05_pct": 0.0,
-   "lt_08_pct": 13.13
+  {
+   "stage": 2,
+   "method": "MAPPO + PAH",
+   "seed": 43,
+   "drone_steps": 12220,
+   "no_conflict_pct": 100.0,
+   "alpha_min": 0.7,
+   "alpha_max": 0.9,
+   "corr_alpha_dtarget": -0.8778,
+   "median_alpha_d0_50": 0.9,
+   "median_alpha_d50_150": 0.9,
+   "median_alpha_d150_300": 0.7,
+   "median_alpha_d300_1000": 0.7
   },
-  "M-S3": {
-   "p10": 0.7,
-   "p50": 0.871,
-   "p90": 0.9,
-   "lt_05_pct": 0.03,
-   "lt_08_pct": 26.16
+  {
+   "stage": 2,
+   "method": "MAPPO + PAH",
+   "seed": 44,
+   "drone_steps": 11775,
+   "no_conflict_pct": 99.966,
+   "alpha_min": 0.7,
+   "alpha_max": 0.9,
+   "corr_alpha_dtarget": -0.8923,
+   "median_alpha_d0_50": 0.9,
+   "median_alpha_d50_150": 0.9,
+   "median_alpha_d150_300": 0.7001,
+   "median_alpha_d300_1000": 0.7
   },
-  "M-noHungarian-S3": {
-   "p10": 0.703,
-   "p50": 0.9,
-   "p90": 0.9,
-   "lt_05_pct": 0.7,
-   "lt_08_pct": 17.76
+  {
+   "stage": 2,
+   "method": "MAPPO + PAH",
+   "seed": 45,
+   "drone_steps": 11880,
+   "no_conflict_pct": 99.9832,
+   "alpha_min": 0.7,
+   "alpha_max": 0.9,
+   "corr_alpha_dtarget": -0.3272,
+   "median_alpha_d0_50": 0.7854,
+   "median_alpha_d50_150": 0.9,
+   "median_alpha_d150_300": 0.7014,
+   "median_alpha_d300_1000": 0.7
+  },
+  {
+   "stage": 2,
+   "method": "MAPPO + PAH",
+   "seed": 46,
+   "drone_steps": 12385,
+   "no_conflict_pct": 99.9839,
+   "alpha_min": 0.7,
+   "alpha_max": 0.9,
+   "corr_alpha_dtarget": -0.789,
+   "median_alpha_d0_50": 0.9,
+   "median_alpha_d50_150": 0.9,
+   "median_alpha_d150_300": 0.7156,
+   "median_alpha_d300_1000": 0.7
+  },
+  {
+   "stage": 3,
+   "method": "MAPPO + PAH",
+   "seed": 42,
+   "drone_steps": 15640,
+   "no_conflict_pct": 99.8977,
+   "alpha_min": 0.7,
+   "alpha_max": 0.9,
+   "corr_alpha_dtarget": -0.9183,
+   "median_alpha_d0_50": 0.8922,
+   "median_alpha_d50_150": 0.794,
+   "median_alpha_d150_300": 0.7,
+   "median_alpha_d300_1000": 0.7
+  },
+  {
+   "stage": 3,
+   "method": "MAPPO + PAH, Hungarian off",
+   "seed": 42,
+   "drone_steps": 19704,
+   "no_conflict_pct": 98.9444,
+   "alpha_min": 0.7,
+   "alpha_max": 0.9,
+   "corr_alpha_dtarget": -0.8269,
+   "median_alpha_d0_50": 0.9,
+   "median_alpha_d50_150": 0.9,
+   "median_alpha_d150_300": 0.8972,
+   "median_alpha_d300_1000": 0.7001
   }
- }
+ ],
+ "advantage_correlation_check_final": [
+  {
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "Fixed-weight MAPPO",
+   "α mean": "0.50 ± 0.00",
+   "corr(mission adv., safety adv.)": "-0.52 ± 0.03",
+   "raw std mission adv.": "3.22 ± 0.10",
+   "raw std safety adv.": "2.32 ± 0.04",
+   "cosine(own-α signal, α=0.5 signal)": "1.00 ± 0.00",
+   "magnitude own / α=0.5": "1.00 ± 0.00",
+   "corr(own-α signal, plain combined advantage)": "0.96 ± 0.01"
+  },
+  {
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "Hand-coded τ-rule MAPPO",
+   "α mean": "0.90 ± 0.00",
+   "corr(mission adv., safety adv.)": "0.00 ± 0.06",
+   "raw std mission adv.": "2.59 ± 0.39",
+   "raw std safety adv.": "4.09 ± 0.08",
+   "cosine(own-α signal, α=0.5 signal)": "0.78 ± 0.02",
+   "magnitude own / α=0.5": "1.29 ± 0.03",
+   "corr(own-α signal, plain combined advantage)": "0.99 ± 0.00"
+  },
+  {
+   "Stage": "Stage 2 (5 drones, 5 obstacles)",
+   "Method": "MAPPO + PAH",
+   "α mean": "0.85 ± 0.02",
+   "corr(mission adv., safety adv.)": "-0.03 ± 0.12",
+   "raw std mission adv.": "2.66 ± 0.13",
+   "raw std safety adv.": "3.97 ± 0.31",
+   "cosine(own-α signal, α=0.5 signal)": "0.79 ± 0.04",
+   "magnitude own / α=0.5": "1.28 ± 0.07",
+   "corr(own-α signal, plain combined advantage)": "0.98 ± 0.01"
+  },
+  {
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "Fixed-weight MAPPO",
+   "α mean": "0.50",
+   "corr(mission adv., safety adv.)": "-0.27",
+   "raw std mission adv.": "3.75",
+   "raw std safety adv.": "2.27",
+   "cosine(own-α signal, α=0.5 signal)": "1.00",
+   "magnitude own / α=0.5": "1.00",
+   "corr(own-α signal, plain combined advantage)": "0.95"
+  },
+  {
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "MAPPO + PAH",
+   "α mean": "0.84",
+   "corr(mission adv., safety adv.)": "0.22",
+   "raw std mission adv.": "3.57",
+   "raw std safety adv.": "4.28",
+   "cosine(own-α signal, α=0.5 signal)": "0.85",
+   "magnitude own / α=0.5": "1.15",
+   "corr(own-α signal, plain combined advantage)": "0.99"
+  },
+  {
+   "Stage": "Stage 3 (8 drones, 10 obstacles)",
+   "Method": "MAPPO + PAH, Hungarian off",
+   "α mean": "0.87",
+   "corr(mission adv., safety adv.)": "0.51",
+   "raw std mission adv.": "4.22",
+   "raw std safety adv.": "4.43",
+   "cosine(own-α signal, α=0.5 signal)": "0.91",
+   "magnitude own / α=0.5": "1.09",
+   "corr(own-α signal, plain combined advantage)": "1.00"
+  }
+ ]
 }
