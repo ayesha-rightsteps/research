@@ -1,0 +1,7 @@
+Fixed-weight MAPPO | stage 2 | seed 47 | curriculum False
+   105 | succ 50.0% | coll 40.0% (obst 8/8) | timeout 10.0% | alpha 0.500 | 0.8m
+   215 | succ 55.0% | coll 35.0% (obst 7/7) | timeout 10.0% | alpha 0.500 | 1.2m
+   315 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 1.5m
+   421 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 1.7m
+   521 | succ 70.0% | coll 30.0% (obst 5/6) | timeout  0.0% | alpha 0.500 | 2.0m
+   623 | succ 75.0% | coll 20.0% (obst 4/4) | timeout  5.0% | alpha 0.500 | 2.2m

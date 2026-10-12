@@ -72,3 +72,7 @@ Hand-coded τ-rule MAPPO | stage 3 | seed 46 | curriculum False
   7408 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.898 | 26.3m
   7511 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.897 | 26.7m
   7615 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.898 | 27.0m
+  7718 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.900 | 27.5m
+  7821 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.900 | 28.0m
+  7928 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.897 | 28.5m
+RUN_DONE tau-rule-mappo stage 3 seed 46 in 28.8 min
