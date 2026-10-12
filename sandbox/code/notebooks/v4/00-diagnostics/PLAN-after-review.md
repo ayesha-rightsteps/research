@@ -42,6 +42,21 @@ Please check these independently before anything below is implemented.
 
 ---
 
+## 1b. Laptop training speed test (approved by Ayesha 2026-10-12, run before the review)
+
+**Question:** can training run on the laptop (Apple M3, 8 cores) instead of only Kaggle, and can several
+runs go in parallel? Speed only — no result from this test is used anywhere.
+
+**Method:** run the *unchanged* v3 Stage 3 MAPPO + PAH training notebook code (cells 1–6 of
+`v3/stage3/var-alpha/kaggle_stage3_pah_seed42test.ipynb`, executed from a scratch folder so nothing is
+written into `v3/`), same config and seed 42, but stop after ~600 episodes. Only two overrides: the
+episode count, and the warm-start path pointed at the existing local file
+`v3/stage2/stage2-b/output/final_model.pt` (read-only). Compare the cumulative time at the same episode
+with Kaggle's own log for that run (Kaggle: 64.4 min for 7939 episodes). Then run 4 and 8 copies at once
+(different seeds) to see how the laptop scales.
+
+**Output:** numbers in the session log only; scratch outputs deleted.
+
 ## 2. Planned work (in order)
 
 ### Step 1 — Correct the safety-reward frequency interpretation (text only, no new numbers)
