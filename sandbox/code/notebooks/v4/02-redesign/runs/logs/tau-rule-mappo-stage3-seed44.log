@@ -34,3 +34,45 @@ Hand-coded τ-rule MAPPO | stage 3 | seed 44 | curriculum False
   3469 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.897 | 13.5m
   3570 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.898 | 13.9m
   3679 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.896 | 14.3m
+  3781 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.898 | 14.7m
+  3885 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.897 | 15.4m
+  3990 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.897 | 15.8m
+  4099 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.896 | 16.2m
+  4206 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.899 | 16.5m
+  4307 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.898 | 16.8m
+  4408 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.900 | 17.2m
+  4515 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.897 | 17.5m
+  4618 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.897 | 17.8m
+  4721 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.899 | 18.2m
+  4824 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.898 | 18.5m
+  4925 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.896 | 18.9m
+  5027 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.898 | 19.3m
+  5131 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.896 | 19.6m
+  5235 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.896 | 20.0m
+  5336 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.898 | 20.3m
+  5440 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.898 | 20.6m
+  5549 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.895 | 21.0m
+  5654 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.899 | 21.3m
+  5757 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.896 | 21.6m
+  5867 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.896 | 22.0m
+  5973 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.896 | 22.3m
+  6077 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.893 | 22.7m
+  6179 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.896 | 23.0m
+  6281 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.896 | 23.4m
+  6382 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.898 | 23.8m
+  6482 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.896 | 24.1m
+  6588 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.898 | 24.5m
+  6689 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.898 | 24.9m
+  6792 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.898 | 25.3m
+  6895 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.895 | 25.7m
+  7001 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.896 | 26.0m
+  7113 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.895 | 26.4m
+  7216 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.899 | 26.9m
+  7322 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.897 | 27.2m
+  7426 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.898 | 27.6m
+  7532 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.900 | 28.0m
+  7637 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.898 | 28.3m
+  7742 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.897 | 28.7m
+  7843 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.898 | 29.0m
+  7945 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.896 | 29.4m
+RUN_DONE tau-rule-mappo stage 3 seed 44 in 29.6 min

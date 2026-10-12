@@ -50,3 +50,28 @@ Fixed-weight MAPPO | stage 3 | seed 44 | curriculum False
   5177 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 17.7m
   5280 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.500 | 18.0m
   5389 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 18.4m
+  5495 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 18.8m
+  5601 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 19.3m
+  5706 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 19.8m
+  5810 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 20.1m
+  5910 | succ 80.0% | coll 20.0% (obst 3/4) | timeout  0.0% | alpha 0.500 | 20.4m
+  6016 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 20.7m
+  6117 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 20.9m
+  6222 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 21.3m
+  6329 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 21.6m
+  6438 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.500 | 21.9m
+  6538 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 22.5m
+  6645 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.500 | 23.1m
+  6754 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 23.4m
+  6856 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 23.8m
+  6962 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 24.1m
+  7069 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 24.5m
+  7176 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.500 | 24.8m
+  7279 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.500 | 25.1m
+  7385 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 25.5m
+  7489 | succ 80.0% | coll 20.0% (obst 3/4) | timeout  0.0% | alpha 0.500 | 25.9m
+  7596 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.500 | 26.3m
+  7704 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.500 | 26.8m
+  7804 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.500 | 27.1m
+  7908 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.500 | 27.6m
+RUN_DONE fixed-weight-mappo stage 3 seed 44 in 27.9 min
