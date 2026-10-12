@@ -1,0 +1,14 @@
+Hand-coded τ-rule MAPPO | stage 2 | seed 42 | curriculum False
+   101 | succ 25.0% | coll 60.0% (obst 12/12) | timeout 15.0% | alpha 0.897 | 0.8m
+   204 | succ 30.0% | coll 40.0% (obst 8/8) | timeout 30.0% | alpha 0.896 | 1.2m
+   305 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.899 | 1.5m
+   409 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.898 | 1.8m
+   509 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.897 | 2.0m
+   616 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.897 | 2.2m
+   716 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.899 | 2.4m
+   820 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.898 | 2.6m
+   922 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.900 | 2.8m
+  1026 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.896 | 3.0m
+  1131 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.895 | 3.3m
+  1235 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.897 | 3.5m
+  1338 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.898 | 3.7m
