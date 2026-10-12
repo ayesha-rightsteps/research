@@ -68,3 +68,12 @@ Plain MAPPO | stage 2 | seed 102 | curriculum False
   6956 | succ 35.0% | coll 60.0% (obst 12/12) | timeout  5.0% | alpha 0.500 | 31.7m
   7057 | succ 45.0% | coll 50.0% (obst 10/10) | timeout  5.0% | alpha 0.500 | 32.1m
   7163 | succ 35.0% | coll 55.0% (obst 11/11) | timeout 10.0% | alpha 0.500 | 32.4m
+  7266 | succ 35.0% | coll 65.0% (obst 13/13) | timeout  0.0% | alpha 0.500 | 32.8m
+  7369 | succ 25.0% | coll 75.0% (obst 15/15) | timeout  0.0% | alpha 0.500 | 33.2m
+  7470 | succ 15.0% | coll 75.0% (obst 15/15) | timeout 10.0% | alpha 0.500 | 33.6m
+  7573 | succ 25.0% | coll 70.0% (obst 14/14) | timeout  5.0% | alpha 0.500 | 34.2m
+  7673 | succ 15.0% | coll 85.0% (obst 17/17) | timeout  0.0% | alpha 0.500 | 34.5m
+  7774 | succ 15.0% | coll 70.0% (obst 14/14) | timeout 15.0% | alpha 0.500 | 35.0m
+  7878 | succ 25.0% | coll 60.0% (obst 12/12) | timeout 15.0% | alpha 0.500 | 35.6m
+  7978 | succ 20.0% | coll 75.0% (obst 15/15) | timeout  5.0% | alpha 0.500 | 36.3m
+RUN_DONE plain-mappo stage 2 seed 102 in 36.4 min
