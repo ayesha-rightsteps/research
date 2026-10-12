@@ -71,3 +71,8 @@ Fixed-weight MAPPO | stage 3 | seed 50 | curriculum False
   7376 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.500 | 25.1m
   7476 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.500 | 25.4m
   7584 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.500 | 25.9m
+  7687 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.500 | 26.4m
+  7789 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 26.8m
+  7889 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.500 | 27.2m
+  7994 | succ 65.0% | coll 30.0% (obst 6/6) | timeout  5.0% | alpha 0.500 | 27.6m
+RUN_DONE fixed-weight-mappo stage 3 seed 50 in 27.6 min

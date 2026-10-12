@@ -68,3 +68,12 @@ Fixed-weight MAPPO | stage 2 | seed 50 | curriculum False
   6954 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 16.6m
   7063 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 16.8m
   7171 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.500 | 16.9m
+  7275 | succ 100.0% | coll  0.0% (obst 0/0) | timeout  0.0% | alpha 0.500 | 17.1m
+  7376 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.500 | 17.3m
+  7479 | succ 90.0% | coll 10.0% (obst 1/2) | timeout  0.0% | alpha 0.500 | 17.4m
+  7582 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.500 | 17.7m
+  7682 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.500 | 17.9m
+  7785 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.500 | 18.1m
+  7892 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.500 | 18.3m
+  8000 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.500 | 18.5m
+RUN_DONE fixed-weight-mappo stage 2 seed 50 in 18.5 min
