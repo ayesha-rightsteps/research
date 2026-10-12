@@ -49,3 +49,46 @@ MAPPO + PAH (Hungarian off) | stage 3 | seed 42 | curriculum False
   5201 | succ  0.0% | coll 100.0% (obst 18/20) | timeout  0.0% | alpha 0.745 | 13.0m
   5312 | succ  5.0% | coll 95.0% (obst 18/19) | timeout  0.0% | alpha 0.753 | 13.2m
   5423 | succ 20.0% | coll 80.0% (obst 16/16) | timeout  0.0% | alpha 0.773 | 13.5m
+  5531 | succ 30.0% | coll 70.0% (obst 13/14) | timeout  0.0% | alpha 0.762 | 13.7m
+  5631 | succ 20.0% | coll 65.0% (obst 11/13) | timeout 15.0% | alpha 0.800 | 14.0m
+  5742 | succ 20.0% | coll 80.0% (obst 15/16) | timeout  0.0% | alpha 0.762 | 14.6m
+  5847 | succ 30.0% | coll 70.0% (obst 13/14) | timeout  0.0% | alpha 0.825 | 15.0m
+  5961 | succ 25.0% | coll 75.0% (obst 14/15) | timeout  0.0% | alpha 0.796 | 15.3m
+  6068 | succ 25.0% | coll 75.0% (obst 14/15) | timeout  0.0% | alpha 0.757 | 15.6m
+  6181 | succ 30.0% | coll 70.0% (obst 12/14) | timeout  0.0% | alpha 0.795 | 16.0m
+  6286 | succ 30.0% | coll 65.0% (obst 12/13) | timeout  5.0% | alpha 0.805 | 16.5m
+  6390 | succ  5.0% | coll 75.0% (obst 10/15) | timeout 20.0% | alpha 0.833 | 17.1m
+  6492 | succ 25.0% | coll 75.0% (obst 14/15) | timeout  0.0% | alpha 0.800 | 17.6m
+  6601 | succ 20.0% | coll 80.0% (obst 15/16) | timeout  0.0% | alpha 0.852 | 18.2m
+  6706 | succ  5.0% | coll 85.0% (obst 16/17) | timeout 10.0% | alpha 0.768 | 18.9m
+  6811 | succ 15.0% | coll 80.0% (obst 15/16) | timeout  5.0% | alpha 0.769 | 19.5m
+  6913 | succ 15.0% | coll 85.0% (obst 14/17) | timeout  0.0% | alpha 0.744 | 20.1m
+  7022 | succ  5.0% | coll 95.0% (obst 17/19) | timeout  0.0% | alpha 0.779 | 20.3m
+  7122 | succ 20.0% | coll 80.0% (obst 15/16) | timeout  0.0% | alpha 0.848 | 20.8m
+  7227 | succ 15.0% | coll 85.0% (obst 14/17) | timeout  0.0% | alpha 0.770 | 21.1m
+  7327 | succ 15.0% | coll 85.0% (obst 15/17) | timeout  0.0% | alpha 0.765 | 21.5m
+  7428 | succ 15.0% | coll 80.0% (obst 14/16) | timeout  5.0% | alpha 0.742 | 21.8m
+  7533 | succ 30.0% | coll 70.0% (obst 13/14) | timeout  0.0% | alpha 0.798 | 22.1m
+Traceback (most recent call last):
+  File "/Users/rightsteps/Masters/deep reinforcement learning/ayesha/sandbox/code/notebooks/v4/02-redesign/train.py", line 182, in <module>
+    main()
+    ~~~~^^
+  File "/Users/rightsteps/Masters/deep reinforcement learning/ayesha/sandbox/code/notebooks/v4/02-redesign/train.py", line 173, in main
+    agent.save(os.path.join(out_dir, 'checkpoint_ep{}.pt'.format(ep_count)))
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/rightsteps/Masters/deep reinforcement learning/ayesha/sandbox/code/notebooks/v4/02-redesign/../common/mappo_v4.py", line 282, in save
+    torch.save(ckpt, path)
+    ~~~~~~~~~~^^^^^^^^^^^^
+  File "/Users/rightsteps/Masters/deep reinforcement learning/ayesha/sandbox/venv/lib/python3.14/site-packages/torch/serialization.py", line 1002, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+         ~~~~~~~~~~~~~~~~~~~~^^^
+  File "/Users/rightsteps/Masters/deep reinforcement learning/ayesha/sandbox/venv/lib/python3.14/site-packages/torch/serialization.py", line 864, in _open_zipfile_writer
+    return container(name_or_buffer)  # type: ignore[arg-type]
+  File "/Users/rightsteps/Masters/deep reinforcement learning/ayesha/sandbox/venv/lib/python3.14/site-packages/torch/serialization.py", line 828, in __init__
+    torch._C.PyTorchFileWriter(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.name, get_crc32_options(), _get_storage_alignment()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+RuntimeError: Parent directory /Users/rightsteps/Masters/deep reinforcement learning/ayesha/sandbox/code/notebooks/v4/02-redesign/runs/stage3/mappo-pah-no-hungarian/seed-42 does not exist.

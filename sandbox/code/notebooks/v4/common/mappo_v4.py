@@ -69,7 +69,8 @@ METHODS = {
     'plain-mappo':        dict(heads=1, actor_adv='plain', alpha_source='fixed', fixed_alpha=0.5),
     'fixed-weight-mappo': dict(heads=2, actor_adv='mixed', alpha_source='fixed', fixed_alpha=0.5),
     'tau-rule-mappo':     dict(heads=2, actor_adv='mixed', alpha_source='taurule'),
-    'mappo-pah':          dict(heads=2, actor_adv='mixed', alpha_source='pah'),
+    'mappo-pah':          dict(heads=2, actor_adv='mixed', alpha_source='pah'),            # risk-learning PAH (fix)
+    'mappo-pah-v1-residual': dict(heads=2, actor_adv='mixed', alpha_source='pah-residual'),  # flawed v1, for the record
 }
 METHOD_NAMES = {'plain-mappo': 'Plain MAPPO', 'fixed-weight-mappo': 'Fixed-weight MAPPO',
                 'tau-rule-mappo': 'Hand-coded τ-rule MAPPO', 'mappo-pah': 'MAPPO + PAH'}
@@ -100,6 +101,21 @@ class HandCodedRule:
         tau_norm = x[..., 0]
         alpha = (self.alpha_min + (self.alpha_max - self.alpha_min) * tau_norm).clamp(self.alpha_min, self.alpha_max)
         return alpha, torch.zeros_like(alpha)
+
+
+class RiskPAH(nn.Module):
+    """v4 PAH (fix of 2026-10-13, see 02-redesign/PAH_FIX_PLAN.md). Same inputs (tau, d_target, n_conflict, normalized)
+    and same 3 -> hidden -> 1 network as the v3 PAH; it predicts the risk p in (0,1) that safety costs are ahead and
+    sets alpha = alpha_max - (alpha_max - alpha_min) * p. It is trained by regression onto the observed safety
+    cost-to-go (Agent.update), never through the actor's PPO objective."""
+    def __init__(self, hidden_dim=32, alpha_min=0.1, alpha_max=0.9):
+        super().__init__()
+        self.alpha_min, self.alpha_max = alpha_min, alpha_max
+        self.net = nn.Sequential(nn.Linear(3, hidden_dim), nn.ReLU(), nn.Linear(hidden_dim, 1))
+
+    def forward(self, x):
+        p = torch.sigmoid(self.net(x).squeeze(-1))
+        return self.alpha_max - (self.alpha_max - self.alpha_min) * p, p
 
 
 def gae(rewards, values, last_val, dones, gamma, lam):
@@ -148,20 +164,25 @@ class Agent:
                  fixed_alpha=0.5, pah_hidden=32, alpha_min=0.1, alpha_max=0.9, pah_delta_scale=0.2,
                  pah_prior_coef=0.15, pah_horizon=3.0, pah_d_max=500.0 * 1.4142136,
                  lr=3e-4, gamma=0.99, lam=0.95, clip_eps=0.2, vf_coef=0.5, ent_coef=0.003,
-                 n_epochs=10, batch_size=64, hidden=64):
-        assert heads in (1, 2) and actor_adv in ('mixed', 'plain') and alpha_source in ('fixed', 'taurule', 'pah')
+                 n_epochs=10, batch_size=64, hidden=64, risk_scale=10.0, pah_coef=1.0):
+        assert heads in (1, 2) and actor_adv in ('mixed', 'plain') and alpha_source in ('fixed', 'taurule', 'pah', 'pah-residual')
+        assert alpha_source != 'pah' or heads == 2, 'the risk-learning PAH needs the safety value head'
         self.n_drones, self.heads, self.actor_adv, self.alpha_source = n_drones, heads, actor_adv, alpha_source
         self.fixed_alpha = fixed_alpha
         self.gamma, self.lam, self.clip_eps = gamma, lam, clip_eps
         self.vf_coef, self.ent_coef = vf_coef, ent_coef
         self.n_epochs, self.batch_size = n_epochs, batch_size
+        self.risk_scale, self.pah_coef = risk_scale, pah_coef
 
         global_dim = n_drones * obs_dim
         self.actor = Actor(obs_dim, act_dim, hidden).to(DEVICE)          # hidden=64 is the v3 size
         self.critic = (Critic(global_dim, hidden) if heads == 1 else Critic2(global_dim, hidden)).to(DEVICE)
         params = list(self.actor.parameters()) + list(self.critic.parameters())
         self.normalizer = PAHNormalizer(pah_horizon, pah_d_max, n_drones)
-        if alpha_source == 'pah':
+        if alpha_source == 'pah':                     # risk-learning PAH (fix)
+            self.pah = RiskPAH(pah_hidden, alpha_min, alpha_max).to(DEVICE)
+            params += list(self.pah.parameters())
+        elif alpha_source == 'pah-residual':          # v1 = v3 residual PAH (biased; kept for the record)
             self.pah = PriorityArbitrationHead(pah_hidden, alpha_min, alpha_max, pah_delta_scale, pah_prior_coef).to(DEVICE)
             params += list(self.pah.parameters())
         elif alpha_source == 'taurule':
@@ -235,13 +256,16 @@ class Agent:
         gs_exp = obs_flat.reshape(T, N * D).unsqueeze(1).expand(T, N, -1).reshape(T * N, -1)
 
         idx_all = np.arange(T * N)
-        st = {k: [] for k in ('actor_loss', 'critic_loss', 'v_loss_m', 'v_loss_s', 'entropy', 'alpha', 'pah_loss', 'delta')}
+        st = {k: [] for k in ('actor_loss', 'critic_loss', 'v_loss_m', 'v_loss_s', 'entropy', 'alpha', 'pah_loss', 'delta',
+                              'risk_pred', 'risk_target')}
         for _ in range(self.n_epochs):
             np.random.shuffle(idx_all)
             for start in range(0, T * N, self.batch_size):
                 idx = idx_all[start:start + self.batch_size]
                 log_p, entropy = self.actor.evaluate_action(obs_flat[idx], act_flat[idx])
                 alpha, delta = self._alpha(tau_f[idx], d_f[idx], nc_f[idx])
+                if self.alpha_source == 'pah':                                 # fix: no actor-loss gradient into PAH
+                    alpha = alpha.detach()
                 if self.actor_adv == 'plain':
                     w_adv = z_c[idx]                                           # v4: Plain MAPPO
                 else:
@@ -258,7 +282,13 @@ class Agent:
                     st['v_loss_m'].append(vl_m.item()); st['v_loss_s'].append(vl_s.item())
                 e_loss = -entropy.mean()
                 loss = a_loss + self.vf_coef * v_loss + self.ent_coef * e_loss
-                if self.alpha_source == 'pah':
+                if self.alpha_source == 'pah':                                 # fix: PAH predicts the safety cost-to-go
+                    risk_target = (-ret_s_flat[idx] / self.risk_scale).clamp(0.0, 1.0)
+                    pah_loss = (delta - risk_target).pow(2).mean()             # here `delta` is the predicted risk p
+                    loss = loss + self.pah_coef * pah_loss
+                    st['pah_loss'].append(pah_loss.item()); st['risk_pred'].append(delta.detach().mean().item())
+                    st['risk_target'].append(risk_target.mean().item())
+                elif self.alpha_source == 'pah-residual':
                     prior = self.pah.compute_prior_loss(delta)
                     loss = loss + prior
                     st['pah_loss'].append(prior.item()); st['delta'].append(delta.detach().abs().mean().item())
@@ -277,12 +307,12 @@ class Agent:
         ckpt = {'actor': self.actor.state_dict(), 'critic': self.critic.state_dict(),
                 'config': dict(heads=self.heads, actor_adv=self.actor_adv, alpha_source=self.alpha_source,
                                fixed_alpha=self.fixed_alpha)}
-        if self.alpha_source == 'pah':
+        if self.alpha_source in ('pah', 'pah-residual'):
             ckpt['pah'] = self.pah.state_dict()
         torch.save(ckpt, path)
 
     def load(self, path):
         ckpt = torch.load(path, map_location=DEVICE, weights_only=False)
         self.actor.load_state_dict(ckpt['actor']); self.critic.load_state_dict(ckpt['critic'])
-        if self.alpha_source == 'pah':
+        if self.alpha_source in ('pah', 'pah-residual'):
             self.pah.load_state_dict(ckpt['pah'])

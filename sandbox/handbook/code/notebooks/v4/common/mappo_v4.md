@@ -28,3 +28,13 @@ Ek hi class, settings se paanch methods banti hain:
 - Do heads wale critic ka loss same batch pe ghatta hai; har method save/load ho kar same action deta hai.
 
 Tests ne do bugs pehle hi pakad liye (inference-only Actor, ek missing import) — dono theek.
+
+## PAH ka fix (13 Oct 2026) — "risk-learning PAH"
+
+Pehla PAH apna α policy ke loss se seekhta tha, aur us loss ne use **khatre mein safety ko nazarandaz** karna sikha
+diya (khatre mein uski correction poori had tak mission ki taraf thi). Naya PAH:
+- wahi 3 inputs aur wahi chhota network;
+- seekhta hai ke **is situation mein aage kitna safety ka nuksaan aane wala hai** (asli tajurbe se);
+- α = zyada khatra → kam (safety pehle), kam khatra → zyada (mission pehle);
+- policy ke loss se use koi gradient nahi milta — is liye use safety ko nazarandaz karne ka koi faayda nahi.
+Tests: actor loss se PAH tak zero gradient; khatre mein α kam seekhta hai; chhote run mein α khatre mein 0.13, safe mein 0.73.

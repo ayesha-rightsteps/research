@@ -125,6 +125,38 @@ def test_alpha_sources_behave():
     assert np.allclose(a_rule.compute_alpha(tau, d, nc), 0.1 + 0.8 * tau / 3.0, atol=1e-6)
 
 
+def test_risk_pah_gets_no_gradient_from_the_actor_loss():
+    """PAH fix gate 1: with the PAH loss switched off, an update must leave PAH's weights exactly unchanged --
+    i.e. the actor's PPO objective sends no gradient into PAH (the cause of the v1 bias)."""
+    torch.manual_seed(0); np.random.seed(0)
+    a = M.Agent(n_drones=5, obs_dim=E.OBS_DIM, **M.METHODS['mappo-pah'], pah_coef=0.0)
+    before = copy.deepcopy(a.pah.state_dict())
+    buf, last = _v4_batch(a, T=256)
+    a.update(buf, last)
+    for k, v in a.pah.state_dict().items():
+        assert torch.equal(v, before[k]), 'PAH weight changed without its own loss: ' + k
+
+
+def test_risk_pah_learns_that_danger_means_low_alpha():
+    """PAH fix gate 2: trained on its own regression target where risk is high at small tau, PAH predicts higher
+    risk -- hence lower alpha -- in danger than when safe."""
+    torch.manual_seed(0)
+    pah = M.RiskPAH()
+    opt = torch.optim.Adam(pah.parameters(), lr=1e-2)
+    g = torch.Generator().manual_seed(0)
+    for _ in range(500):
+        x = torch.rand(256, 3, generator=g)                      # [tau_norm, d_norm, n_norm]
+        target = (x[:, 0] < 0.3).float() * 0.9 + 0.05            # danger when tau_norm < 0.3
+        alpha, p = pah(x)
+        loss = (p - target).pow(2).mean()
+        opt.zero_grad(); loss.backward(); opt.step()
+    with torch.no_grad():
+        danger = torch.tensor([[0.1, 0.5, 0.0]]); safe = torch.tensor([[1.0, 0.5, 0.0]])
+        a_d, p_d = pah(danger); a_s, p_s = pah(safe)
+    assert p_d.item() > 0.7 and p_s.item() < 0.2, (p_d.item(), p_s.item())
+    assert a_d.item() < 0.4 and a_s.item() > 0.7, (a_d.item(), a_s.item())
+
+
 if __name__ == '__main__':
     import sys, time
     tests = [v for k, v in sorted(globals().items()) if k.startswith('test_')]
