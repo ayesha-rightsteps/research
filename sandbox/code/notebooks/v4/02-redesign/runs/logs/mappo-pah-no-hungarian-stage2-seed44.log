@@ -1,0 +1,13 @@
+MAPPO + PAH (Hungarian off) | stage 2 | seed 44 | curriculum False
+   101 | succ  0.0% | coll 80.0% (obst 14/16) | timeout 20.0% | alpha 0.603 | 0.6m
+   208 | succ 25.0% | coll 70.0% (obst 13/14) | timeout  5.0% | alpha 0.723 | 1.0m
+   316 | succ 25.0% | coll 75.0% (obst 12/15) | timeout  0.0% | alpha 0.733 | 1.2m
+   416 | succ  0.0% | coll 80.0% (obst 16/16) | timeout 20.0% | alpha 0.788 | 1.4m
+   523 | succ 25.0% | coll 75.0% (obst 14/15) | timeout  0.0% | alpha 0.766 | 1.6m
+   625 | succ 50.0% | coll 50.0% (obst 9/10) | timeout  0.0% | alpha 0.692 | 1.8m
+   728 | succ 35.0% | coll 65.0% (obst 12/13) | timeout  0.0% | alpha 0.719 | 2.0m
+   829 | succ 20.0% | coll 75.0% (obst 15/15) | timeout  5.0% | alpha 0.768 | 2.3m
+   933 | succ 35.0% | coll 65.0% (obst 13/13) | timeout  0.0% | alpha 0.736 | 2.5m
+  1035 | succ 35.0% | coll 65.0% (obst 12/13) | timeout  0.0% | alpha 0.703 | 2.7m
+  1139 | succ 30.0% | coll 70.0% (obst 13/14) | timeout  0.0% | alpha 0.731 | 2.9m
+  1240 | succ 30.0% | coll 70.0% (obst 12/14) | timeout  0.0% | alpha 0.758 | 3.2m
