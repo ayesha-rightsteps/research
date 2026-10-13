@@ -73,3 +73,6 @@ Fixed-weight MAPPO | stage 2 | seed 51 | curriculum False
   7497 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.500 | 14.5m
   7600 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.500 | 14.6m
   7706 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.500 | 14.8m
+  7807 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.500 | 14.9m
+  7908 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.500 | 15.0m
+RUN_DONE fixed-weight-mappo stage 2 seed 51 in 15.1 min
