@@ -72,3 +72,8 @@ MAPPO + PAH | stage 3 | seed 44 | curriculum False
   7377 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.823 | 26.1m
   7481 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.812 | 26.3m
   7585 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.812 | 26.6m
+  7695 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.805 | 26.9m
+  7797 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.800 | 27.3m
+  7898 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.815 | 27.6m
+  7998 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.831 | 27.9m
+RUN_DONE mappo-pah stage 3 seed 44 in 27.9 min

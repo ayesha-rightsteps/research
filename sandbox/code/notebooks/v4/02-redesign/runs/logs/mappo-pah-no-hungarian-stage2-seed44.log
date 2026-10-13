@@ -53,3 +53,26 @@ MAPPO + PAH (Hungarian off) | stage 2 | seed 44 | curriculum False
   5437 | succ 60.0% | coll 40.0% (obst 7/8) | timeout  0.0% | alpha 0.809 | 12.2m
   5537 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.829 | 12.4m
   5638 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.787 | 12.6m
+  5744 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.813 | 12.8m
+  5849 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.827 | 13.0m
+  5952 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.830 | 13.3m
+  6058 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.764 | 13.5m
+  6165 | succ 70.0% | coll 30.0% (obst 5/6) | timeout  0.0% | alpha 0.834 | 13.7m
+  6269 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.822 | 13.9m
+  6370 | succ 95.0% | coll  5.0% (obst 0/1) | timeout  0.0% | alpha 0.792 | 14.1m
+  6477 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.806 | 14.4m
+  6583 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.829 | 14.6m
+  6686 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.768 | 14.8m
+  6786 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.801 | 15.0m
+  6889 | succ 80.0% | coll 20.0% (obst 3/4) | timeout  0.0% | alpha 0.829 | 15.2m
+  6997 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.820 | 15.4m
+  7098 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.820 | 15.6m
+  7203 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.823 | 15.8m
+  7310 | succ 80.0% | coll 20.0% (obst 3/4) | timeout  0.0% | alpha 0.788 | 16.0m
+  7410 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.821 | 16.2m
+  7516 | succ 80.0% | coll 20.0% (obst 3/4) | timeout  0.0% | alpha 0.827 | 16.5m
+  7621 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.820 | 16.7m
+  7727 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.804 | 16.9m
+  7835 | succ 75.0% | coll 25.0% (obst 4/5) | timeout  0.0% | alpha 0.818 | 17.2m
+  7936 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.800 | 17.4m
+RUN_DONE mappo-pah-no-hungarian stage 2 seed 44 in 17.5 min

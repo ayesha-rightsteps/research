@@ -3,3 +3,38 @@ MAPPO + PAH | stage 3 | seed 45 | curriculum False
    205 | succ 15.0% | coll 85.0% (obst 17/17) | timeout  0.0% | alpha 0.697 | 1.1m
    305 | succ 10.0% | coll 75.0% (obst 15/15) | timeout 15.0% | alpha 0.758 | 1.4m
    405 | succ 25.0% | coll 75.0% (obst 14/15) | timeout  0.0% | alpha 0.739 | 1.6m
+   508 | succ 15.0% | coll 70.0% (obst 14/14) | timeout 15.0% | alpha 0.754 | 2.0m
+   610 | succ 30.0% | coll 60.0% (obst 12/12) | timeout 10.0% | alpha 0.771 | 2.4m
+   717 | succ 25.0% | coll 65.0% (obst 11/13) | timeout 10.0% | alpha 0.709 | 2.8m
+   827 | succ 20.0% | coll 55.0% (obst 9/11) | timeout 25.0% | alpha 0.755 | 3.1m
+   928 | succ 55.0% | coll 45.0% (obst 8/9) | timeout  0.0% | alpha 0.765 | 3.6m
+  1038 | succ 55.0% | coll 45.0% (obst 9/9) | timeout  0.0% | alpha 0.744 | 3.9m
+  1143 | succ 55.0% | coll 45.0% (obst 9/9) | timeout  0.0% | alpha 0.742 | 4.3m
+  1243 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.747 | 4.5m
+  1347 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.728 | 4.9m
+  1449 | succ 60.0% | coll 40.0% (obst 8/8) | timeout  0.0% | alpha 0.724 | 5.3m
+  1553 | succ 50.0% | coll 45.0% (obst 8/9) | timeout  5.0% | alpha 0.724 | 5.8m
+  1654 | succ 10.0% | coll 30.0% (obst 4/6) | timeout 60.0% | alpha 0.686 | 6.6m
+  1756 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.730 | 7.3m
+  1857 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.781 | 7.7m
+  1961 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.732 | 8.1m
+  2065 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.758 | 8.6m
+  2170 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.733 | 9.1m
+  2273 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.793 | 9.5m
+  2377 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.712 | 9.9m
+  2478 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.776 | 10.4m
+  2583 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.784 | 10.9m
+  2688 | succ 70.0% | coll 30.0% (obst 5/6) | timeout  0.0% | alpha 0.782 | 11.3m
+  2791 | succ 75.0% | coll 25.0% (obst 5/5) | timeout  0.0% | alpha 0.782 | 11.7m
+  2894 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.737 | 12.1m
+  2995 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.794 | 12.5m
+  3097 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.799 | 12.9m
+  3197 | succ 70.0% | coll 30.0% (obst 5/6) | timeout  0.0% | alpha 0.758 | 13.5m
+  3302 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.728 | 14.2m
+  3403 | succ 100.0% | coll  0.0% (obst 0/0) | timeout  0.0% | alpha 0.744 | 14.6m
+  3505 | succ 90.0% | coll 10.0% (obst 2/2) | timeout  0.0% | alpha 0.758 | 14.9m
+  3608 | succ 100.0% | coll  0.0% (obst 0/0) | timeout  0.0% | alpha 0.778 | 15.3m
+  3712 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.765 | 15.7m
+  3815 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.803 | 16.0m
+  3916 | succ 95.0% | coll  5.0% (obst 1/1) | timeout  0.0% | alpha 0.790 | 16.4m
+  4021 | succ 95.0% | coll  5.0% (obst 0/1) | timeout  0.0% | alpha 0.790 | 16.8m
