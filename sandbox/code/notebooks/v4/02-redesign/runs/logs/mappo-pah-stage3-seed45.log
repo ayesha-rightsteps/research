@@ -1,0 +1,5 @@
+MAPPO + PAH | stage 3 | seed 45 | curriculum False
+   104 | succ  0.0% | coll 60.0% (obst 12/12) | timeout 40.0% | alpha 0.710 | 0.8m
+   205 | succ 15.0% | coll 85.0% (obst 17/17) | timeout  0.0% | alpha 0.697 | 1.1m
+   305 | succ 10.0% | coll 75.0% (obst 15/15) | timeout 15.0% | alpha 0.758 | 1.4m
+   405 | succ 25.0% | coll 75.0% (obst 14/15) | timeout  0.0% | alpha 0.739 | 1.6m
