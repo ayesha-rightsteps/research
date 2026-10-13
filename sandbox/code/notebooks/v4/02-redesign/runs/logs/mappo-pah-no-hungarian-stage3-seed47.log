@@ -4,3 +4,28 @@ MAPPO + PAH (Hungarian off) | stage 3 | seed 47 | curriculum False
    321 | succ  0.0% | coll 100.0% (obst 18/20) | timeout  0.0% | alpha 0.685 | 2.0m
    429 | succ  0.0% | coll 100.0% (obst 18/20) | timeout  0.0% | alpha 0.722 | 2.2m
    550 | succ  5.0% | coll 90.0% (obst 16/18) | timeout  5.0% | alpha 0.715 | 2.6m
+   653 | succ  5.0% | coll 85.0% (obst 14/17) | timeout 10.0% | alpha 0.666 | 2.8m
+   756 | succ  0.0% | coll 95.0% (obst 17/19) | timeout  5.0% | alpha 0.720 | 3.3m
+   859 | succ 10.0% | coll 85.0% (obst 15/17) | timeout  5.0% | alpha 0.705 | 3.6m
+   960 | succ 10.0% | coll 90.0% (obst 15/18) | timeout  0.0% | alpha 0.724 | 3.9m
+  1061 | succ 20.0% | coll 75.0% (obst 15/15) | timeout  5.0% | alpha 0.730 | 4.2m
+  1169 | succ 30.0% | coll 65.0% (obst 12/13) | timeout  5.0% | alpha 0.712 | 4.5m
+  1274 | succ 25.0% | coll 70.0% (obst 11/14) | timeout  5.0% | alpha 0.735 | 4.8m
+  1385 | succ 25.0% | coll 70.0% (obst 11/14) | timeout  5.0% | alpha 0.685 | 5.1m
+  1487 | succ 35.0% | coll 65.0% (obst 9/13) | timeout  0.0% | alpha 0.756 | 5.4m
+  1588 | succ 30.0% | coll 70.0% (obst 10/14) | timeout  0.0% | alpha 0.726 | 5.8m
+  1695 | succ 25.0% | coll 75.0% (obst 13/15) | timeout  0.0% | alpha 0.705 | 6.1m
+  1800 | succ 25.0% | coll 75.0% (obst 14/15) | timeout  0.0% | alpha 0.671 | 6.4m
+  1901 | succ 30.0% | coll 70.0% (obst 11/14) | timeout  0.0% | alpha 0.729 | 6.8m
+  2006 | succ 30.0% | coll 65.0% (obst 11/13) | timeout  5.0% | alpha 0.698 | 7.3m
+  2112 | succ 30.0% | coll 70.0% (obst 14/14) | timeout  0.0% | alpha 0.689 | 7.7m
+  2213 | succ 40.0% | coll 60.0% (obst 11/12) | timeout  0.0% | alpha 0.723 | 8.2m
+  2320 | succ 55.0% | coll 40.0% (obst 6/8) | timeout  5.0% | alpha 0.708 | 8.7m
+  2424 | succ 50.0% | coll 50.0% (obst 8/10) | timeout  0.0% | alpha 0.738 | 9.2m
+  2531 | succ 50.0% | coll 35.0% (obst 5/7) | timeout 15.0% | alpha 0.716 | 9.8m
+  2637 | succ 65.0% | coll 30.0% (obst 5/6) | timeout  5.0% | alpha 0.720 | 10.5m
+  2737 | succ 45.0% | coll 40.0% (obst 6/8) | timeout 15.0% | alpha 0.727 | 11.2m
+  2843 | succ 65.0% | coll 35.0% (obst 4/7) | timeout  0.0% | alpha 0.713 | 11.7m
+  2946 | succ 70.0% | coll 30.0% (obst 3/6) | timeout  0.0% | alpha 0.791 | 12.2m
+  3049 | succ 50.0% | coll 50.0% (obst 7/10) | timeout  0.0% | alpha 0.706 | 12.6m
+  3156 | succ 65.0% | coll 35.0% (obst 4/7) | timeout  0.0% | alpha 0.685 | 13.1m
