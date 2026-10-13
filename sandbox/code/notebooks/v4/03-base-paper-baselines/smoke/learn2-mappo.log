@@ -1,0 +1,21 @@
+MAPPO | stage 2 | seed 101 | obs dim 38
+   102 | succ  0.0% | coll 40.0% | timeout 60.0% | 1.0m
+   204 | succ 25.0% | coll 45.0% | timeout 30.0% | 1.5m
+   312 | succ 30.0% | coll 55.0% | timeout 15.0% | 1.8m
+   415 | succ 65.0% | coll 35.0% | timeout  0.0% | 2.0m
+   521 | succ 60.0% | coll 40.0% | timeout  0.0% | 2.3m
+   628 | succ 60.0% | coll 40.0% | timeout  0.0% | 2.5m
+   740 | succ 65.0% | coll 35.0% | timeout  0.0% | 2.7m
+   844 | succ 45.0% | coll 55.0% | timeout  0.0% | 2.8m
+   945 | succ 70.0% | coll 30.0% | timeout  0.0% | 3.1m
+  1056 | succ 60.0% | coll 40.0% | timeout  0.0% | 3.3m
+  1156 | succ 60.0% | coll 40.0% | timeout  0.0% | 3.5m
+  1264 | succ 55.0% | coll 45.0% | timeout  0.0% | 3.6m
+  1364 | succ 65.0% | coll 35.0% | timeout  0.0% | 3.8m
+  1468 | succ 50.0% | coll 50.0% | timeout  0.0% | 3.9m
+  1572 | succ 45.0% | coll 55.0% | timeout  0.0% | 4.1m
+  1676 | succ 55.0% | coll 45.0% | timeout  0.0% | 4.3m
+  1776 | succ 65.0% | coll 35.0% | timeout  0.0% | 4.4m
+  1883 | succ 60.0% | coll 40.0% | timeout  0.0% | 4.6m
+  1990 | succ 60.0% | coll 40.0% | timeout  0.0% | 4.9m
+RUN_DONE mappo stage 2 seed 101 in 4.9 min

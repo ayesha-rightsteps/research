@@ -18,6 +18,14 @@ terms (the safety distance now uses the nearest drone OR disc surface), success 
 
 Extra per-step info for logging (v4 logs diagnostics during training): collision kind, safety-reward
 cause, which hazard set tau, loss-of-separation pairs, active conflict edges.
+
+Phase 2 switches (v4/03-base-paper-baselines/PLAN.md Section 2); the defaults reproduce Phase 1b exactly:
+  assignment  'every-step'      Hungarian at reset and every step (default; = use_hungarian=True)
+              'fixed-at-reset'  Hungarian once at reset, then fixed -- the base paper's "rigid assignment" baselines
+              'fixed-arbitrary' drone i -> target i, fixed (= use_hungarian=False, the Phase 1b "Hungarian off")
+  teammates   'conflict'        the 4 conflict-graph neighbour slots (default; obs dim 50)
+              'all'             relative positions of all teammates, as DA-MAPPO's "swarm topology" (obs dim 30 + 2(N-1))
+              'none'            own features only (obs dim 30) -- the IGAT-style encoder gets neighbours through the graph
 """
 
 import numpy as np
@@ -88,7 +96,7 @@ class MultiUAVEnvV4:
                  max_speed=5.0, max_steps=500, collision_radius=3.0,
                  target_radius=25.0, success_bonus=20.0, target_speed=1.0,
                  obstacle_radius=OBS_RADIUS, use_hungarian=True, seed=None,
-                 safety_danger_radius=None, collision_penalty=1.0):
+                 safety_danger_radius=None, collision_penalty=1.0, assignment=None, teammates='conflict'):
         self.n = n_drones
         self.n_obs = n_obstacles
         self.W = world_size
@@ -99,14 +107,19 @@ class MultiUAVEnvV4:
         self.bonus = success_bonus
         self.tgt_speed = target_speed
         self.obs_r = obstacle_radius
-        self.use_hungarian = use_hungarian
+        self.assignment_mode = assignment or ('every-step' if use_hungarian else 'fixed-arbitrary')
+        assert self.assignment_mode in ('every-step', 'fixed-at-reset', 'fixed-arbitrary'), assignment
+        assert teammates in ('conflict', 'all', 'none'), teammates
+        self.use_hungarian = self.assignment_mode == 'every-step'
+        self.teammates = teammates
         # safety-reward shape (Phase 1b Step 3 tuning knobs). Defaults = v3: shaping starts 3 x collision
         # radius from the nearest drone / disc surface, and a collision gives r_safety = -1.
         self.safety_danger_r = collision_radius * 3.0 if safety_danger_radius is None else safety_danger_radius
         self.collision_penalty = collision_penalty
         self.rng = np.random.default_rng(seed)
         self.cg = ConflictGraph(n_drones, horizon=TAU_HORIZON, d_danger=collision_radius * 3.0)
-        self.obs_dim = OBS_DIM
+        self.obs_dim = {'conflict': OBS_DIM, 'all': BASE_DIM + N_RAYS + 2 * (n_drones - 1),
+                        'none': BASE_DIM + N_RAYS}[teammates]
         self.act_dim = 2
 
     # ---------------------------------------------------------------- reset / step
@@ -121,7 +134,7 @@ class MultiUAVEnvV4:
         self.drone_vel = np.zeros((self.n, 2), dtype=np.float32)
         angles = self.rng.uniform(0, 2 * np.pi, self.n)
         self.target_vel = (self.tgt_speed * np.stack([np.cos(angles), np.sin(angles)], axis=1)).astype(np.float32)
-        self.assignment = self._hungarian() if self.use_hungarian else np.arange(self.n)
+        self.assignment = np.arange(self.n) if self.assignment_mode == 'fixed-arbitrary' else self._hungarian()
         self.cg.update(self.drone_pos, self.drone_vel)
         return self._obs()
 
@@ -196,10 +209,16 @@ class MultiUAVEnvV4:
             rays = ray_distances(self.drone_pos[i].astype(np.float64), self.obstacle_pos.astype(np.float64),
                                  self.obs_r, self.W) / RAY_RANGE
             base = np.concatenate([self.drone_pos[i] / self.W, self.drone_vel[i] / self.max_sp, rel / self.W, rays])
-            nbr = self.cg.neighbor_obs(i, self.drone_pos, self.drone_vel)
-            for s in range(K_NBR):
-                nbr[s * 5: s * 5 + 2] /= self.W
-                nbr[s * 5 + 2: s * 5 + 4] /= self.max_sp
+            if self.teammates == 'conflict':
+                nbr = self.cg.neighbor_obs(i, self.drone_pos, self.drone_vel)
+                for s in range(K_NBR):
+                    nbr[s * 5: s * 5 + 2] /= self.W
+                    nbr[s * 5 + 2: s * 5 + 4] /= self.max_sp
+            elif self.teammates == 'all':                 # Phase 2: all teammates, ordered by drone index
+                nbr = np.concatenate([(self.drone_pos[j] - self.drone_pos[i]) / self.W
+                                      for j in range(self.n) if j != i])
+            else:
+                nbr = np.zeros(0, dtype=np.float32)
             obs[i] = np.concatenate([base, nbr])
         return obs
 

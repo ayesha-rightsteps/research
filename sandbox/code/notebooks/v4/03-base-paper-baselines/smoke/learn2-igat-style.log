@@ -1,0 +1,21 @@
+IGAT-style MAPPO | stage 2 | seed 101 | obs dim 30
+   100 | succ  0.0% | coll 55.0% | timeout 45.0% | 1.2m
+   202 | succ 30.0% | coll 65.0% | timeout  5.0% | 2.8m
+   307 | succ 60.0% | coll 40.0% | timeout  0.0% | 3.6m
+   407 | succ 60.0% | coll 40.0% | timeout  0.0% | 4.3m
+   507 | succ 65.0% | coll 35.0% | timeout  0.0% | 5.1m
+   608 | succ 80.0% | coll 20.0% | timeout  0.0% | 5.5m
+   714 | succ 70.0% | coll 30.0% | timeout  0.0% | 5.9m
+   816 | succ 75.0% | coll 25.0% | timeout  0.0% | 6.2m
+   917 | succ 90.0% | coll 10.0% | timeout  0.0% | 6.6m
+  1021 | succ 90.0% | coll 10.0% | timeout  0.0% | 7.0m
+  1125 | succ 85.0% | coll 15.0% | timeout  0.0% | 7.3m
+  1228 | succ 85.0% | coll 15.0% | timeout  0.0% | 7.7m
+  1328 | succ 85.0% | coll 15.0% | timeout  0.0% | 8.2m
+  1429 | succ 100.0% | coll  0.0% | timeout  0.0% | 8.6m
+  1531 | succ 80.0% | coll 20.0% | timeout  0.0% | 8.9m
+  1633 | succ 60.0% | coll 40.0% | timeout  0.0% | 9.3m
+  1736 | succ 75.0% | coll 25.0% | timeout  0.0% | 9.6m
+  1842 | succ 70.0% | coll 30.0% | timeout  0.0% | 10.0m
+  1947 | succ 80.0% | coll 20.0% | timeout  0.0% | 10.4m
+RUN_DONE igat-style stage 2 seed 101 in 10.6 min

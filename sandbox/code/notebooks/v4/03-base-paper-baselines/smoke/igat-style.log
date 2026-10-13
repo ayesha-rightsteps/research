@@ -1,0 +1,5 @@
+IGAT-style MAPPO | stage 3 | seed 101 | obs dim 30
+   100 | succ  0.0% | coll 70.0% | timeout 30.0% | 1.2m
+   201 | succ  0.0% | coll 65.0% | timeout 35.0% | 2.7m
+   307 | succ  0.0% | coll 75.0% | timeout 25.0% | 3.8m
+RUN_DONE igat-style stage 3 seed 101 in 3.8 min

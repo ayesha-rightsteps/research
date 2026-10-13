@@ -13,8 +13,11 @@ Per episode it records the outcome (success / collision / timeout), the collisio
 path length of every drone; per drone-step the PAH-side quantities (alpha, tau, which hazard set tau).
 
 Usage:
-  python evaluate.py                 # all 100 models, 4 processes  -> output/eval_per_seed.csv, output/eval_raw/
+  python evaluate.py                 # all 100 models, 4 processes  -> output/eval_raw/
   python evaluate.py --episodes 20   # quick check
+  python evaluate.py --phase2        # Phase 2 base-paper methods: ../03-base-paper-baselines/runs -> that folder's output/
+Phase 2 models (config.json has 'assignment') are rebuilt with 03-base-paper-baselines/train_baselines.py; the
+episode loop is the same, with the two hooks those agents need (graph for IGAT-style, hidden-state reset for RMAPPO).
 """
 import os, sys, json, glob, time
 import numpy as np
@@ -30,11 +33,19 @@ EVAL_SEED = 7001
 EPISODES = 200
 METHODS = ['plain-mappo', 'fixed-weight-mappo', 'tau-rule-mappo', 'mappo-pah', 'mappo-pah-no-hungarian']
 OUT = os.path.join(HERE, 'output')
+PHASE2 = os.path.join(HERE, '..', '03-base-paper-baselines')
+PHASE2_METHODS = ['ippo', 'mappo', 'rmappo', 'da-mappo-2d', 'igat-style']
 
 
 def build(run_dir):
     """Agent + environment exactly as in training, from the run's config.json."""
     c = json.load(open(os.path.join(run_dir, 'config.json')))
+    if 'assignment' in c:                       # Phase 2 base-paper method
+        sys.path.insert(0, PHASE2)
+        import train_baselines as TB
+        agent = TB.make_agent(c)
+        agent.load(os.path.join(run_dir, 'final_model.pt'))
+        return c, agent, TB.make_env(c, EVAL_SEED, bonus=0.0)
     agent = M.Agent(n_drones=c['n_drones'], obs_dim=E.OBS_DIM, **c['agent'], pah_hidden=c['pah_hidden'],
                     alpha_min=c['alpha_min'], alpha_max=c['alpha_max'], pah_delta_scale=c['pah_delta_scale'],
                     pah_prior_coef=c['pah_prior_coef'], pah_horizon=c['pah_horizon'], pah_d_max=c['pah_d_max'],
@@ -51,15 +62,18 @@ def build(run_dir):
 def evaluate_run(run_dir, episodes=EPISODES):
     torch.set_num_threads(1)
     c, agent, env = build(run_dir)
-    horizon = c['pah_horizon']
+    horizon = c.get('pah_horizon', E.TAU_HORIZON)
     eps = []                                   # one dict per episode
     alpha_by_tau = {k: [] for k in range(4)}   # tau bins [0,1), [1,2), [2,3), 3 (= nothing within the horizon)
     tau_obst = tau_drone = flagged_steps = drone_steps = 0
     for _ in range(episodes):
         obs, done, steps = env.reset(), False, 0
+        if hasattr(agent, 'reset_episode'):
+            agent.reset_episode()
         path = np.zeros(c['n_drones'])
         while not done:
-            act, _, _ = agent.get_actions(obs, deterministic=True)
+            kw = {'adj': env.cg.adj.copy()} if getattr(agent, 'uses_graph', False) else {}
+            act, _, _ = agent.get_actions(obs, deterministic=True, **kw)
             before = env.drone_pos.copy()
             obs, _, te, tr, info = env.step(act)
             path += np.linalg.norm(env.drone_pos - before, axis=1)
@@ -103,14 +117,16 @@ def evaluate_run(run_dir, episodes=EPISODES):
 
 def main():
     episodes = int(sys.argv[sys.argv.index('--episodes') + 1]) if '--episodes' in sys.argv else EPISODES
-    runs = sorted(d for st in (2, 3) for m in METHODS
-                  for d in glob.glob(os.path.join(HERE, 'runs', 'stage{}'.format(st), m, 'seed-*'))
+    root, methods, out = (PHASE2, PHASE2_METHODS, os.path.join(PHASE2, 'output')) if '--phase2' in sys.argv \
+        else (HERE, METHODS, OUT)
+    runs = sorted(d for st in (2, 3) for m in methods
+                  for d in glob.glob(os.path.join(root, 'runs', 'stage{}'.format(st), m, 'seed-*'))
                   if os.path.exists(os.path.join(d, 'final_model.pt')))
     print('{} models, {} episodes each, evaluation seed {}'.format(len(runs), episodes, EVAL_SEED), flush=True)
     t0 = time.time()
     with Pool(4) as pool:
         res = pool.starmap(evaluate_run, [(d, episodes) for d in runs])
-    raw = os.path.join(OUT, 'eval_raw' if episodes == EPISODES else 'eval_raw_check')
+    raw = os.path.join(out, 'eval_raw' if episodes == EPISODES else 'eval_raw_check')
     os.makedirs(raw, exist_ok=True)
     for r in res:
         json.dump(r, open(os.path.join(raw, 'stage{}_{}_seed{}.json'.format(r['stage'], r['method'], r['seed'])), 'w'))

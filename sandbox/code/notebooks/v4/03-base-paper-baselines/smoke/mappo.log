@@ -1,0 +1,5 @@
+MAPPO | stage 3 | seed 101 | obs dim 44
+   100 | succ  0.0% | coll 60.0% | timeout 40.0% | 1.3m
+   201 | succ  0.0% | coll 70.0% | timeout 30.0% | 2.1m
+   303 | succ 10.0% | coll 75.0% | timeout 15.0% | 2.6m
+RUN_DONE mappo stage 3 seed 101 in 2.6 min

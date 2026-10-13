@@ -1,0 +1,21 @@
+IPPO | stage 2 | seed 101 | obs dim 38
+   100 | succ  0.0% | coll 60.0% | timeout 40.0% | 0.7m
+   200 | succ 40.0% | coll 35.0% | timeout 25.0% | 1.6m
+   302 | succ 60.0% | coll 35.0% | timeout  5.0% | 2.2m
+   403 | succ 50.0% | coll 35.0% | timeout 15.0% | 2.5m
+   505 | succ 35.0% | coll 50.0% | timeout 15.0% | 2.9m
+   605 | succ 70.0% | coll 25.0% | timeout  5.0% | 3.4m
+   705 | succ 75.0% | coll 20.0% | timeout  5.0% | 3.8m
+   805 | succ 70.0% | coll 30.0% | timeout  0.0% | 4.0m
+   906 | succ 70.0% | coll 30.0% | timeout  0.0% | 4.3m
+  1008 | succ 75.0% | coll 25.0% | timeout  0.0% | 4.5m
+  1110 | succ 90.0% | coll 10.0% | timeout  0.0% | 4.8m
+  1215 | succ 70.0% | coll 30.0% | timeout  0.0% | 5.0m
+  1320 | succ 75.0% | coll 25.0% | timeout  0.0% | 5.2m
+  1429 | succ 70.0% | coll 30.0% | timeout  0.0% | 5.3m
+  1533 | succ 70.0% | coll 30.0% | timeout  0.0% | 5.5m
+  1640 | succ 75.0% | coll 25.0% | timeout  0.0% | 5.6m
+  1744 | succ 75.0% | coll 25.0% | timeout  0.0% | 5.8m
+  1844 | succ 75.0% | coll 25.0% | timeout  0.0% | 5.9m
+  1945 | succ 75.0% | coll 25.0% | timeout  0.0% | 6.0m
+RUN_DONE ippo stage 2 seed 101 in 6.1 min

@@ -1,0 +1,21 @@
+DA-MAPPO (2D) | stage 2 | seed 101 | obs dim 38
+   102 | succ  5.0% | coll 25.0% | timeout 70.0% | 1.0m
+   202 | succ 35.0% | coll 45.0% | timeout 20.0% | 1.6m
+   304 | succ 50.0% | coll 35.0% | timeout 15.0% | 1.9m
+   411 | succ 70.0% | coll 30.0% | timeout  0.0% | 2.2m
+   523 | succ 65.0% | coll 35.0% | timeout  0.0% | 2.4m
+   626 | succ 60.0% | coll 40.0% | timeout  0.0% | 2.6m
+   731 | succ 55.0% | coll 45.0% | timeout  0.0% | 2.9m
+   831 | succ 70.0% | coll 30.0% | timeout  0.0% | 3.1m
+   939 | succ 75.0% | coll 25.0% | timeout  0.0% | 3.4m
+  1042 | succ 65.0% | coll 30.0% | timeout  5.0% | 3.6m
+  1144 | succ 75.0% | coll 25.0% | timeout  0.0% | 3.7m
+  1244 | succ 75.0% | coll 25.0% | timeout  0.0% | 3.9m
+  1353 | succ 65.0% | coll 35.0% | timeout  0.0% | 4.1m
+  1465 | succ 65.0% | coll 35.0% | timeout  0.0% | 4.3m
+  1573 | succ 70.0% | coll 30.0% | timeout  0.0% | 4.5m
+  1677 | succ 75.0% | coll 25.0% | timeout  0.0% | 4.6m
+  1789 | succ 70.0% | coll 30.0% | timeout  0.0% | 4.8m
+  1896 | succ 65.0% | coll 35.0% | timeout  0.0% | 4.9m
+  1998 | succ 70.0% | coll 30.0% | timeout  0.0% | 5.0m
+RUN_DONE da-mappo-2d stage 2 seed 101 in 5.0 min

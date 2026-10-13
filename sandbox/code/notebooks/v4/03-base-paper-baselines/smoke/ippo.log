@@ -1,0 +1,4 @@
+IPPO | stage 3 | seed 101 | obs dim 44
+   101 | succ  0.0% | coll 50.0% | timeout 50.0% | 1.4m
+   203 | succ  0.0% | coll 55.0% | timeout 45.0% | 2.5m
+RUN_DONE ippo stage 3 seed 101 in 3.1 min

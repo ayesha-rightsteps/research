@@ -1,0 +1,5 @@
+DA-MAPPO (2D) | stage 3 | seed 101 | obs dim 44
+   103 | succ  0.0% | coll 35.0% | timeout 65.0% | 1.3m
+   206 | succ  0.0% | coll 60.0% | timeout 40.0% | 2.0m
+   310 | succ 10.0% | coll 60.0% | timeout 30.0% | 2.5m
+RUN_DONE da-mappo-2d stage 3 seed 101 in 2.5 min
