@@ -1,0 +1,10 @@
+MAPPO + PAH | stage 2 | seed 51 | curriculum False
+   103 | succ 10.0% | coll 45.0% (obst 9/9) | timeout 45.0% | alpha 0.771 | 0.8m
+   204 | succ 50.0% | coll 20.0% (obst 4/4) | timeout 30.0% | alpha 0.798 | 1.3m
+   306 | succ 35.0% | coll 65.0% (obst 13/13) | timeout  0.0% | alpha 0.754 | 1.8m
+   412 | succ 70.0% | coll 30.0% (obst 6/6) | timeout  0.0% | alpha 0.779 | 2.2m
+   518 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.768 | 2.6m
+   624 | succ 85.0% | coll 15.0% (obst 3/3) | timeout  0.0% | alpha 0.785 | 2.8m
+   728 | succ 65.0% | coll 35.0% (obst 7/7) | timeout  0.0% | alpha 0.808 | 3.0m
+   831 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.810 | 3.2m
+   936 | succ 80.0% | coll 20.0% (obst 4/4) | timeout  0.0% | alpha 0.794 | 3.4m
