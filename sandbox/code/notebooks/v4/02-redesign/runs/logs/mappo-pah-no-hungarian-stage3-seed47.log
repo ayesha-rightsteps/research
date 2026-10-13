@@ -1,0 +1,6 @@
+MAPPO + PAH (Hungarian off) | stage 3 | seed 47 | curriculum False
+   100 | succ  0.0% | coll 80.0% (obst 10/16) | timeout 20.0% | alpha 0.642 | 1.1m
+   209 | succ  0.0% | coll 100.0% (obst 18/20) | timeout  0.0% | alpha 0.727 | 1.7m
+   321 | succ  0.0% | coll 100.0% (obst 18/20) | timeout  0.0% | alpha 0.685 | 2.0m
+   429 | succ  0.0% | coll 100.0% (obst 18/20) | timeout  0.0% | alpha 0.722 | 2.2m
+   550 | succ  5.0% | coll 90.0% (obst 16/18) | timeout  5.0% | alpha 0.715 | 2.6m
