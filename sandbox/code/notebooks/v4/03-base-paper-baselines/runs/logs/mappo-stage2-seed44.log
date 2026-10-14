@@ -49,3 +49,29 @@ MAPPO | stage 2 | seed 44 | obs dim 38
   5042 | succ 60.0% | coll 40.0% | timeout  0.0% | 12.6m
   5143 | succ 55.0% | coll 45.0% | timeout  0.0% | 12.8m
   5247 | succ 65.0% | coll 35.0% | timeout  0.0% | 13.0m
+  5352 | succ 65.0% | coll 35.0% | timeout  0.0% | 13.3m
+  5459 | succ 60.0% | coll 40.0% | timeout  0.0% | 13.5m
+  5559 | succ 60.0% | coll 40.0% | timeout  0.0% | 13.7m
+  5662 | succ 60.0% | coll 40.0% | timeout  0.0% | 14.0m
+  5773 | succ 55.0% | coll 45.0% | timeout  0.0% | 14.2m
+  5888 | succ 55.0% | coll 45.0% | timeout  0.0% | 14.4m
+  6001 | succ 55.0% | coll 45.0% | timeout  0.0% | 14.6m
+  6105 | succ 60.0% | coll 40.0% | timeout  0.0% | 14.8m
+  6210 | succ 65.0% | coll 35.0% | timeout  0.0% | 15.0m
+  6324 | succ 50.0% | coll 50.0% | timeout  0.0% | 15.1m
+  6429 | succ 55.0% | coll 45.0% | timeout  0.0% | 15.3m
+  6533 | succ 65.0% | coll 35.0% | timeout  0.0% | 15.4m
+  6636 | succ 60.0% | coll 40.0% | timeout  0.0% | 15.6m
+  6743 | succ 55.0% | coll 45.0% | timeout  0.0% | 15.7m
+  6848 | succ 55.0% | coll 45.0% | timeout  0.0% | 15.9m
+  6957 | succ 70.0% | coll 30.0% | timeout  0.0% | 16.0m
+  7066 | succ 60.0% | coll 40.0% | timeout  0.0% | 16.2m
+  7180 | succ 60.0% | coll 40.0% | timeout  0.0% | 16.3m
+  7285 | succ 60.0% | coll 40.0% | timeout  0.0% | 16.5m
+  7386 | succ 65.0% | coll 35.0% | timeout  0.0% | 16.6m
+  7500 | succ 65.0% | coll 35.0% | timeout  0.0% | 16.8m
+  7607 | succ 70.0% | coll 30.0% | timeout  0.0% | 17.0m
+  7707 | succ 60.0% | coll 40.0% | timeout  0.0% | 17.1m
+  7814 | succ 55.0% | coll 45.0% | timeout  0.0% | 17.3m
+  7923 | succ 60.0% | coll 40.0% | timeout  0.0% | 17.4m
+RUN_DONE mappo stage 2 seed 44 in 17.5 min

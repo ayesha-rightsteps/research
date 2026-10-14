@@ -62,3 +62,17 @@ MAPPO | stage 2 | seed 43 | obs dim 38
   6378 | succ 60.0% | coll 40.0% | timeout  0.0% | 14.0m
   6484 | succ 50.0% | coll 50.0% | timeout  0.0% | 14.1m
   6584 | succ 60.0% | coll 40.0% | timeout  0.0% | 14.4m
+  6690 | succ 55.0% | coll 45.0% | timeout  0.0% | 14.6m
+  6790 | succ 45.0% | coll 55.0% | timeout  0.0% | 14.9m
+  6894 | succ 55.0% | coll 45.0% | timeout  0.0% | 15.1m
+  7001 | succ 55.0% | coll 45.0% | timeout  0.0% | 15.3m
+  7111 | succ 60.0% | coll 40.0% | timeout  0.0% | 15.5m
+  7222 | succ 55.0% | coll 45.0% | timeout  0.0% | 15.7m
+  7324 | succ 70.0% | coll 30.0% | timeout  0.0% | 15.8m
+  7424 | succ 70.0% | coll 30.0% | timeout  0.0% | 16.0m
+  7524 | succ 65.0% | coll 35.0% | timeout  0.0% | 16.1m
+  7626 | succ 60.0% | coll 40.0% | timeout  0.0% | 16.4m
+  7728 | succ 70.0% | coll 30.0% | timeout  0.0% | 16.6m
+  7837 | succ 70.0% | coll 30.0% | timeout  0.0% | 16.8m
+  7946 | succ 70.0% | coll 30.0% | timeout  0.0% | 17.0m
+RUN_DONE mappo stage 2 seed 43 in 17.1 min

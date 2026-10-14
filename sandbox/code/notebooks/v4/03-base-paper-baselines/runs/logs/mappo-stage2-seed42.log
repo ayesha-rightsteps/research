@@ -71,3 +71,8 @@ MAPPO | stage 2 | seed 42 | obs dim 38
   7332 | succ 80.0% | coll 20.0% | timeout  0.0% | 16.6m
   7443 | succ 75.0% | coll 25.0% | timeout  0.0% | 16.7m
   7545 | succ 90.0% | coll 10.0% | timeout  0.0% | 17.0m
+  7653 | succ 80.0% | coll 20.0% | timeout  0.0% | 17.2m
+  7758 | succ 75.0% | coll 25.0% | timeout  0.0% | 17.5m
+  7859 | succ 75.0% | coll 25.0% | timeout  0.0% | 17.8m
+  7960 | succ 70.0% | coll 30.0% | timeout  0.0% | 18.0m
+RUN_DONE mappo stage 2 seed 42 in 18.1 min

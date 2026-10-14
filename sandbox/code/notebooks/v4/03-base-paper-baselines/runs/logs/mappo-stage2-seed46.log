@@ -36,3 +36,43 @@ MAPPO | stage 2 | seed 46 | obs dim 38
   3638 | succ 70.0% | coll 30.0% | timeout  0.0% | 9.3m
   3740 | succ 80.0% | coll 20.0% | timeout  0.0% | 9.5m
   3850 | succ 75.0% | coll 25.0% | timeout  0.0% | 9.8m
+  3954 | succ 75.0% | coll 25.0% | timeout  0.0% | 10.0m
+  4057 | succ 75.0% | coll 25.0% | timeout  0.0% | 10.3m
+  4161 | succ 70.0% | coll 30.0% | timeout  0.0% | 10.5m
+  4267 | succ 70.0% | coll 30.0% | timeout  0.0% | 10.8m
+  4378 | succ 70.0% | coll 30.0% | timeout  0.0% | 11.0m
+  4479 | succ 80.0% | coll 20.0% | timeout  0.0% | 11.1m
+  4581 | succ 80.0% | coll 20.0% | timeout  0.0% | 11.3m
+  4689 | succ 75.0% | coll 25.0% | timeout  0.0% | 11.4m
+  4792 | succ 70.0% | coll 30.0% | timeout  0.0% | 11.6m
+  4893 | succ 80.0% | coll 20.0% | timeout  0.0% | 11.8m
+  5004 | succ 70.0% | coll 30.0% | timeout  0.0% | 11.9m
+  5118 | succ 70.0% | coll 30.0% | timeout  0.0% | 12.1m
+  5220 | succ 65.0% | coll 35.0% | timeout  0.0% | 12.2m
+  5328 | succ 75.0% | coll 25.0% | timeout  0.0% | 12.4m
+  5438 | succ 75.0% | coll 25.0% | timeout  0.0% | 12.6m
+  5539 | succ 65.0% | coll 35.0% | timeout  0.0% | 12.7m
+  5640 | succ 70.0% | coll 30.0% | timeout  0.0% | 12.9m
+  5740 | succ 60.0% | coll 40.0% | timeout  0.0% | 13.1m
+  5851 | succ 65.0% | coll 35.0% | timeout  0.0% | 13.2m
+  5957 | succ 65.0% | coll 35.0% | timeout  0.0% | 13.4m
+  6057 | succ 55.0% | coll 45.0% | timeout  0.0% | 13.6m
+  6162 | succ 55.0% | coll 45.0% | timeout  0.0% | 13.8m
+  6265 | succ 45.0% | coll 50.0% | timeout  5.0% | 14.1m
+  6367 | succ 50.0% | coll 50.0% | timeout  0.0% | 14.2m
+  6474 | succ 55.0% | coll 45.0% | timeout  0.0% | 14.4m
+  6582 | succ 60.0% | coll 40.0% | timeout  0.0% | 14.5m
+  6683 | succ 65.0% | coll 35.0% | timeout  0.0% | 14.7m
+  6792 | succ 65.0% | coll 35.0% | timeout  0.0% | 14.9m
+  6901 | succ 65.0% | coll 35.0% | timeout  0.0% | 15.1m
+  7008 | succ 55.0% | coll 45.0% | timeout  0.0% | 15.3m
+  7115 | succ 65.0% | coll 35.0% | timeout  0.0% | 15.6m
+  7224 | succ 55.0% | coll 45.0% | timeout  0.0% | 15.8m
+  7324 | succ 60.0% | coll 40.0% | timeout  0.0% | 16.0m
+  7435 | succ 55.0% | coll 45.0% | timeout  0.0% | 16.2m
+  7546 | succ 60.0% | coll 40.0% | timeout  0.0% | 16.3m
+  7649 | succ 60.0% | coll 40.0% | timeout  0.0% | 16.5m
+  7750 | succ 55.0% | coll 45.0% | timeout  0.0% | 16.7m
+  7852 | succ 60.0% | coll 40.0% | timeout  0.0% | 16.9m
+  7960 | succ 60.0% | coll 40.0% | timeout  0.0% | 17.1m
+RUN_DONE mappo stage 2 seed 46 in 17.1 min
