@@ -52,3 +52,25 @@ DA-MAPPO (2D) | stage 3 | seed 44 | obs dim 44
   5493 | succ 35.0% | coll 55.0% | timeout 10.0% | 16.7m
   5608 | succ 45.0% | coll 55.0% | timeout  0.0% | 17.0m
   5712 | succ 45.0% | coll 55.0% | timeout  0.0% | 17.4m
+  5813 | succ 55.0% | coll 45.0% | timeout  0.0% | 17.7m
+  5916 | succ 60.0% | coll 40.0% | timeout  0.0% | 18.1m
+  6023 | succ 50.0% | coll 50.0% | timeout  0.0% | 18.4m
+  6129 | succ 50.0% | coll 50.0% | timeout  0.0% | 18.7m
+  6237 | succ 40.0% | coll 55.0% | timeout  5.0% | 18.9m
+  6349 | succ 40.0% | coll 55.0% | timeout  5.0% | 19.1m
+  6458 | succ 15.0% | coll 85.0% | timeout  0.0% | 19.4m
+  6560 | succ 20.0% | coll 75.0% | timeout  5.0% | 19.7m
+  6661 | succ 35.0% | coll 65.0% | timeout  0.0% | 20.0m
+  6766 | succ 25.0% | coll 75.0% | timeout  0.0% | 20.2m
+  6870 | succ 25.0% | coll 75.0% | timeout  0.0% | 20.4m
+  6985 | succ 30.0% | coll 70.0% | timeout  0.0% | 20.5m
+  7104 | succ 30.0% | coll 70.0% | timeout  0.0% | 20.7m
+  7207 | succ 30.0% | coll 70.0% | timeout  0.0% | 20.9m
+  7327 | succ 35.0% | coll 65.0% | timeout  0.0% | 21.1m
+  7444 | succ 30.0% | coll 70.0% | timeout  0.0% | 21.3m
+  7555 | succ 35.0% | coll 60.0% | timeout  5.0% | 21.5m
+  7667 | succ 30.0% | coll 70.0% | timeout  0.0% | 21.8m
+  7770 | succ 20.0% | coll 80.0% | timeout  0.0% | 22.0m
+  7876 | succ 20.0% | coll 80.0% | timeout  0.0% | 22.2m
+  7977 | succ 20.0% | coll 80.0% | timeout  0.0% | 22.4m
+RUN_DONE da-mappo-2d stage 3 seed 44 in 22.6 min
