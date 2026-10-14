@@ -1,3 +1,4 @@
 start 2026-10-14 13:41:28
 queue stopped after last Stage 3 job started 2026-10-14 17:56:19
 end 2026-10-14 17:56:19
+Stage 3 all finished 2026-10-14 18:14:50
