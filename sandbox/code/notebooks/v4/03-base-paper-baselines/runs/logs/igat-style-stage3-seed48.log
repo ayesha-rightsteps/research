@@ -3,3 +3,23 @@ IGAT-style MAPPO | stage 3 | seed 48 | obs dim 30
    206 | succ  0.0% | coll 65.0% | timeout 35.0% | 3.4m
    307 | succ  0.0% | coll 80.0% | timeout 20.0% | 5.2m
    414 | succ 30.0% | coll 65.0% | timeout  5.0% | 6.5m
+   518 | succ 15.0% | coll 75.0% | timeout 10.0% | 7.0m
+   622 | succ 10.0% | coll 85.0% | timeout  5.0% | 7.9m
+   733 | succ 50.0% | coll 50.0% | timeout  0.0% | 8.6m
+   835 | succ 60.0% | coll 40.0% | timeout  0.0% | 9.3m
+   940 | succ 40.0% | coll 55.0% | timeout  5.0% | 10.1m
+  1042 | succ 50.0% | coll 50.0% | timeout  0.0% | 10.8m
+  1149 | succ 45.0% | coll 55.0% | timeout  0.0% | 11.5m
+  1254 | succ 60.0% | coll 40.0% | timeout  0.0% | 12.4m
+  1357 | succ 50.0% | coll 50.0% | timeout  0.0% | 13.1m
+  1462 | succ 60.0% | coll 40.0% | timeout  0.0% | 13.7m
+  1564 | succ 65.0% | coll 35.0% | timeout  0.0% | 14.6m
+  1669 | succ 70.0% | coll 30.0% | timeout  0.0% | 15.6m
+  1773 | succ 65.0% | coll 35.0% | timeout  0.0% | 16.4m
+  1879 | succ 35.0% | coll 55.0% | timeout 10.0% | 17.2m
+  2000 | succ 50.0% | coll 50.0% | timeout  0.0% | 17.9m
+  2101 | succ 60.0% | coll 40.0% | timeout  0.0% | 18.6m
+  2203 | succ 55.0% | coll 40.0% | timeout  5.0% | 19.5m
+  2307 | succ 55.0% | coll 45.0% | timeout  0.0% | 20.6m
+  2414 | succ 75.0% | coll 25.0% | timeout  0.0% | 21.4m
+  2521 | succ 85.0% | coll 15.0% | timeout  0.0% | 22.1m

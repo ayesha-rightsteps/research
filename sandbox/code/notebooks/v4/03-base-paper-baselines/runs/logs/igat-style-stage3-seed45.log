@@ -65,3 +65,15 @@ IGAT-style MAPPO | stage 3 | seed 45 | obs dim 30
   6634 | succ 75.0% | coll 25.0% | timeout  0.0% | 64.6m
   6742 | succ 70.0% | coll 30.0% | timeout  0.0% | 65.5m
   6842 | succ 65.0% | coll 30.0% | timeout  5.0% | 66.5m
+  6945 | succ 50.0% | coll 50.0% | timeout  0.0% | 67.4m
+  7051 | succ 75.0% | coll 20.0% | timeout  5.0% | 68.5m
+  7151 | succ 55.0% | coll 40.0% | timeout  5.0% | 69.5m
+  7254 | succ 60.0% | coll 30.0% | timeout 10.0% | 70.5m
+  7359 | succ 60.0% | coll 35.0% | timeout  5.0% | 71.5m
+  7461 | succ 35.0% | coll 45.0% | timeout 20.0% | 72.8m
+  7562 | succ 30.0% | coll 70.0% | timeout  0.0% | 74.2m
+  7668 | succ 55.0% | coll 45.0% | timeout  0.0% | 75.5m
+  7779 | succ 45.0% | coll 55.0% | timeout  0.0% | 76.1m
+  7886 | succ 65.0% | coll 35.0% | timeout  0.0% | 76.8m
+  7988 | succ 75.0% | coll 25.0% | timeout  0.0% | 77.3m
+RUN_DONE igat-style stage 3 seed 45 in 77.4 min

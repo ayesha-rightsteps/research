@@ -1,0 +1,11 @@
+IGAT-style MAPPO | stage 3 | seed 50 | obs dim 30
+   105 | succ  0.0% | coll 85.0% | timeout 15.0% | 3.0m
+   207 | succ  0.0% | coll 70.0% | timeout 30.0% | 4.6m
+   309 | succ 15.0% | coll 75.0% | timeout 10.0% | 5.8m
+   415 | succ 25.0% | coll 65.0% | timeout 10.0% | 6.8m
+   520 | succ 45.0% | coll 55.0% | timeout  0.0% | 7.5m
+   621 | succ 40.0% | coll 60.0% | timeout  0.0% | 8.3m
+   726 | succ 50.0% | coll 50.0% | timeout  0.0% | 9.1m
+   835 | succ 45.0% | coll 55.0% | timeout  0.0% | 9.8m
+   937 | succ 60.0% | coll 40.0% | timeout  0.0% | 11.0m
+  1043 | succ 70.0% | coll 30.0% | timeout  0.0% | 12.2m
