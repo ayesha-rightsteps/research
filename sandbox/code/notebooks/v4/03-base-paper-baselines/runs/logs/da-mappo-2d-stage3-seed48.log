@@ -1,3 +1,7 @@
 DA-MAPPO (2D) | stage 3 | seed 48 | obs dim 44
    105 | succ  0.0% | coll 30.0% | timeout 70.0% | 2.3m
    212 | succ 15.0% | coll 60.0% | timeout 25.0% | 3.5m
+   314 | succ 25.0% | coll 60.0% | timeout 15.0% | 4.3m
+   422 | succ 10.0% | coll 65.0% | timeout 25.0% | 4.9m
+   522 | succ 25.0% | coll 50.0% | timeout 25.0% | 5.5m
+   623 | succ 30.0% | coll 70.0% | timeout  0.0% | 6.0m
