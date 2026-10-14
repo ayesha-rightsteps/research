@@ -32,3 +32,46 @@ MAPPO | stage 3 | seed 48 | obs dim 44
   3266 | succ 30.0% | coll 70.0% | timeout  0.0% | 11.2m
   3367 | succ 25.0% | coll 75.0% | timeout  0.0% | 11.4m
   3473 | succ 20.0% | coll 75.0% | timeout  5.0% | 11.6m
+  3583 | succ 25.0% | coll 70.0% | timeout  5.0% | 11.9m
+  3686 | succ 15.0% | coll 80.0% | timeout  5.0% | 12.3m
+  3788 | succ 30.0% | coll 65.0% | timeout  5.0% | 12.7m
+  3900 | succ 20.0% | coll 80.0% | timeout  0.0% | 13.1m
+  4019 | succ 40.0% | coll 60.0% | timeout  0.0% | 13.4m
+  4125 | succ 35.0% | coll 65.0% | timeout  0.0% | 13.7m
+  4234 | succ 45.0% | coll 55.0% | timeout  0.0% | 13.9m
+  4344 | succ 35.0% | coll 65.0% | timeout  0.0% | 14.1m
+  4448 | succ 35.0% | coll 65.0% | timeout  0.0% | 14.3m
+  4560 | succ 35.0% | coll 65.0% | timeout  0.0% | 14.5m
+  4674 | succ 45.0% | coll 55.0% | timeout  0.0% | 14.7m
+  4778 | succ 40.0% | coll 60.0% | timeout  0.0% | 15.0m
+  4893 | succ 45.0% | coll 55.0% | timeout  0.0% | 15.1m
+  5001 | succ 40.0% | coll 60.0% | timeout  0.0% | 15.4m
+  5114 | succ 40.0% | coll 60.0% | timeout  0.0% | 15.5m
+  5232 | succ 30.0% | coll 70.0% | timeout  0.0% | 15.8m
+  5342 | succ 40.0% | coll 60.0% | timeout  0.0% | 16.1m
+  5448 | succ 25.0% | coll 75.0% | timeout  0.0% | 16.5m
+  5549 | succ 25.0% | coll 70.0% | timeout  5.0% | 16.7m
+  5665 | succ 20.0% | coll 75.0% | timeout  5.0% | 17.1m
+  5775 | succ 20.0% | coll 80.0% | timeout  0.0% | 17.6m
+  5877 | succ 30.0% | coll 65.0% | timeout  5.0% | 17.9m
+  5992 | succ 35.0% | coll 65.0% | timeout  0.0% | 18.3m
+  6092 | succ 35.0% | coll 65.0% | timeout  0.0% | 18.8m
+  6196 | succ 35.0% | coll 60.0% | timeout  5.0% | 19.0m
+  6296 | succ 20.0% | coll 75.0% | timeout  5.0% | 19.3m
+  6410 | succ 30.0% | coll 70.0% | timeout  0.0% | 19.6m
+  6511 | succ 35.0% | coll 65.0% | timeout  0.0% | 20.0m
+  6628 | succ 40.0% | coll 60.0% | timeout  0.0% | 20.2m
+  6729 | succ 35.0% | coll 65.0% | timeout  0.0% | 20.5m
+  6833 | succ 25.0% | coll 75.0% | timeout  0.0% | 20.7m
+  6933 | succ 30.0% | coll 70.0% | timeout  0.0% | 20.9m
+  7037 | succ 35.0% | coll 65.0% | timeout  0.0% | 21.1m
+  7137 | succ 45.0% | coll 55.0% | timeout  0.0% | 21.3m
+  7242 | succ 40.0% | coll 60.0% | timeout  0.0% | 21.5m
+  7358 | succ 40.0% | coll 60.0% | timeout  0.0% | 21.8m
+  7471 | succ 30.0% | coll 70.0% | timeout  0.0% | 22.0m
+  7571 | succ 30.0% | coll 70.0% | timeout  0.0% | 22.3m
+  7683 | succ 30.0% | coll 70.0% | timeout  0.0% | 22.5m
+  7786 | succ 35.0% | coll 65.0% | timeout  0.0% | 22.8m
+  7893 | succ 35.0% | coll 65.0% | timeout  0.0% | 23.0m
+  7997 | succ 25.0% | coll 75.0% | timeout  0.0% | 23.2m
+RUN_DONE mappo stage 3 seed 48 in 23.2 min
