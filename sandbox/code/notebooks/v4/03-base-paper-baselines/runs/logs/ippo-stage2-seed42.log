@@ -1,0 +1,11 @@
+IPPO | stage 2 | seed 42 | obs dim 38
+   101 | succ  0.0% | coll 45.0% | timeout 55.0% | 1.3m
+   201 | succ 35.0% | coll 35.0% | timeout 30.0% | 2.1m
+   302 | succ 75.0% | coll 20.0% | timeout  5.0% | 2.8m
+   407 | succ 75.0% | coll 15.0% | timeout 10.0% | 3.2m
+   514 | succ 75.0% | coll  5.0% | timeout 20.0% | 3.6m
+   617 | succ 65.0% | coll 30.0% | timeout  5.0% | 4.1m
+   725 | succ 60.0% | coll 25.0% | timeout 15.0% | 4.4m
+   831 | succ 65.0% | coll 30.0% | timeout  5.0% | 4.7m
+   940 | succ 75.0% | coll 25.0% | timeout  0.0% | 5.0m
+  1041 | succ 80.0% | coll 20.0% | timeout  0.0% | 5.2m

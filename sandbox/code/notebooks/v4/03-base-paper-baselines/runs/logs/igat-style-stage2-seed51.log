@@ -1,0 +1,4 @@
+IGAT-style MAPPO | stage 2 | seed 51 | obs dim 30
+   102 | succ  5.0% | coll 20.0% | timeout 75.0% | 2.9m
+   204 | succ 60.0% | coll 30.0% | timeout 10.0% | 4.5m
+   305 | succ 60.0% | coll 40.0% | timeout  0.0% | 5.5m
