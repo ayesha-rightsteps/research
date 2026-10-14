@@ -1,0 +1,18 @@
+MAPPO | stage 3 | seed 43 | obs dim 44
+   103 | succ  0.0% | coll 50.0% | timeout 50.0% | 2.0m
+   204 | succ  0.0% | coll 75.0% | timeout 25.0% | 3.2m
+   315 | succ  0.0% | coll 75.0% | timeout 25.0% | 3.9m
+   416 | succ 20.0% | coll 70.0% | timeout 10.0% | 4.3m
+   518 | succ 20.0% | coll 80.0% | timeout  0.0% | 4.8m
+   628 | succ  5.0% | coll 80.0% | timeout 15.0% | 5.2m
+   730 | succ 10.0% | coll 80.0% | timeout 10.0% | 5.7m
+   842 | succ 15.0% | coll 80.0% | timeout  5.0% | 6.1m
+   942 | succ  5.0% | coll 85.0% | timeout 10.0% | 6.5m
+  1046 | succ 15.0% | coll 85.0% | timeout  0.0% | 6.8m
+  1150 | succ 35.0% | coll 65.0% | timeout  0.0% | 7.1m
+  1257 | succ 30.0% | coll 70.0% | timeout  0.0% | 7.4m
+  1366 | succ 25.0% | coll 75.0% | timeout  0.0% | 7.6m
+  1481 | succ 30.0% | coll 70.0% | timeout  0.0% | 7.9m
+  1585 | succ 20.0% | coll 80.0% | timeout  0.0% | 8.1m
+  1688 | succ 10.0% | coll 90.0% | timeout  0.0% | 8.3m
+  1788 | succ 10.0% | coll 90.0% | timeout  0.0% | 8.7m

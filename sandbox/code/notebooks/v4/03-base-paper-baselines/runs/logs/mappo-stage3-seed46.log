@@ -1,0 +1,4 @@
+MAPPO | stage 3 | seed 46 | obs dim 44
+   100 | succ  0.0% | coll 55.0% | timeout 45.0% | 1.6m
+   200 | succ  0.0% | coll 75.0% | timeout 25.0% | 2.7m
+   306 | succ  0.0% | coll 85.0% | timeout 15.0% | 3.5m

@@ -52,3 +52,27 @@ IPPO | stage 3 | seed 48 | obs dim 44
   5342 | succ 25.0% | coll 65.0% | timeout 10.0% | 26.6m
   5447 | succ  5.0% | coll 90.0% | timeout  5.0% | 27.3m
   5553 | succ 15.0% | coll 80.0% | timeout  5.0% | 27.7m
+  5656 | succ  5.0% | coll 80.0% | timeout 15.0% | 28.2m
+  5756 | succ  0.0% | coll 80.0% | timeout 20.0% | 28.9m
+  5862 | succ 15.0% | coll 60.0% | timeout 25.0% | 29.9m
+  5966 | succ  0.0% | coll 65.0% | timeout 35.0% | 30.8m
+  6068 | succ 10.0% | coll 65.0% | timeout 25.0% | 31.8m
+  6170 | succ  0.0% | coll 70.0% | timeout 30.0% | 32.5m
+  6270 | succ 20.0% | coll 70.0% | timeout 10.0% | 33.3m
+  6381 | succ 35.0% | coll 50.0% | timeout 15.0% | 33.9m
+  6486 | succ 25.0% | coll 70.0% | timeout  5.0% | 34.6m
+  6588 | succ 30.0% | coll 70.0% | timeout  0.0% | 35.3m
+  6690 | succ 15.0% | coll 65.0% | timeout 20.0% | 36.0m
+  6792 | succ 20.0% | coll 75.0% | timeout  5.0% | 36.7m
+  6892 | succ 10.0% | coll 75.0% | timeout 15.0% | 37.4m
+  6992 | succ  5.0% | coll 85.0% | timeout 10.0% | 38.5m
+  7094 | succ 15.0% | coll 50.0% | timeout 35.0% | 39.4m
+  7199 | succ  5.0% | coll 70.0% | timeout 25.0% | 40.3m
+  7300 | succ 15.0% | coll 70.0% | timeout 15.0% | 41.2m
+  7400 | succ 60.0% | coll 40.0% | timeout  0.0% | 41.8m
+  7500 | succ 25.0% | coll 65.0% | timeout 10.0% | 42.6m
+  7603 | succ 45.0% | coll 45.0% | timeout 10.0% | 43.3m
+  7703 | succ 45.0% | coll 50.0% | timeout  5.0% | 44.0m
+  7806 | succ 35.0% | coll 55.0% | timeout 10.0% | 44.9m
+  7914 | succ 35.0% | coll 65.0% | timeout  0.0% | 45.5m
+RUN_DONE ippo stage 3 seed 48 in 46.0 min

@@ -75,3 +75,4 @@ IPPO | stage 3 | seed 46 | obs dim 44
   7702 | succ  0.0% | coll 85.0% | timeout 15.0% | 41.5m
   7806 | succ 15.0% | coll 80.0% | timeout  5.0% | 42.2m
   7908 | succ 20.0% | coll 70.0% | timeout 10.0% | 42.7m
+RUN_DONE ippo stage 3 seed 46 in 43.3 min
