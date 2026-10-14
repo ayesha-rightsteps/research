@@ -3,3 +3,41 @@ IGAT-style MAPPO | stage 3 | seed 51 | obs dim 30
    203 | succ  5.0% | coll 80.0% | timeout 15.0% | 4.8m
    306 | succ 35.0% | coll 65.0% | timeout  0.0% | 6.3m
    407 | succ 55.0% | coll 45.0% | timeout  0.0% | 7.5m
+   510 | succ 55.0% | coll 45.0% | timeout  0.0% | 8.5m
+   611 | succ 25.0% | coll 70.0% | timeout  5.0% | 9.4m
+   711 | succ 40.0% | coll 55.0% | timeout  5.0% | 10.6m
+   817 | succ 60.0% | coll 35.0% | timeout  5.0% | 11.5m
+   925 | succ 70.0% | coll 30.0% | timeout  0.0% | 12.3m
+  1028 | succ 80.0% | coll 20.0% | timeout  0.0% | 13.1m
+  1132 | succ 65.0% | coll 35.0% | timeout  0.0% | 14.2m
+  1235 | succ 75.0% | coll 25.0% | timeout  0.0% | 14.8m
+  1340 | succ 70.0% | coll 30.0% | timeout  0.0% | 15.7m
+  1445 | succ 70.0% | coll 30.0% | timeout  0.0% | 16.5m
+  1546 | succ 65.0% | coll 35.0% | timeout  0.0% | 17.1m
+  1654 | succ 70.0% | coll 30.0% | timeout  0.0% | 18.0m
+  1755 | succ 80.0% | coll 20.0% | timeout  0.0% | 19.0m
+  1859 | succ 60.0% | coll 35.0% | timeout  5.0% | 20.0m
+  1960 | succ 60.0% | coll 40.0% | timeout  0.0% | 21.1m
+  2063 | succ 65.0% | coll 20.0% | timeout 15.0% | 22.2m
+  2165 | succ 80.0% | coll 20.0% | timeout  0.0% | 23.1m
+  2265 | succ 75.0% | coll 25.0% | timeout  0.0% | 23.8m
+  2375 | succ 80.0% | coll 20.0% | timeout  0.0% | 24.5m
+  2476 | succ 80.0% | coll 20.0% | timeout  0.0% | 25.1m
+  2577 | succ 65.0% | coll 35.0% | timeout  0.0% | 25.9m
+  2679 | succ 75.0% | coll 25.0% | timeout  0.0% | 26.6m
+  2784 | succ 70.0% | coll 30.0% | timeout  0.0% | 27.5m
+  2886 | succ 80.0% | coll 20.0% | timeout  0.0% | 28.1m
+  2991 | succ 75.0% | coll 25.0% | timeout  0.0% | 28.9m
+  3093 | succ 90.0% | coll 10.0% | timeout  0.0% | 29.7m
+  3195 | succ 55.0% | coll 45.0% | timeout  0.0% | 30.4m
+  3295 | succ 65.0% | coll 35.0% | timeout  0.0% | 31.2m
+  3400 | succ 75.0% | coll 25.0% | timeout  0.0% | 32.0m
+  3505 | succ 65.0% | coll 35.0% | timeout  0.0% | 32.7m
+  3614 | succ 70.0% | coll 30.0% | timeout  0.0% | 33.5m
+  3721 | succ 80.0% | coll 20.0% | timeout  0.0% | 34.3m
+  3830 | succ 80.0% | coll 20.0% | timeout  0.0% | 35.0m
+  3936 | succ 60.0% | coll 40.0% | timeout  0.0% | 36.0m
+  4036 | succ 80.0% | coll 20.0% | timeout  0.0% | 36.8m
+  4137 | succ 70.0% | coll 30.0% | timeout  0.0% | 37.6m
+  4240 | succ 70.0% | coll 30.0% | timeout  0.0% | 38.4m
+  4340 | succ 85.0% | coll 15.0% | timeout  0.0% | 39.2m
