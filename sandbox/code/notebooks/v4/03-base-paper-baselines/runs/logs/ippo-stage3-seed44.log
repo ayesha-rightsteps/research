@@ -62,3 +62,17 @@ IPPO | stage 3 | seed 44 | obs dim 44
   6398 | succ 40.0% | coll 55.0% | timeout  5.0% | 28.0m
   6498 | succ 35.0% | coll 60.0% | timeout  5.0% | 28.5m
   6600 | succ 20.0% | coll 75.0% | timeout  5.0% | 29.0m
+  6705 | succ 20.0% | coll 80.0% | timeout  0.0% | 29.6m
+  6810 | succ 15.0% | coll 85.0% | timeout  0.0% | 30.2m
+  6913 | succ 10.0% | coll 85.0% | timeout  5.0% | 30.7m
+  7016 | succ 25.0% | coll 75.0% | timeout  0.0% | 31.3m
+  7121 | succ 35.0% | coll 65.0% | timeout  0.0% | 31.7m
+  7221 | succ 20.0% | coll 75.0% | timeout  5.0% | 32.2m
+  7322 | succ 20.0% | coll 80.0% | timeout  0.0% | 32.7m
+  7432 | succ 25.0% | coll 70.0% | timeout  5.0% | 33.3m
+  7533 | succ 20.0% | coll 80.0% | timeout  0.0% | 33.8m
+  7635 | succ 20.0% | coll 75.0% | timeout  5.0% | 34.2m
+  7735 | succ 15.0% | coll 80.0% | timeout  5.0% | 34.7m
+  7848 | succ 25.0% | coll 75.0% | timeout  0.0% | 35.0m
+  7950 | succ 20.0% | coll 80.0% | timeout  0.0% | 35.4m
+RUN_DONE ippo stage 3 seed 44 in 35.5 min

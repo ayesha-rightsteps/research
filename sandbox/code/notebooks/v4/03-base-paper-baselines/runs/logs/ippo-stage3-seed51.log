@@ -1,0 +1,18 @@
+IPPO | stage 3 | seed 51 | obs dim 44
+   101 | succ  0.0% | coll 60.0% | timeout 40.0% | 1.9m
+   201 | succ  0.0% | coll 65.0% | timeout 35.0% | 3.1m
+   306 | succ  0.0% | coll 70.0% | timeout 30.0% | 4.2m
+   409 | succ 15.0% | coll 60.0% | timeout 25.0% | 4.9m
+   511 | succ 30.0% | coll 60.0% | timeout 10.0% | 5.4m
+   611 | succ 25.0% | coll 70.0% | timeout  5.0% | 5.8m
+   723 | succ 25.0% | coll 75.0% | timeout  0.0% | 6.2m
+   827 | succ 25.0% | coll 70.0% | timeout  5.0% | 6.6m
+   938 | succ 35.0% | coll 60.0% | timeout  5.0% | 7.1m
+  1046 | succ 35.0% | coll 65.0% | timeout  0.0% | 7.5m
+  1150 | succ 25.0% | coll 75.0% | timeout  0.0% | 8.0m
+  1251 | succ 40.0% | coll 55.0% | timeout  5.0% | 8.4m
+  1355 | succ 35.0% | coll 60.0% | timeout  5.0% | 8.9m
+  1464 | succ 35.0% | coll 65.0% | timeout  0.0% | 9.4m
+  1572 | succ 35.0% | coll 60.0% | timeout  5.0% | 9.8m
+  1675 | succ 10.0% | coll 65.0% | timeout 25.0% | 10.2m
+  1777 | succ 20.0% | coll 70.0% | timeout 10.0% | 10.6m
