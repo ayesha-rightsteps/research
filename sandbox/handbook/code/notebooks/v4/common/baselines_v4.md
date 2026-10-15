@@ -31,6 +31,13 @@ Teen tests ko jaan boojh kar toda hua code diya — teeno ne ghalti pakdi. Yani 
 RMAPPO baqi methods se ~8–10 guna dheema hai (GRU ko 16 steps peeche tak seekhna padta hai). Barabari ke liye
 batch size sab ka same rakha, is liye RMAPPO ke runs lambe hain.
 
+**Tez update (15 Oct 2026):** RMAPPO ke seekhne wale hisse (`_chunk_eval`) ko tez kiya gaya. Hisaab wahi hai,
+sirf tareeqa badla:
+- Jo layers yaad-dasht nahi rakhtin, wo saare 16 steps par ek saath chalti hain (pehle har step par alag).
+- Actor ka GRU aur critic ka GRU ek hi "double" GRU ki tarah ek saath chalte hain.
+Test: purane aur naye code ke losses bilkul same aaye, weights mein farq sirf 0.0000002 (computer ki rounding).
+Update ~2.6 guna tez hua; poora run ~2 guna tez.
+
 ## Mushkil lafz
 - **GRU:** network ka hissa jo pichle steps ki baat yaad rakhta hai.
 - **Graph attention:** har drone apne padosiyon ko alag ahmiyat deta hai.

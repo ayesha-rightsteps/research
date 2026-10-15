@@ -1,0 +1,15 @@
+RMAPPO | stage 3 | seed 45 | obs dim 44
+   100 | succ  0.0% | coll 40.0% | timeout 60.0% | 6.6m
+   201 | succ  0.0% | coll 65.0% | timeout 35.0% | 14.4m
+   301 | succ  0.0% | coll 65.0% | timeout 35.0% | 22.1m
+   401 | succ  0.0% | coll 75.0% | timeout 25.0% | 28.0m
+   501 | succ  0.0% | coll 95.0% | timeout  5.0% | 36.2m
+   601 | succ  0.0% | coll 65.0% | timeout 35.0% | 42.5m
+   701 | succ  0.0% | coll 80.0% | timeout 20.0% | 50.5m
+   801 | succ  0.0% | coll 65.0% | timeout 35.0% | 59.3m
+   901 | succ  0.0% | coll 70.0% | timeout 30.0% | 69.7m
+  1002 | succ  0.0% | coll 55.0% | timeout 45.0% | 78.6m
+  1102 | succ  0.0% | coll 75.0% | timeout 25.0% | 88.0m
+  1202 | succ  0.0% | coll 65.0% | timeout 35.0% | 97.2m
+  1302 | succ  0.0% | coll 75.0% | timeout 25.0% | 107.2m
+  1404 | succ  0.0% | coll 75.0% | timeout 25.0% | 116.2m

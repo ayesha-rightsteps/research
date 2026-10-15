@@ -1,0 +1,22 @@
+RMAPPO | stage 3 | seed 44 | obs dim 44
+   100 | succ  0.0% | coll 55.0% | timeout 45.0% | 7.1m
+   200 | succ  0.0% | coll 55.0% | timeout 45.0% | 14.5m
+   302 | succ  0.0% | coll 85.0% | timeout 15.0% | 20.7m
+   403 | succ  0.0% | coll 75.0% | timeout 25.0% | 26.0m
+   504 | succ  0.0% | coll 95.0% | timeout  5.0% | 31.5m
+   606 | succ  0.0% | coll 90.0% | timeout 10.0% | 37.2m
+   707 | succ  0.0% | coll 70.0% | timeout 30.0% | 45.6m
+   810 | succ  0.0% | coll 90.0% | timeout 10.0% | 52.0m
+   911 | succ  0.0% | coll 95.0% | timeout  5.0% | 57.0m
+  1012 | succ  0.0% | coll 90.0% | timeout 10.0% | 61.2m
+  1116 | succ  0.0% | coll 100.0% | timeout  0.0% | 66.3m
+  1216 | succ  0.0% | coll 90.0% | timeout 10.0% | 71.1m
+  1321 | succ  0.0% | coll 95.0% | timeout  5.0% | 76.4m
+  1422 | succ  0.0% | coll 100.0% | timeout  0.0% | 82.4m
+  1522 | succ  0.0% | coll 85.0% | timeout 15.0% | 87.5m
+  1622 | succ  0.0% | coll 100.0% | timeout  0.0% | 93.0m
+  1723 | succ  0.0% | coll 85.0% | timeout 15.0% | 97.9m
+  1823 | succ  0.0% | coll 85.0% | timeout 15.0% | 103.7m
+  1925 | succ  0.0% | coll 90.0% | timeout 10.0% | 109.5m
+  2029 | succ  0.0% | coll 95.0% | timeout  5.0% | 115.7m
+  2129 | succ  0.0% | coll 90.0% | timeout 10.0% | 121.7m
