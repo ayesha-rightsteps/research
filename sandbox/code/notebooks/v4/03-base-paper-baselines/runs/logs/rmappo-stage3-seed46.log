@@ -70,3 +70,12 @@ RMAPPO | stage 3 | seed 46 | obs dim 44
   6986 | succ  0.0% | coll 90.0% | timeout 10.0% | 228.8m
   7086 | succ  0.0% | coll 90.0% | timeout 10.0% | 231.9m
   7187 | succ  0.0% | coll 80.0% | timeout 20.0% | 235.3m
+  7287 | succ  0.0% | coll 95.0% | timeout  5.0% | 238.9m
+  7389 | succ  0.0% | coll 95.0% | timeout  5.0% | 242.3m
+  7490 | succ  0.0% | coll 95.0% | timeout  5.0% | 245.0m
+  7593 | succ  0.0% | coll 100.0% | timeout  0.0% | 247.9m
+  7695 | succ  0.0% | coll 95.0% | timeout  5.0% | 249.8m
+  7796 | succ  0.0% | coll 100.0% | timeout  0.0% | 251.6m
+  7897 | succ  0.0% | coll 95.0% | timeout  5.0% | 253.2m
+  7997 | succ  0.0% | coll 85.0% | timeout 15.0% | 255.3m
+RUN_DONE rmappo stage 3 seed 46 in 255.4 min

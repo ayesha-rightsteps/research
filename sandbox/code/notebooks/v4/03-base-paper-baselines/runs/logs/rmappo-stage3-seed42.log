@@ -74,3 +74,8 @@ RMAPPO | stage 3 | seed 42 | obs dim 44
   7372 | succ  0.0% | coll 100.0% | timeout  0.0% | 231.2m
   7476 | succ  0.0% | coll 95.0% | timeout  5.0% | 233.5m
   7576 | succ  0.0% | coll 95.0% | timeout  5.0% | 235.9m
+  7676 | succ  0.0% | coll 100.0% | timeout  0.0% | 238.8m
+  7776 | succ  0.0% | coll 90.0% | timeout 10.0% | 242.8m
+  7876 | succ  0.0% | coll 80.0% | timeout 20.0% | 246.6m
+  7977 | succ  0.0% | coll 90.0% | timeout 10.0% | 249.4m
+RUN_DONE rmappo stage 3 seed 42 in 249.9 min

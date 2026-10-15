@@ -1,13 +1,14 @@
 # PAH Phase 2 Scorecard — MAPPO + PAH against the base-paper baselines
 
-MS thesis · Ayesha Khalil · Phase 2 results · 15 Oct 2026
+MS thesis · Ayesha Khalil · Phase 2 results · 15 Oct 2026 (RMAPPO added 16 Oct 2026)
 Online version: https://claude.ai/artifact/4bu8Wa31ccoxmtztcwWfAz
 
 All methods were trained in the same 2D multi-UAV environment with moving targets. Each method has 10 training
 seeds (42–51), and every seed was tested on the same 200 starting layouts (deterministic actions, evaluation
 seed 7001). Success means every drone reaches its own target with no collision inside the time limit.
 
-**Status:** 80 / 100 Phase 2 runs finished · 9 methods with results · RMAPPO (20 runs) still to train.
+**Status:** Phase 2 closed · 86 runs (80 + RMAPPO Stage 3 seeds 42–47) · 10 methods with results. RMAPPO was reported as
+trained with the shared settings: Stage 3 only, 6 seeds, Stage 2 not run (see "RMAPPO note" below).
 
 Stage 2 = 5 drones, 10 obstacles. Stage 3 = 8 drones, 20 obstacles.
 
@@ -30,7 +31,9 @@ Success = mean over 10 seeds ± 95% confidence half-width.
 | DA-MAPPO (2D) | 59.9 ± 2.4 | 40.0 | 0.2 | 28.8 ± 2.7 | 70.5 | 0.6 |
 | MAPPO | 55.8 ± 4.2 | 43.4 | 0.8 | 21.9 ± 4.1 | 76.4 | 1.7 |
 | IPPO | 57.4 ± 7.4 | 39.6 | 2.9 | 17.1 ± 5.1 | 77.0 | 6.0 |
-| RMAPPO | pending | | | pending | | |
+| RMAPPO † | not run | | | 0.0 ± 0.0 | 86.3 | 13.7 |
+
+† RMAPPO: Stage 3 only, 6 seeds (42–47), shared settings. See "RMAPPO note".
 
 ## Table 2 — Speed and path (successful episodes only)
 
@@ -48,7 +51,9 @@ over all 2,000 test episodes of a method, drone–drone / drone–obstacle.
 | DA-MAPPO (2D) | 68 | 197 | 15 / 784 | 103 | 203 | 51 / 1359 |
 | MAPPO | 76 | 209 | 46 / 822 | 113 | 214 | 116 / 1412 |
 | IPPO | 101 | 226 | 62 / 731 | 177 | 293 | 242 / 1297 |
-| RMAPPO | pending | | | pending | | |
+| RMAPPO † | not run | | | — (no successes) | — | 115 / 920 ‡ |
+
+‡ RMAPPO hits are over 1,200 test episodes (6 seeds), not 2,000.
 
 ## Table 3 — MAPPO + PAH minus each method (success points, Welch 95% CI)
 
@@ -64,7 +69,7 @@ Whole interval above zero → PAH better. Interval contains zero → not settled
 | **DA-MAPPO (2D) — primary comparison** | **+26.9 [+22.6, +31.2]** | **PAH better** | **+53.8 [+49.3, +58.4]** | **PAH better** |
 | MAPPO | +31.0 [+25.8, +36.3] | PAH better | +60.8 [+55.5, +66.1] | PAH better |
 | IPPO | +29.3 [+21.4, +37.3] | PAH better | +65.6 [+59.6, +71.6] | PAH better |
-| RMAPPO | pending | | pending | |
+| RMAPPO † (6 seeds) | not run | | +82.7 [+78.7, +86.7] | PAH better |
 
 ## Table 4 — Base paper: DA-MAPPO, Table V (dynamic multi-target)
 
@@ -90,7 +95,7 @@ Copied from the DA-MAPPO paper (IEEE Internet of Things Journal). Their setup: 3
 | 3 | MAPPO | 64 | DA-MAPPO (2D) | 28.8 |
 | 4 | IPPO | 53 | MAPPO | 21.9 |
 | 5 | EGO-Planner v2 | 43 | IPPO | 17.1 |
-| 6 | NavRL | 32 | RMAPPO | pending |
+| 6 | NavRL | 32 | RMAPPO † | 0.0 |
 
 - **Same shape.** In both, dynamic target re-assignment beats MAPPO with a fixed assignment (paper: DA-MAPPO 90 vs
   MAPPO 64; ours: DA-MAPPO (2D) − MAPPO = +7.0 [2.3, 11.6] at Stage 3), and IPPO is the weakest MARL method.
@@ -113,6 +118,23 @@ conflict-graph features instead of raw teammate positions. So the gap splits int
 All three steps help at both stages. PAH's own share is the smallest, but its interval stays above zero at both
 stages.
 
+## RMAPPO note — why it shows 0%
+
+- **Result.** Stage 3, seeds 42–47, all 8,000 episodes: success 0.0% on every seed (200 test episodes each); collision
+  86.3%, timeout 13.7%. Training-time checks (every 100 episodes) were also 0% on every seed. MAPPO, the same method
+  without the GRU, reaches 21.9% here.
+- **Cause found: exploration collapse.** The policy's action spread (log std) fell to the lower clamp −4.0 by about
+  episode 2,000 (seed 45: −2.1 at ep 500, −3.2 at ep 1,000, −4.0 at ep 2,000) and the other seeds end at −2.9 to −3.5.
+  All other methods end at −0.04 to −0.9. With almost no exploration the policy stopped improving before it had learnt
+  to navigate.
+- **Not an implementation bug in the recurrent replay.** Log-probabilities recomputed over stored chunks match the
+  ones from data collection (max difference 1e-6).
+- **Likely reason (not tested).** The shared minibatch of 64 drone-steps means only 4 sequences of 16 steps per
+  gradient step (640 noisy steps per update). The original RMAPPO (Yu et al., MAPPO paper) updates on large batches.
+- **Decision (Ayesha, 16 Oct 2026).** Report as trained, without retuning; Stage 2 and seeds 48–51 were not run.
+- **How to read it.** This row shows that RMAPPO fails under our shared settings; it does not show how well a tuned
+  RMAPPO would do. In the base paper RMAPPO scored 67% at ENV-3.
+
 ## Limits — what a reviewer may ask
 
 - **One 2D environment.** No claim is made against the paper's 3D Gazebo numbers.
@@ -121,10 +143,11 @@ stages.
 - **PAH vs hand-coded τ-rule at Stage 2 is unresolved:** +2.0 [−2.6, 6.6]. PAH is clearly ahead at Stage 3.
 - **PAH design.** One PAH fix came after looking at the first Stage 3 seed-42 result. It corrected a bias and was not
   tuned on the test seeds; recorded in the Phase 1b README.
-- **RMAPPO is missing.** Its 20 runs will be trained next and added here.
+- **RMAPPO did not learn under the shared settings** (0.0% at Stage 3, 6 seeds; Stage 2 not run). A reviewer can call this
+  an under-tuned baseline; the PAH − RMAPPO gap should not be used as evidence for PAH. See "RMAPPO note".
 - **Multiple comparisons.** Secondary comparisons in Table 3 are not corrected for multiple testing.
 
 ---
 
 Sources: `v4/02-redesign/output/eval_raw/` (Phase 1b, 100 JSON) and `v4/03-base-paper-baselines/output/eval_raw/`
-(Phase 2, 80 JSON). Phase 2 evaluation used `02-redesign/evaluate.py:evaluate_run` (same protocol as Phase 1b).
+(Phase 2, 86 JSON). Phase 2 evaluation used `02-redesign/evaluate.py:evaluate_run` (same protocol as Phase 1b).

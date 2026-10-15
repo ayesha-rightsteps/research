@@ -1,0 +1,3 @@
+./runs/run_phase2_rmappo.sh: line 10: 38213 Done                    cat runs/jobs_rmappo.txt
+     38214 Terminated: 15          | xargs -P 6 -L 1 sh -c 'm=$0; st=$1; sd=$2; python3 -u train_baselines.py $m $st $sd > runs/logs/$m-stage$st-seed$sd.log 2>&1'
+rmappo: line 1: 42060 Terminated: 15          python3 -u train_baselines.py $m $st $sd > runs/logs/$m-stage$st-seed$sd.log 2>&1

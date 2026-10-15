@@ -1,1 +1,4 @@
 start 2026-10-15 22:38:00
+end 2026-10-16 02:45:03
+queue stopped 2026-10-16 02:45:06 (Ayesha: report RMAPPO as-is; seeds 42-47 Stage 3 only; seed 48 stopped)
+2026-10-16 02:54:57 Stage 3 seeds 42-47 all finished
