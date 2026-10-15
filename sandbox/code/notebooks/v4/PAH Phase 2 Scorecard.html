@@ -1,0 +1,247 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>PAH Phase 2 Scorecard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single reading column (~900px) of ledger-style tables; PAH rows carry the only accent, baselines stay in slate. */
+:root{
+  --bg:#f5f7f9; --surface:#ffffff; --ink:#18212b; --ink-2:#4a5866; --ink-3:#7a8794;
+  --line:#dbe2e8; --accent:#1f5fae; --accent-soft:#e3edf9; --bar:#b7c3cf;
+  --good:#1d7a4a; --good-soft:#e2f3e9; --unsure:#8a6a12; --unsure-soft:#f7efd8;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#11161c; --surface:#18202a; --ink:#e6ecf2; --ink-2:#a9b6c3; --ink-3:#7d8b98;
+    --line:#2a3542; --accent:#7fb0ee; --accent-soft:#1c2c42; --bar:#3c4a59;
+    --good:#6fcf9a; --good-soft:#163024; --unsure:#e2c46b; --unsure-soft:#332a12;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#11161c; --surface:#18202a; --ink:#e6ecf2; --ink-2:#a9b6c3; --ink-3:#7d8b98;
+  --line:#2a3542; --accent:#7fb0ee; --accent-soft:#1c2c42; --bar:#3c4a59;
+  --good:#6fcf9a; --good-soft:#163024; --unsure:#e2c46b; --unsure-soft:#332a12;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;padding:0 16px}
+.wrap{max-width:920px;margin:0 auto;padding-block:40px 64px;display:flex;flex-direction:column;gap:44px}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:2rem;font-weight:800;line-height:1.15}
+h2{font-size:1.3rem;font-weight:700}
+p{margin:0;max-width:68ch}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+header{display:flex;flex-direction:column;gap:12px}
+.lede{color:var(--ink-2);font-size:1.05rem}
+section{display:flex;flex-direction:column;gap:14px}
+.note{color:var(--ink-2);font-size:.95rem}
+.status{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.status div{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.status b{font-family:var(--mono);font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.status span{font-size:.85rem;color:var(--ink-2)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:9px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface)}
+thead tr.grp th{border-bottom:none;padding-bottom:0;color:var(--ink-2)}
+tbody tr:last-child td{border-bottom:none}
+td{font-variant-numeric:tabular-nums}
+td.num{font-family:var(--mono);font-size:.86rem}
+tr.sep td{background:var(--bg);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:6px 12px}
+tr.pah td{background:var(--accent-soft)}
+tr.pah td:first-child{font-weight:600;color:var(--accent)}
+tr.pending td{color:var(--ink-3);font-style:italic}
+.ci{color:var(--ink-3);font-size:.78rem}
+.succ{display:inline-flex;align-items:center;gap:8px;justify-content:flex-end}
+.bar{display:inline-block;width:70px;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bar)}
+tr.pah .bar i{background:var(--accent)}
+.pill{display:inline-block;font-family:var(--mono);font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:99px}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.unsure{background:var(--unsure-soft);color:var(--unsure)}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.vs{grid-template-columns:1fr}h1{font-size:1.6rem}}
+.vs .tbl h3{font-family:var(--display);font-size:1rem;margin:0;padding:12px 12px 4px}
+.vs .tbl p{font-size:.85rem;color:var(--ink-2);padding:0 12px 10px}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;max-width:72ch}
+li{color:var(--ink-2)}
+li strong{color:var(--ink)}
+footer{font-size:.82rem;color:var(--ink-3);border-top:1px solid var(--line);padding-top:16px}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">MS thesis · Ayesha Khalil · Phase 2 results · 15 Oct 2026</div>
+  <h1>MAPPO + PAH against the base-paper baselines</h1>
+  <p class="lede">All methods were trained in the same 2D multi-UAV environment with moving targets. Each method has 10 training seeds (42–51), and every seed was tested on the same 200 starting layouts. Success means every drone reaches its own target with no collision inside the time limit.</p>
+</header>
+
+<section>
+  <div class="status">
+    <div><b>80 / 100</b><span>Phase 2 runs finished</span></div>
+    <div><b>9</b><span>methods with results</span></div>
+    <div><b>20</b><span>RMAPPO runs still to train (laptop, overnight)</span></div>
+    <div><b>200 × 10</b><span>test episodes × seeds per method</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Table 1</div>
+  <h2>Our results, both stages</h2>
+  <p class="note">Stage 2: 5 drones, 10 obstacles. Stage 3: 8 drones, 20 obstacles. Success is the mean over 10 seeds, with its 95% confidence half-width underneath. Collision and timeout are percentages of episodes.</p>
+  <div class="tbl">
+  <table>
+    <thead>
+      <tr class="grp"><th></th><th colspan="3">Stage 2 · 5 drones</th><th colspan="3">Stage 3 · 8 drones</th></tr>
+      <tr><th>Method</th><th>Success %</th><th>Collision %</th><th>Timeout %</th><th>Success %</th><th>Collision %</th><th>Timeout %</th></tr>
+    </thead>
+    <tbody id="t1"></tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Table 2</div>
+  <h2>Speed and path, successful episodes only</h2>
+  <p class="note">T<sub>ave</sub> is the number of steps until all drones arrived. L<sub>ave</sub> is the mean path length per drone in world units. Collision counts are summed over all 2,000 test episodes of a method, split into drone–drone and drone–obstacle.</p>
+  <div class="tbl">
+  <table>
+    <thead>
+      <tr class="grp"><th></th><th colspan="3">Stage 2</th><th colspan="3">Stage 3</th></tr>
+      <tr><th>Method</th><th>T<sub>ave</sub> steps</th><th>L<sub>ave</sub></th><th>Hits D–D / D–O</th><th>T<sub>ave</sub> steps</th><th>L<sub>ave</sub></th><th>Hits D–D / D–O</th></tr>
+    </thead>
+    <tbody id="t2"></tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Table 3</div>
+  <h2>MAPPO + PAH minus each method, success points</h2>
+  <p class="note">Welch 95% confidence interval over the 10 seeds of each method. If the whole interval is above zero, PAH is better. If the interval contains zero, the data cannot tell the two apart.</p>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Compared with</th><th>Stage 2 difference [95% CI]</th><th>Verdict</th><th>Stage 3 difference [95% CI]</th><th>Verdict</th></tr></thead>
+    <tbody id="t3"></tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Table 4</div>
+  <h2>Base paper: DA-MAPPO, Table V (dynamic multi-target)</h2>
+  <p class="note">Numbers copied from the DA-MAPPO paper. Their setup is a 3D Gazebo simulator with LiDAR, 256-unit networks and about 3 million training steps; their T<sub>ave</sub> and L<sub>ave</sub> use different units from ours. The absolute numbers can not be compared with ours. The ranking of methods can.</p>
+  <div class="tbl">
+  <table>
+    <thead>
+      <tr class="grp"><th></th><th colspan="2">ENV-1 · 30 obstacles</th><th colspan="2">ENV-2 · 40 obstacles</th><th colspan="2">ENV-3 · 50 obstacles</th></tr>
+      <tr><th>Method</th><th>Success %</th><th>Collision %</th><th>Success %</th><th>Collision %</th><th>Success %</th><th>Collision %</th></tr>
+    </thead>
+    <tbody id="t4"></tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Side by side</div>
+  <h2>Does our pattern match the paper?</h2>
+  <div class="vs">
+    <div class="tbl">
+      <h3>Base paper, hardest setting (ENV-3)</h3>
+      <p>Success %, best first</p>
+      <table><tbody id="v1"></tbody></table>
+    </div>
+    <div class="tbl">
+      <h3>Ours, hardest setting (Stage 3)</h3>
+      <p>Success %, best first, same method families</p>
+      <table><tbody id="v2"></tbody></table>
+    </div>
+  </div>
+  <ul>
+    <li><strong>Same shape.</strong> In both, the method that re-assigns targets dynamically beats MAPPO with a fixed assignment (paper: DA-MAPPO 90 vs MAPPO 64; ours: DA-MAPPO (2D) beats MAPPO by +7.0 [2.3, 11.6] at Stage 3), and IPPO is the weakest MARL method.</li>
+    <li><strong>Our addition sits on top.</strong> MAPPO + PAH is above every base-paper method at both stages, in the same way DA-MAPPO is above its baselines in the paper.</li>
+    <li><strong>Our baselines score lower than the paper's.</strong> Our Stage 3 is harder for them: all methods share our small 64-unit network and 8,000-episode budget, with no curriculum.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Where the gap comes from</div>
+  <h2>Splitting the Stage 3 gap to DA-MAPPO (2D)</h2>
+  <p class="note">DA-MAPPO (2D) and Plain MAPPO use the same agent, reward and settings. The only difference is that Plain MAPPO sees conflict-graph features instead of raw teammate positions. That lets us split the 53.8-point gap into three steps, each measured on its own.</p>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Step</th><th>From → to</th><th>Stage 2</th><th>Stage 3</th></tr></thead>
+    <tbody>
+      <tr><td>Conflict-graph observation</td><td>DA-MAPPO (2D) → Plain MAPPO</td><td class="num">+9.0 <span class="ci">[5.0, 13.0]</span></td><td class="num">+15.4 <span class="ci">[10.3, 20.4]</span></td></tr>
+      <tr><td>Two value heads (mission + safety)</td><td>Plain MAPPO → Fixed-weight MAPPO</td><td class="num">+10.9 <span class="ci">[7.0, 14.9]</span></td><td class="num">+30.0 <span class="ci">[22.8, 37.1]</span></td></tr>
+      <tr class="pah"><td>PAH learned α</td><td>Fixed-weight MAPPO → MAPPO + PAH</td><td class="num">+7.0 <span class="ci">[2.8, 11.1]</span></td><td class="num">+8.5 <span class="ci">[1.7, 15.4]</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">All three steps help at both stages. PAH's own share is the smallest of the three but its interval stays above zero at both stages.</p>
+</section>
+
+<section>
+  <div class="eyebrow">Limits</div>
+  <h2>What a reviewer may ask</h2>
+  <ul>
+    <li><strong>One 2D environment.</strong> No claim is made against the paper's 3D Gazebo numbers.</li>
+    <li><strong>Shared hyperparameters.</strong> Every method used the same settings, as the base paper did. The base-paper methods were not tuned separately.</li>
+    <li><strong>PAH vs hand-coded τ-rule at Stage 2 is unresolved:</strong> +2.0 [−2.6, 6.6]. PAH is clearly ahead at Stage 3.</li>
+    <li><strong>PAH design.</strong> One PAH fix came after looking at the first Stage 3 seed-42 result. It corrected a bias and was not tuned on the test seeds; this is recorded in the Phase 1b README.</li>
+    <li><strong>RMAPPO is missing.</strong> Its 20 runs will be trained next and added here.</li>
+    <li><strong>Multiple comparisons.</strong> The secondary comparisons in Table 3 are not corrected for multiple testing.</li>
+  </ul>
+</section>
+
+<footer>Evaluation: deterministic actions, evaluation seed 7001, 200 episodes per model, 10 models per method. Sources: v4/02-redesign/output/eval_raw and v4/03-base-paper-baselines/output/eval_raw. Base-paper numbers: DA-MAPPO, IEEE Internet of Things Journal, Table V.</footer>
+</div>
+
+<script>
+const R = {"mappo-pah": {"2": {"succ": 86.8, "ci": 3.8, "coll": 13.2, "to": 0.0, "T": 54.4, "L": 187.8, "dd": 6, "do": 258}, "3": {"succ": 82.7, "ci": 4.0, "coll": 17.3, "to": 0.0, "T": 61.3, "L": 173.0, "dd": 16, "do": 330}}, "fixed-weight-mappo": {"2": {"succ": 79.8, "ci": 2.2, "coll": 20.2, "to": 0.0, "T": 58.7, "L": 200.5, "dd": 12, "do": 391}, "3": {"succ": 74.2, "ci": 6.1, "coll": 25.8, "to": 0.0, "T": 75.5, "L": 198.7, "dd": 24, "do": 492}}, "tau-rule-mappo": {"2": {"succ": 84.8, "ci": 3.1, "coll": 15.2, "to": 0.0, "T": 57.7, "L": 190.4, "dd": 8, "do": 296}, "3": {"succ": 71.4, "ci": 5.9, "coll": 28.6, "to": 0.0, "T": 72.9, "L": 182.4, "dd": 10, "do": 561}}, "mappo-pah-no-hungarian": {"2": {"succ": 83.4, "ci": 3.9, "coll": 16.6, "to": 0.0, "T": 78.2, "L": 300.8, "dd": 76, "do": 255}, "3": {"succ": 68.4, "ci": 7.4, "coll": 31.2, "to": 0.4, "T": 108.9, "L": 342.1, "dd": 127, "do": 495}}, "plain-mappo": {"2": {"succ": 68.9, "ci": 3.6, "coll": 31.1, "to": 0.0, "T": 59.6, "L": 193.9, "dd": 10, "do": 612}, "3": {"succ": 44.2, "ci": 4.7, "coll": 55.8, "to": 0.0, "T": 63.1, "L": 170.9, "dd": 9, "do": 1106}}, "igat-style": {"2": {"succ": 73.0, "ci": 5.4, "coll": 26.2, "to": 0.9, "T": 75.5, "L": 224.9, "dd": 50, "do": 473}, "3": {"succ": 46.8, "ci": 9.5, "coll": 52.3, "to": 1.0, "T": 118.0, "L": 311.6, "dd": 215, "do": 831}}, "da-mappo-2d": {"2": {"succ": 59.9, "ci": 2.4, "coll": 40.0, "to": 0.2, "T": 67.6, "L": 197.4, "dd": 15, "do": 784}, "3": {"succ": 28.8, "ci": 2.7, "coll": 70.5, "to": 0.6, "T": 102.8, "L": 202.9, "dd": 51, "do": 1359}}, "mappo": {"2": {"succ": 55.8, "ci": 4.2, "coll": 43.4, "to": 0.8, "T": 76.3, "L": 208.9, "dd": 46, "do": 822}, "3": {"succ": 21.9, "ci": 4.1, "coll": 76.4, "to": 1.7, "T": 113.1, "L": 214.3, "dd": 116, "do": 1412}}, "ippo": {"2": {"succ": 57.4, "ci": 7.4, "coll": 39.6, "to": 2.9, "T": 100.6, "L": 225.8, "dd": 62, "do": 731}, "3": {"succ": 17.1, "ci": 5.1, "coll": 77.0, "to": 6.0, "T": 177.1, "L": 292.8, "dd": 242, "do": 1297}}};
+const NAME = {"mappo-pah":"MAPPO + PAH","fixed-weight-mappo":"Fixed-weight MAPPO","tau-rule-mappo":"Hand-coded τ-rule MAPPO","mappo-pah-no-hungarian":"MAPPO + PAH (Hungarian off)","plain-mappo":"Plain MAPPO","igat-style":"IGAT-style MAPPO","da-mappo-2d":"DA-MAPPO (2D)","mappo":"MAPPO","ippo":"IPPO"};
+const OURS = ["mappo-pah","fixed-weight-mappo","tau-rule-mappo","mappo-pah-no-hungarian","plain-mappo"];
+const BASE = ["igat-style","da-mappo-2d","mappo","ippo"];
+const f1 = v => v.toFixed(1);
+const cls = m => m === "mappo-pah" ? ' class="pah"' : "";
+function succCell(d){ return `<td class="num"><span class="succ"><span class="bar"><i style="width:${d.succ}%"></i></span>${f1(d.succ)}</span><br><span class="ci">±${f1(d.ci)}</span></td>`; }
+function rows(list, fn){ return list.map(m => `<tr${cls(m)}><td>${NAME[m]}</td>${fn(R[m])}</tr>`).join(""); }
+const sep = (t, n) => `<tr class="sep"><td colspan="${n}">${t}</td></tr>`;
+const pend = (n) => `<tr class="pending"><td>RMAPPO</td>${'<td class="num">pending</td>'.repeat(n-1)}</tr>`;
+
+const t1 = d => succCell(d[2]) + `<td class="num">${f1(d[2].coll)}</td><td class="num">${f1(d[2].to)}</td>` + succCell(d[3]) + `<td class="num">${f1(d[3].coll)}</td><td class="num">${f1(d[3].to)}</td>`;
+document.getElementById("t1").innerHTML = sep("Our methods (Phase 1b)",7) + rows(OURS,t1) + sep("Base-paper methods in our environment (Phase 2)",7) + rows(BASE,t1) + pend(7);
+
+const t2 = d => [2,3].map(s => `<td class="num">${Math.round(d[s].T)}</td><td class="num">${Math.round(d[s].L)}</td><td class="num">${d[s].dd} / ${d[s].do}</td>`).join("");
+document.getElementById("t2").innerHTML = sep("Our methods (Phase 1b)",7) + rows(OURS,t2) + sep("Base-paper methods in our environment (Phase 2)",7) + rows(BASE,t2) + pend(7);
+
+const CMP = [
+ ["Fixed-weight MAPPO",[7.0,2.8,11.1],[8.5,1.7,15.4]],
+ ["Hand-coded τ-rule MAPPO",[2.0,-2.6,6.6],[11.2,4.6,17.9]],
+ ["MAPPO + PAH (Hungarian off)",[3.3,-1.8,8.5],[14.3,6.3,22.3]],
+ ["Plain MAPPO",[17.9,13.0,22.8],[38.5,32.8,44.2]],
+ ["IGAT-style MAPPO",[13.8,7.7,20.0],[36.0,26.0,45.9]],
+ ["DA-MAPPO (2D) — primary comparison",[26.9,22.6,31.2],[53.8,49.3,58.4]],
+ ["MAPPO",[31.0,25.8,36.3],[60.8,55.5,66.1]],
+ ["IPPO",[29.3,21.4,37.3],[65.6,59.6,71.6]]];
+const sg = v => (v>=0?"+":"−") + Math.abs(v).toFixed(1);
+const verdict = c => c[1] > 0 ? '<span class="pill good">PAH better</span>' : '<span class="pill unsure">not settled</span>';
+const cell = c => `<td class="num">${sg(c[0])} <span class="ci">[${sg(c[1])}, ${sg(c[2])}]</span></td><td>${verdict(c)}</td>`;
+document.getElementById("t3").innerHTML = CMP.map(r => `<tr><td>${r[0]}</td>${cell(r[1])}${cell(r[2])}</tr>`).join("") + `<tr class="pending"><td>RMAPPO</td><td class="num">pending</td><td></td><td class="num">pending</td><td></td></tr>`;
+
+const P = [["DA-MAPPO",[99,1],[95,5],[90,10]],["RMAPPO",[85,15],[69,31],[67,33]],["MAPPO",[83,17],[70,30],[64,36]],["IPPO",[78,22],[57,43],[53,47]],["NavRL",[63,34],[53,43],[32,65]],["EGO-Planner v2",[53,45],[51,48],[43,57]]];
+document.getElementById("t4").innerHTML = P.map(r => `<tr${r[0]==="DA-MAPPO"?' class="pah"':''}><td>${r[0]}</td>${r.slice(1).map(e=>`<td class="num">${e[0]}</td><td class="num">${e[1]}</td>`).join("")}</tr>`).join("");
+
+const v1 = [["DA-MAPPO",90,true],["RMAPPO",67],["MAPPO",64],["IPPO",53],["EGO-Planner v2",43],["NavRL",32]];
+const v2 = [["MAPPO + PAH",82.7,true],["IGAT-style MAPPO",46.8],["DA-MAPPO (2D)",28.8],["MAPPO",21.9],["IPPO",17.1],["RMAPPO","pending"]];
+const vr = list => list.map(r => `<tr${r[2]?' class="pah"':''}${r[1]==="pending"?' class="pending"':''}><td>${r[0]}</td><td class="num">${typeof r[1]==="number"?`<span class="succ"><span class="bar"><i style="width:${r[1]}%"></i></span>${r[1]}</span>`:r[1]}</td></tr>`).join("");
+document.getElementById("v1").innerHTML = vr(v1);
+document.getElementById("v2").innerHTML = vr(v2);
+</script>
+
+</body></html>
