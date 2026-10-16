@@ -158,6 +158,45 @@ def test_random_policy_many_episodes_no_errors():
                 assert info['collision_kind'] in ('drone-drone', 'drone-obstacle', 'both')
 
 
+MODES = ('every-step', 'fixed-at-reset', 'fixed-arbitrary')
+
+
+def _still_env(mode, seed=5):
+    """5 drones, no discs, targets standing still -- so only the success rule is tested (Manish's review Q5)."""
+    env = E.MultiUAVEnvV4(n_drones=5, n_obstacles=0, target_speed=0.0, seed=seed, assignment=mode)
+    env.reset()
+    return env
+
+
+def test_success_definition_is_the_same_in_every_assignment_mode():
+    """Success = every drone within target_radius of its OWN assigned target, in all three modes. Checked at the
+    boundary: exactly target_radius away counts, 0.01 further does not (one drone moved, the rest on target)."""
+    for mode in MODES:
+        for extra, expected in ((0.0, True), (0.01, False)):
+            env = _still_env(mode)
+            pos = env.target_pos[env.assignment].astype(np.float64).copy()
+            pos[2] += np.array([env.tgt_r + extra, 0.0])      # drone 2 sits exactly at / just beyond the radius
+            env.drone_pos = pos
+            _, _, terminated, _, info = env.step(np.zeros((5, 2)))
+            assert info['all_targets_reached'] == expected, (mode, extra, info['all_targets_reached'])
+            assert not info['any_collision'], mode
+            assert terminated == expected, (mode, extra)
+
+
+def test_swapped_targets_differ_only_through_the_assignment_rule():
+    """Two drones on each other's targets: every-step re-runs the Hungarian method, so the pairing follows the drones
+    and the episode is a success; with a fixed assignment (at reset or arbitrary) it is not. Same success function --
+    the difference is the assignment mode, which is the method difference being compared (as in DA-MAPPO)."""
+    for mode, expected in (('every-step', True), ('fixed-at-reset', False), ('fixed-arbitrary', False)):
+        env = _still_env(mode)
+        a = env.assignment.copy()
+        pos = env.target_pos[a].astype(np.float64).copy()
+        pos[[0, 1]] = pos[[1, 0]]                              # drones 0 and 1 swap targets
+        env.drone_pos = pos
+        _, _, _, _, info = env.step(np.zeros((5, 2)))
+        assert info['all_targets_reached'] == expected, (mode, info['all_targets_reached'])
+
+
 if __name__ == '__main__':
     import sys, time
     tests = [v for k, v in sorted(globals().items()) if k.startswith('test_')]

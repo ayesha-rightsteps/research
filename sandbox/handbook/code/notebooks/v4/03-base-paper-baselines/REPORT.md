@@ -8,10 +8,10 @@ dono stages par. Report English mein hai taake Manish aur supervisor ko seedha d
 
 ## Sab se ahem baatein
 - **MAPPO + PAH dono stages mein pehle number par hai:** Stage 2 mein 86.8% aur Stage 3 mein 82.7%.
-- **Asal muqabla (DA-MAPPO (2D) se):** Stage 2 mein +26.9 aur Stage 3 mein +53.8 points. Dono mein PAH pakka behtar hai.
+- **Asal muqabla (DA-MAPPO (2D) se):** Stage 2 mein +26.9 aur Stage 3 mein +53.9 points. Dono mein PAH pakka behtar hai.
 - **Base paper jaisa pattern:** wahan DA-MAPPO apne baselines se upar tha, yahan MAPPO + PAH sab se upar hai. IPPO
   dono jagah sab se kamzor hai.
-- **Farq kahan se aata hai (Stage 3):** conflict graph +15.4, do value heads +30.0, aur PAH ka apna hissa +8.5.
+- **Farq kahan se aata hai (Stage 3):** conflict graph +15.4, do value heads +30.0, aur PAH ka apna hissa +8.6.
   Teeno hamare idea hain aur teeno ka faida dikhta hai.
 - **RMAPPO (16 Oct):** sirf Stage 3, 6 seeds (42–47) — success **0.0%** har seed par. Wajah: training ke shuru mein hi
   policy ka "random hilna" (explore) khatam ho gaya (log_std −4.0 ki limit tak gira), is liye wo seekh nahi saka. Code ka
@@ -19,6 +19,10 @@ dono stages par. Report English mein hai taake Manish aur supervisor ko seedha d
   Dhyaan: PAH − RMAPPO (+82.7) ko PAH ki taaqat ka saboot na banayein — examiner kahega baseline theek se tune nahi hua.
 - **Hadood:** sirf 2D environment hai, sab methods ki settings same rakhi gayin, Stage 2 mein τ-rule se farq pakka
   nahi, aur RMAPPO shared settings par fail hua (upar dekhiye).
+
+## Rounding (16 Oct 2026)
+Kuch numbers 0.1 badle (jaise +8.5 → +8.6, DA-MAPPO (2D) 28.8 → 28.9). Data nahi badla: 10 seeds ka average aksar
+bilkul x.x5 pe aata hai, aur ab ek saaf rule hai — half up (8.55 → 8.6). Saari tables ab `summarize.py` se banti hain.
 
 ## Tables kaise parhein
 - **Success ± number:** ± wala number batata hai ke 10 seeds mein kitna utaar chadhaao tha.

@@ -22,15 +22,15 @@ Success = mean over 10 seeds ± 95% confidence half-width.
 |---|---|---|---|---|---|---|
 | *Our methods (Phase 1b)* | | | | | | |
 | **MAPPO + PAH** | **86.8 ± 3.8** | 13.2 | 0.0 | **82.7 ± 4.0** | 17.3 | 0.0 |
-| Fixed-weight MAPPO | 79.8 ± 2.2 | 20.2 | 0.0 | 74.2 ± 6.1 | 25.8 | 0.0 |
-| Hand-coded τ-rule MAPPO | 84.8 ± 3.1 | 15.2 | 0.0 | 71.4 ± 5.9 | 28.6 | 0.0 |
-| MAPPO + PAH (Hungarian off) | 83.4 ± 3.9 | 16.6 | 0.0 | 68.4 ± 7.4 | 31.2 | 0.4 |
-| Plain MAPPO | 68.9 ± 3.6 | 31.1 | 0.0 | 44.2 ± 4.7 | 55.8 | 0.0 |
+| Fixed-weight MAPPO | 79.9 ± 2.2 | 20.2 | 0.0 | 74.2 ± 6.1 | 25.8 | 0.1 |
+| Hand-coded τ-rule MAPPO | 84.8 ± 3.1 | 15.2 | 0.0 | 71.5 ± 5.9 | 28.6 | 0.0 |
+| MAPPO + PAH (Hungarian off) | 83.5 ± 3.9 | 16.6 | 0.0 | 68.4 ± 7.4 | 31.2 | 0.4 |
+| Plain MAPPO | 68.9 ± 3.6 | 31.1 | 0.0 | 44.2 ± 4.7 | 55.8 | 0.1 |
 | *Base-paper methods in our environment (Phase 2)* | | | | | | |
 | IGAT-style MAPPO | 73.0 ± 5.4 | 26.2 | 0.9 | 46.8 ± 9.5 | 52.3 | 1.0 |
-| DA-MAPPO (2D) | 59.9 ± 2.4 | 40.0 | 0.2 | 28.8 ± 2.7 | 70.5 | 0.6 |
-| MAPPO | 55.8 ± 4.2 | 43.4 | 0.8 | 21.9 ± 4.1 | 76.4 | 1.7 |
-| IPPO | 57.4 ± 7.4 | 39.6 | 2.9 | 17.1 ± 5.1 | 77.0 | 6.0 |
+| DA-MAPPO (2D) | 59.9 ± 2.4 | 40.0 | 0.2 | 28.9 ± 2.7 | 70.5 | 0.7 |
+| MAPPO | 55.8 ± 4.2 | 43.4 | 0.9 | 21.9 ± 4.1 | 76.4 | 1.7 |
+| IPPO | 57.5 ± 7.4 | 39.7 | 2.9 | 17.1 ± 5.1 | 77.0 | 6.0 |
 | RMAPPO † | not run | | | 0.0 ± 0.0 | 86.3 | 13.7 |
 
 † RMAPPO: Stage 3 only, 6 seeds (42–47), shared settings. See "RMAPPO note".
@@ -43,7 +43,7 @@ over all 2,000 test episodes of a method, drone–drone / drone–obstacle.
 | Method | S2 T_ave | S2 L_ave | S2 Hits D–D / D–O | S3 T_ave | S3 L_ave | S3 Hits D–D / D–O |
 |---|---|---|---|---|---|---|
 | **MAPPO + PAH** | 54 | 188 | 6 / 258 | 61 | 173 | 16 / 330 |
-| Fixed-weight MAPPO | 59 | 200 | 12 / 391 | 76 | 199 | 24 / 492 |
+| Fixed-weight MAPPO | 59 | 201 | 12 / 391 | 76 | 199 | 24 / 492 |
 | Hand-coded τ-rule MAPPO | 58 | 190 | 8 / 296 | 73 | 182 | 10 / 561 |
 | MAPPO + PAH (Hungarian off) | 78 | 301 | 76 / 255 | 109 | 342 | 127 / 495 |
 | Plain MAPPO | 60 | 194 | 10 / 612 | 63 | 171 | 9 / 1106 |
@@ -61,14 +61,14 @@ Whole interval above zero → PAH better. Interval contains zero → not settled
 
 | Compared with | Stage 2 [95% CI] | Verdict | Stage 3 [95% CI] | Verdict |
 |---|---|---|---|---|
-| Fixed-weight MAPPO | +7.0 [+2.8, +11.1] | PAH better | +8.5 [+1.7, +15.4] | PAH better |
-| Hand-coded τ-rule MAPPO | +2.0 [−2.6, +6.6] | not settled | +11.2 [+4.6, +17.9] | PAH better |
-| MAPPO + PAH (Hungarian off) | +3.3 [−1.8, +8.5] | not settled | +14.3 [+6.3, +22.3] | PAH better |
+| Fixed-weight MAPPO | +7.0 [+2.8, +11.1] | PAH better | +8.6 [+1.7, +15.4] | PAH better |
+| Hand-coded τ-rule MAPPO | +2.0 [−2.6, +6.6] | not settled | +11.3 [+4.6, +17.9] | PAH better |
+| MAPPO + PAH (Hungarian off) | +3.4 [−1.8, +8.5] | not settled | +14.3 [+6.3, +22.3] | PAH better |
 | Plain MAPPO | +17.9 [+13.0, +22.8] | PAH better | +38.5 [+32.8, +44.2] | PAH better |
-| IGAT-style MAPPO | +13.8 [+7.7, +20.0] | PAH better | +36.0 [+26.0, +45.9] | PAH better |
-| **DA-MAPPO (2D) — primary comparison** | **+26.9 [+22.6, +31.2]** | **PAH better** | **+53.8 [+49.3, +58.4]** | **PAH better** |
-| MAPPO | +31.0 [+25.8, +36.3] | PAH better | +60.8 [+55.5, +66.1] | PAH better |
-| IPPO | +29.3 [+21.4, +37.3] | PAH better | +65.6 [+59.6, +71.6] | PAH better |
+| IGAT-style MAPPO | +13.9 [+7.7, +20.0] | PAH better | +36.0 [+26.0, +45.9] | PAH better |
+| **DA-MAPPO (2D) — primary comparison** | **+26.9 [+22.6, +31.2]** | **PAH better** | **+53.9 [+49.3, +58.4]** | **PAH better** |
+| MAPPO | +31.1 [+25.8, +36.3] | PAH better | +60.8 [+55.5, +66.1] | PAH better |
+| IPPO | +29.4 [+21.4, +37.3] | PAH better | +65.6 [+59.6, +71.6] | PAH better |
 | RMAPPO † (6 seeds) | not run | | +82.7 [+78.7, +86.7] | PAH better |
 
 ## Table 4 — Base paper: DA-MAPPO, Table V (dynamic multi-target)
@@ -92,7 +92,7 @@ Copied from the DA-MAPPO paper (IEEE Internet of Things Journal). Their setup: 3
 |---|---|---|---|---|
 | 1 | **DA-MAPPO** | **90** | **MAPPO + PAH** | **82.7** |
 | 2 | RMAPPO | 67 | IGAT-style MAPPO | 46.8 |
-| 3 | MAPPO | 64 | DA-MAPPO (2D) | 28.8 |
+| 3 | MAPPO | 64 | DA-MAPPO (2D) | 28.9 |
 | 4 | IPPO | 53 | MAPPO | 21.9 |
 | 5 | EGO-Planner v2 | 43 | IPPO | 17.1 |
 | 6 | NavRL | 32 | RMAPPO † | 0.0 |
@@ -112,8 +112,8 @@ conflict-graph features instead of raw teammate positions. So the gap splits int
 | Step | From → to | Stage 2 | Stage 3 |
 |---|---|---|---|
 | Conflict-graph observation | DA-MAPPO (2D) → Plain MAPPO | +9.0 [5.0, 13.0] | +15.4 [10.3, 20.4] |
-| Two value heads (mission + safety) | Plain MAPPO → Fixed-weight MAPPO | +10.9 [7.0, 14.9] | +30.0 [22.8, 37.1] |
-| **PAH learned α** | Fixed-weight MAPPO → MAPPO + PAH | **+7.0 [2.8, 11.1]** | **+8.5 [1.7, 15.4]** |
+| Two value heads (mission + safety) | Plain MAPPO → Fixed-weight MAPPO | +11.0 [7.0, 14.9] | +30.0 [22.8, 37.1] |
+| **PAH learned α** | Fixed-weight MAPPO → MAPPO + PAH | **+7.0 [2.8, 11.1]** | **+8.6 [1.7, 15.4]** |
 
 All three steps help at both stages. PAH's own share is the smallest, but its interval stays above zero at both
 stages.
@@ -149,5 +149,9 @@ stages.
 
 ---
 
+Rounding: one decimal, half up (each seed's success is k/200, so 10-seed means are often exactly x.x5; e.g. the primary
+difference is exactly 8.55 → +8.6). All tables are produced by `03-base-paper-baselines/summarize.py`
+(`output/eval_summary.md`); a full re-run of all 186 evaluations on 16 Oct 2026 gave byte-identical files.
+
 Sources: `v4/02-redesign/output/eval_raw/` (Phase 1b, 100 JSON) and `v4/03-base-paper-baselines/output/eval_raw/`
-(Phase 2, 86 JSON). Phase 2 evaluation used `02-redesign/evaluate.py:evaluate_run` (same protocol as Phase 1b).
+(Phase 2, 86 JSON). Phase 2 evaluation: `02-redesign/evaluate.py --phase2` (same `evaluate_run` and protocol as Phase 1b).

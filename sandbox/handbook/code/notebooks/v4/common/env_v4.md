@@ -25,3 +25,9 @@ Observation ab 50 numbers ka hai (pehle 30): apni position, speed, target ki tar
 - Same seed → same episode.
 - **Sab se zaroori:** obstacles zero hon to yeh environment **v3 jaisa hi** chalta hai — rewards, assignment,
   padosi, sab. Matlab jo "unchanged" hona chahiye tha woh sach mein unchanged hai.
+
+**Naye tests (16 Oct 2026, Manish ka sawal Q5):** "success" ka matlab teeno assignment modes (every-step,
+fixed-at-reset, fixed-arbitrary) mein ek hi hai — har drone apne assigned target ke `target_radius` ke andar. Test
+seema (boundary) pe bhi check karta hai. Doosra test dikhata hai ke do drone ek doosre ke target pe hon to sirf
+every-step mein kamyabi milti hai — farq assignment ke rule ka hai, success ki definition ka nahi. Teen jaan-boojh ke
+toote versions in tests ne pakde. Kul 15 / 15 tests pass.

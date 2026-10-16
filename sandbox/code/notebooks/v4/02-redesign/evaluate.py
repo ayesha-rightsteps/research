@@ -16,6 +16,11 @@ Usage:
   python evaluate.py                 # all 100 models, 4 processes  -> output/eval_raw/
   python evaluate.py --episodes 20   # quick check
   python evaluate.py --phase2        # Phase 2 base-paper methods: ../03-base-paper-baselines/runs -> that folder's output/
+  Options (any combination):
+    --methods a,b      only these methods          --stages 3     only these stages (e.g. 2,3)
+    --raw-dir NAME     write to output/NAME/ instead of output/eval_raw/ (e.g. a re-run to compare with the original)
+    --procs N          parallel processes (default 4)
+  Example, RMAPPO Stage 3 only: python evaluate.py --phase2 --methods rmappo --stages 3
 Phase 2 models (config.json has 'assignment') are rebuilt with 03-base-paper-baselines/train_baselines.py; the
 episode loop is the same, with the two hooks those agents need (graph for IGAT-style, hidden-state reset for RMAPPO).
 """
@@ -115,18 +120,26 @@ def evaluate_run(run_dir, episodes=EPISODES):
         outcomes=[e['outcome'][0] for e in eps])        # 's' / 'c' / 't' per episode, same layouts for every model
 
 
+def arg(name, default=None):
+    """Value after a command-line flag, or the default when the flag is absent."""
+    return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else default
+
+
 def main():
-    episodes = int(sys.argv[sys.argv.index('--episodes') + 1]) if '--episodes' in sys.argv else EPISODES
+    episodes = int(arg('--episodes', EPISODES))
     root, methods, out = (PHASE2, PHASE2_METHODS, os.path.join(PHASE2, 'output')) if '--phase2' in sys.argv \
         else (HERE, METHODS, OUT)
-    runs = sorted(d for st in (2, 3) for m in methods
+    if '--methods' in sys.argv:
+        methods = arg('--methods').split(',')
+    stages = [int(s) for s in arg('--stages', '2,3').split(',')]
+    runs = sorted(d for st in stages for m in methods
                   for d in glob.glob(os.path.join(root, 'runs', 'stage{}'.format(st), m, 'seed-*'))
                   if os.path.exists(os.path.join(d, 'final_model.pt')))
     print('{} models, {} episodes each, evaluation seed {}'.format(len(runs), episodes, EVAL_SEED), flush=True)
     t0 = time.time()
-    with Pool(4) as pool:
+    with Pool(int(arg('--procs', 4))) as pool:
         res = pool.starmap(evaluate_run, [(d, episodes) for d in runs])
-    raw = os.path.join(out, 'eval_raw' if episodes == EPISODES else 'eval_raw_check')
+    raw = os.path.join(out, arg('--raw-dir', 'eval_raw' if episodes == EPISODES else 'eval_raw_check'))
     os.makedirs(raw, exist_ok=True)
     for r in res:
         json.dump(r, open(os.path.join(raw, 'stage{}_{}_seed{}.json'.format(r['stage'], r['method'], r['seed'])), 'w'))

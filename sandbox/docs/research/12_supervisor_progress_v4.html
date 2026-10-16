@@ -1,0 +1,276 @@
+<title>PAH Thesis Progress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single reading column (~900px) of ledger-style tables; PAH rows carry the only accent, baselines stay in slate. */
+:root{
+  --bg:#f5f7f9; --surface:#ffffff; --ink:#18212b; --ink-2:#4a5866; --ink-3:#7a8794;
+  --line:#dbe2e8; --accent:#1f5fae; --accent-soft:#e3edf9; --bar:#b7c3cf;
+  --good:#1d7a4a; --good-soft:#e2f3e9; --unsure:#8a6a12; --unsure-soft:#f7efd8;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#11161c; --surface:#18202a; --ink:#e6ecf2; --ink-2:#a9b6c3; --ink-3:#7d8b98;
+    --line:#2a3542; --accent:#7fb0ee; --accent-soft:#1c2c42; --bar:#3c4a59;
+    --good:#6fcf9a; --good-soft:#163024; --unsure:#e2c46b; --unsure-soft:#332a12;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#11161c; --surface:#18202a; --ink:#e6ecf2; --ink-2:#a9b6c3; --ink-3:#7d8b98;
+  --line:#2a3542; --accent:#7fb0ee; --accent-soft:#1c2c42; --bar:#3c4a59;
+  --good:#6fcf9a; --good-soft:#163024; --unsure:#e2c46b; --unsure-soft:#332a12;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;padding:0 16px}
+.wrap{max-width:920px;margin:0 auto;padding-block:40px 64px;display:flex;flex-direction:column;gap:44px}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:2rem;font-weight:800;line-height:1.15}
+h2{font-size:1.3rem;font-weight:700}
+p{margin:0;max-width:68ch}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+header{display:flex;flex-direction:column;gap:12px}
+.lede{color:var(--ink-2);font-size:1.05rem}
+section{display:flex;flex-direction:column;gap:14px}
+.note{color:var(--ink-2);font-size:.95rem}
+.status{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.status div{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.status b{font-family:var(--mono);font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.status span{font-size:.85rem;color:var(--ink-2)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:9px 12px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface)}
+thead tr.grp th{border-bottom:none;padding-bottom:0;color:var(--ink-2)}
+tbody tr:last-child td{border-bottom:none}
+td{font-variant-numeric:tabular-nums}
+td.num{font-family:var(--mono);font-size:.86rem}
+tr.sep td{background:var(--bg);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);text-align:left;padding:6px 12px}
+tr.pah td{background:var(--accent-soft)}
+tr.pah td:first-child{font-weight:600;color:var(--accent)}
+tr.pending td{color:var(--ink-3);font-style:italic}
+.ci{color:var(--ink-3);font-size:.78rem}
+.succ{display:inline-flex;align-items:center;gap:8px;justify-content:flex-end}
+.bar{display:inline-block;width:70px;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bar)}
+tr.pah .bar i{background:var(--accent)}
+.pill{display:inline-block;font-family:var(--mono);font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:99px}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.unsure{background:var(--unsure-soft);color:var(--unsure)}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.vs{grid-template-columns:1fr}h1{font-size:1.6rem}}
+.vs .tbl h3{font-family:var(--display);font-size:1rem;margin:0;padding:12px 12px 4px}
+.vs .tbl p{font-size:.85rem;color:var(--ink-2);padding:0 12px 10px}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;max-width:72ch}
+li{color:var(--ink-2)}
+li strong{color:var(--ink)}
+footer{font-size:.82rem;color:var(--ink-3);border-top:1px solid var(--line);padding-top:16px}
+
+.result{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.result h3{font-family:var(--display);font-size:1.05rem;margin:0}
+.result .big{font-family:var(--mono);font-size:1.7rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent)}
+.result .big small{font-family:var(--body);font-size:.95rem;font-weight:400;color:var(--ink-2)}
+td.txt,th.txt{text-align:left;white-space:normal}
+.q{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;max-width:none}
+.q li{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 16px;color:var(--ink)}
+.q li b{font-family:var(--display);color:var(--accent);margin-right:4px}
+code{font-family:var(--mono);font-size:.85em;background:var(--accent-soft);padding:1px 5px;border-radius:3px}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">MS(CS) thesis progress · 16 October 2026 · follows the summary of 12 October</div>
+  <h1>MAPPO + PAH: redesign, results and comparison with the base papers</h1>
+  <p class="lede"><b>Thesis:</b> Multi-Agent Proximal Policy Optimization for Joint Dynamic Target Assignment and Collision Avoidance in UAV Systems. <b>Student:</b> Ayesha Khalil (CIIT/SP25-RCS-009/ATD). <b>Supervisor:</b> Dr. Faisal Rehman · <b>Co-supervisor:</b> Mr. Ehzaz Mustafa.</p>
+</header>
+
+<section>
+  <div class="status">
+    <div><b>+8.6</b><span>MAPPO + PAH − Fixed-weight MAPPO, Stage 3 (CI +1.7 to +15.4)</span></div>
+    <div><b>82.7%</b><span>MAPPO + PAH success, 8 drones · 1st of 9 methods</span></div>
+    <div><b>186</b><span>trained models, 10 seeds each, same settings</span></div>
+    <div><b>186 / 186</b><span>evaluations identical on a full re-run</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Summary</div>
+  <h2>What has been done since 12 October</h2>
+  <ul>
+    <li>The four changes proposed on 12 October were implemented (separate mission and safety value heads, obstacle danger in PAH's τ input, 24-ray LiDAR sensing, sized obstacle discs). PAH keeps the synopsis inputs (τ, d_target, n_conflict).</li>
+    <li>The first trained PAH showed a measurable bias against safety. The cause was found, PAH's learning rule was changed once, and the design was then frozen.</li>
+    <li>Five of our methods and five base-paper methods were trained in the same environment with the same settings: 10 seeds each, 186 trained models in total.</li>
+    <li><b>Primary result:</b> MAPPO + PAH is better than Fixed-weight MAPPO with 8 drones, +8.6 points [95% CI +1.7, +15.4]. It ranks first at both stages and is above every base-paper method.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">Primary question · pre-registered before training</div>
+  <div class="result">
+    <h3>Stage 3 (8 drones, 20 obstacles): MAPPO + PAH − Fixed-weight MAPPO, mission success</h3>
+    <div class="big">+8.6 points <small>95% Welch CI [+1.7, +15.4] · 10 vs 10 seeds</small></div>
+    <p>The interval is entirely above zero, so by the rule fixed before training MAPPO + PAH is better. The gain is plausibly between about 2 and 15 points. MAPPO + PAH also finishes fastest (61 vs 76 steps on average in successful episodes).</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">1 · Design changes</div>
+  <h2>From v3 to v4</h2>
+  <p>The 12 October diagnostics showed that failures were obstacle collisions, PAH could not see obstacles, and α barely changed the learning signal. A check on the laptop confirmed the last point: in the v3 design Plain MAPPO (89.9%) and Fixed-weight MAPPO (88.2%) were indistinguishable, CI [−1.1, +4.5]. The redesign:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Change (proposed 12 Oct)</th><th class="txt">What was implemented</th></tr></thead>
+    <tbody>
+      <tr><td>1. Separate value heads</td><td class="txt">The critic has a mission head and a safety head; α mixes the two advantages for the actor.</td></tr>
+      <tr><td>2. Obstacle danger for PAH</td><td class="txt">τ is now the time to the nearest drone <i>or</i> obstacle collision (capped at 3 steps). The input set stays τ, d_target, n_conflict.</td></tr>
+      <tr><td>3. LiDAR-like sensing</td><td class="txt">24 rays, 15° apart, range 100 (v3: four axis-aligned distances).</td></tr>
+      <tr><td>4. Sized, denser obstacles</td><td class="txt">Discs of radius 12: 10 at Stage 2, 20 at Stage 3.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Two further changes came from sanity runs on Plain MAPPO only (seeds 101/102, separate from the main seeds), and were then frozen for every method:</p>
+  <ul>
+    <li><b>Environment bug fixed:</b> targets bounced off obstacles too close to them, so a drone hovering on its target was dragged into the disc. A hand-written LiDAR rule then reached 82% success with no obstacle collisions, which shows the task is solvable.</li>
+    <li><b>Density and safety reward:</b> with 20/40 discs Plain MAPPO learned too slowly, so 10/20 were used (the denser setting is kept for the density sweep). Safety shaping starts 20 units from a hazard, and a collision costs −10.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">2 · PAH</div>
+  <h2>The first PAH was biased; the fixed PAH learns risk</h2>
+  <p>The first v4 PAH learned α through the actor's PPO objective. The gradient of α·A<sub>mission</sub> + (1−α)·A<sub>safety</sub> with respect to α is A<sub>mission</sub> − A<sub>safety</sub>, and in danger A<sub>safety</sub> is strongly negative, so PAH learned to push α towards the mission exactly when danger was close (measured correction +0.200, its maximum, when τ &lt; 1). This was already visible in v3 and is reported as a finding.</p>
+  <p>The fixed PAH has the same three inputs and the same 3→32→1 network. It predicts the risk p of the coming safety cost by regression on the observed safety return, and sets α = 0.9 − 0.8·p. No gradient reaches PAH from the actor loss. The change was made once and tested on synthetic data and a 300-episode smoke run before the main training.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>α by time-to-collision τ (Stage 3)</th><th class="num">τ &lt; 1 (danger)</th><th class="num">1 ≤ τ &lt; 2</th><th class="num">2 ≤ τ &lt; 3</th><th class="num">τ = 3 (clear)</th></tr></thead>
+    <tbody>
+      <tr><td>Fixed-weight MAPPO</td><td class="num">0.50</td><td class="num">0.50</td><td class="num">0.50</td><td class="num">0.50</td></tr>
+      <tr><td>Hand-coded τ-rule MAPPO</td><td class="num">0.19</td><td class="num">0.51</td><td class="num">0.77</td><td class="num">0.90</td></tr>
+      <tr class="pah"><td>MAPPO + PAH</td><td class="num">0.19</td><td class="num">0.32</td><td class="num">0.59</td><td class="num">0.81</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">α weights the mission; 1 − α weights safety. PAH turns towards safety earlier than the hand-coded rule (0.32 vs 0.51 at 1 ≤ τ &lt; 2). 80% of its danger signals come from obstacles.</p>
+</section>
+
+<section>
+  <div class="eyebrow">3 · Protocol</div>
+  <h2>How the results were produced</h2>
+  <ul>
+    <li>Same environment, training budget (8,000 episodes) and hyperparameters for all methods. Tuning was done once, on Plain MAPPO only, and frozen before any other method was trained.</li>
+    <li>10 training seeds (42–51) per method and stage. Final test: 200 episodes per model, deterministic actions, evaluation seed 7001, so every model sees the same 200 layouts.</li>
+    <li>Success = every drone reaches its assigned target with no collision within 500 steps (as in DA-MAPPO).</li>
+    <li>Reading rule, fixed in advance: difference of mean success with a 95% Welch CI. Only the Stage 3 comparison above is primary; every other comparison is secondary, with no multiple-testing correction.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">4 · Results</div>
+  <h2>All methods, both stages</h2>
+  <p>Mission success (%), mean over 10 seeds ± 95% half-width. Stage 2: 5 drones, 10 obstacles. Stage 3: 8 drones, 20 obstacles.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Method</th><th class="num">Stage 2</th><th class="num">Stage 3</th><th class="num">Stage 3 collision</th><th class="num">PAH − method, Stage 3</th></tr></thead>
+    <tbody>
+      <tr class="sep"><td colspan="5">Our methods</td></tr>
+      <tr class="pah"><td>MAPPO + PAH</td><td class="num"><span class="succ"><span class="bar"><i style="width:86.8%"></i></span>86.8</span><br><span class="ci">±3.8</span></td><td class="num"><span class="succ"><span class="bar"><i style="width:82.7%"></i></span>82.7</span><br><span class="ci">±4.0</span></td><td class="num">17.3</td><td class="num">—</td></tr>
+      <tr><td>Fixed-weight MAPPO (α = 0.5)</td><td class="num"><span class="succ"><span class="bar"><i style="width:79.9%"></i></span>79.9</span><br><span class="ci">±2.2</span></td><td class="num"><span class="succ"><span class="bar"><i style="width:74.2%"></i></span>74.2</span><br><span class="ci">±6.1</span></td><td class="num">25.8</td><td class="num">+8.6 <span class="ci">[+1.7, +15.4]</span></td></tr>
+      <tr><td>Hand-coded τ-rule MAPPO</td><td class="num"><span class="succ"><span class="bar"><i style="width:84.8%"></i></span>84.8</span><br><span class="ci">±3.1</span></td><td class="num"><span class="succ"><span class="bar"><i style="width:71.5%"></i></span>71.5</span><br><span class="ci">±5.9</span></td><td class="num">28.6</td><td class="num">+11.3 <span class="ci">[+4.6, +17.9]</span></td></tr>
+      <tr><td>MAPPO + PAH, no assignment</td><td class="num"><span class="succ"><span class="bar"><i style="width:83.5%"></i></span>83.5</span><br><span class="ci">±3.9</span></td><td class="num"><span class="succ"><span class="bar"><i style="width:68.4%"></i></span>68.4</span><br><span class="ci">±7.4</span></td><td class="num">31.2</td><td class="num">+14.3 <span class="ci">[+6.3, +22.3]</span></td></tr>
+      <tr><td>Plain MAPPO (one value head)</td><td class="num"><span class="succ"><span class="bar"><i style="width:68.9%"></i></span>68.9</span><br><span class="ci">±3.6</span></td><td class="num"><span class="succ"><span class="bar"><i style="width:44.2%"></i></span>44.2</span><br><span class="ci">±4.7</span></td><td class="num">55.8</td><td class="num">+38.5 <span class="ci">[+32.8, +44.2]</span></td></tr>
+      <tr class="sep"><td colspan="5">Base-paper methods in our environment</td></tr>
+      <tr><td>IGAT-style MAPPO</td><td class="num"><span class="succ"><span class="bar"><i style="width:73.0%"></i></span>73.0</span><br><span class="ci">±5.4</span></td><td class="num"><span class="succ"><span class="bar"><i style="width:46.8%"></i></span>46.8</span><br><span class="ci">±9.5</span></td><td class="num">52.3</td><td class="num">+36.0 <span class="ci">[+26.0, +45.9]</span></td></tr>
+      <tr><td>DA-MAPPO (2D)</td><td class="num"><span class="succ"><span class="bar"><i style="width:59.9%"></i></span>59.9</span><br><span class="ci">±2.4</span></td><td class="num"><span class="succ"><span class="bar"><i style="width:28.9%"></i></span>28.9</span><br><span class="ci">±2.7</span></td><td class="num">70.5</td><td class="num">+53.9 <span class="ci">[+49.3, +58.4]</span></td></tr>
+      <tr><td>MAPPO (assignment fixed at start)</td><td class="num"><span class="succ"><span class="bar"><i style="width:55.8%"></i></span>55.8</span><br><span class="ci">±4.2</span></td><td class="num"><span class="succ"><span class="bar"><i style="width:21.9%"></i></span>21.9</span><br><span class="ci">±4.1</span></td><td class="num">76.4</td><td class="num">+60.8 <span class="ci">[+55.5, +66.1]</span></td></tr>
+      <tr><td>IPPO</td><td class="num"><span class="succ"><span class="bar"><i style="width:57.5%"></i></span>57.5</span><br><span class="ci">±7.4</span></td><td class="num"><span class="succ"><span class="bar"><i style="width:17.1%"></i></span>17.1</span><br><span class="ci">±5.1</span></td><td class="num">77.0</td><td class="num">+65.6 <span class="ci">[+59.6, +71.6]</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">"No assignment" fixes drone i to target i for the whole episode. Timeouts are near zero: failed episodes end in a collision, mostly with an obstacle. RMAPPO is not in this table; see Limits.</p>
+
+  <div class="vs">
+    <div class="tbl"><table>
+      <thead><tr><th colspan="2">DA-MAPPO paper, Table V, ENV-3 (50 obstacles, 3D Gazebo)</th></tr></thead>
+      <tbody>
+        <tr class="pah"><td>DA-MAPPO</td><td class="num">90</td></tr>
+        <tr><td>RMAPPO</td><td class="num">67</td></tr>
+        <tr><td>MAPPO</td><td class="num">64</td></tr>
+        <tr><td>IPPO</td><td class="num">53</td></tr>
+      </tbody>
+    </table></div>
+    <div class="tbl"><table>
+      <thead><tr><th colspan="2">Ours, Stage 3 (2D, 8 drones)</th></tr></thead>
+      <tbody>
+        <tr class="pah"><td>MAPPO + PAH</td><td class="num">82.7</td></tr>
+        <tr><td>IGAT-style MAPPO</td><td class="num">46.8</td></tr>
+        <tr><td>DA-MAPPO (2D)</td><td class="num">28.9</td></tr>
+        <tr><td>MAPPO</td><td class="num">21.9</td></tr>
+        <tr><td>IPPO</td><td class="num">17.1</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <p>Absolute numbers cannot be compared (different simulator, sensors, network size and training length). The ordering can: dynamic assignment beats a fixed assignment in both (ours: DA-MAPPO (2D) − MAPPO = +7.0 [+2.3, +11.6] at Stage 3), IPPO is the weakest learning method in both, and MAPPO + PAH sits above all base-paper methods.</p>
+</section>
+
+<section>
+  <div class="eyebrow">5 · Where the gain comes from</div>
+  <h2>Three controlled steps from DA-MAPPO (2D) to MAPPO + PAH</h2>
+  <div class="tbl"><table>
+    <thead><tr><th class="txt">Step (one change each)</th><th class="num">Stage 2</th><th class="num">Stage 3</th></tr></thead>
+    <tbody>
+      <tr><td class="txt">Conflict-graph neighbour features instead of raw teammate positions</td><td class="num">+9.0 <span class="ci">[+5.0, +13.0]</span></td><td class="num">+15.4 <span class="ci">[+10.3, +20.4]</span></td></tr>
+      <tr><td class="txt">Separate mission and safety value heads</td><td class="num">+11.0 <span class="ci">[+7.0, +14.9]</span></td><td class="num">+30.0 <span class="ci">[+22.8, +37.1]</span></td></tr>
+      <tr class="pah"><td class="txt">PAH's learned α instead of α = 0.5</td><td class="num">+7.0 <span class="ci">[+2.8, +11.1]</span></td><td class="num">+8.6 <span class="ci">[+1.7, +15.4]</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">The steps are roughly additive. PAH's own contribution is the last row; the 53.9-point gap to DA-MAPPO (2D) is not claimed as PAH's effect.</p>
+</section>
+
+<section>
+  <div class="eyebrow">6 · Checks</div>
+  <h2>Robustness and reproducibility</h2>
+  <ul>
+    <li><b>Seed 42 left out.</b> Because the first PAH's bias was seen on seed 42, the main comparisons were recomputed without it: Stage 3 PAH − Fixed-weight +7.9 [+0.7, +15.1], PAH − τ-rule +12.8 [+5.9, +19.6]; Stage 2 PAH − Fixed-weight +7.7 [+3.1, +12.2]. On seed 42 itself the fixed PAH is below the τ-rule (79.5% vs 82.0%).</li>
+    <li><b>Re-run.</b> All 186 final evaluations were run again on 16 October and gave byte-identical results; all tables are generated by script from the raw files.</li>
+    <li><b>Tests.</b> Environment, agent and baseline unit tests pass, including a test that the success definition is identical for every assignment mode.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">7 · Limits</div>
+  <h2>What the thesis will state</h2>
+  <ul>
+    <li>The primary CI is wide; its lower end is +1.7 points.</li>
+    <li>At Stage 2, MAPPO + PAH vs the hand-coded τ-rule is not settled: +2.0 [−2.6, +6.6]. The learned α is clearly better only with 8 drones.</li>
+    <li>Base-paper methods use our shared settings, tuned on Plain MAPPO; they were not tuned individually, and their absolute scores are below the papers' 3D results.</li>
+    <li><b>RMAPPO</b> did not learn under the shared settings (exploration collapsed early; 0% on 6 seeds at Stage 3; no implementation bug found). It is reported in an appendix with the reason, not as a performance number.</li>
+    <li>One 2D simulated environment; no 3D or hardware claims.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="eyebrow">8 · Next</div>
+  <h2>Plan for the coming weeks</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Work</th><th class="txt">Content</th><th class="num">Estimate</th></tr></thead>
+    <tbody>
+      <tr><td>Phase 3: base-paper experiments</td><td class="txt">Obstacle-density sweep (20–50), static vs moving targets, assignment every step vs every 50 steps, 3→10 drones, IGAT metrics, learning curves, sensor noise, computation time. Mostly evaluation of the trained models.</td><td class="num">~2 days</td></tr>
+      <tr><td>Results package</td><td class="txt">Thesis tables and figures in the base papers' format</td><td class="num">~1 day</td></tr>
+      <tr><td>Thesis writing</td><td class="txt">Methodology and literature review can start now</td><td class="num">~4–5 weeks</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="eyebrow">Decisions requested</div>
+  <h2>Questions for the supervisor</h2>
+  <ol class="q">
+    <li><b>Design changes.</b> Please confirm the four changes of 12 October as implemented, and the PAH learning-rule change (same inputs and network; risk regression instead of the policy gradient).</li>
+    <li><b>RMAPPO.</b> Is reporting it in an appendix enough, or should it be re-run with its original large-batch setting (about one night of training after a short learning check)?</li>
+    <li><b>Replication.</b> Should the primary comparison be repeated on 10 fresh seeds (about 2.5 hours) to narrow the confidence interval?</li>
+    <li><b>Phase 3 scope.</b> Is the experiment list above sufficient for the comparison chapter?</li>
+    <li><b>v3 results.</b> May the v3 study be presented as the first stage that motivated the redesign?</li>
+  </ol>
+</section>
+
+<footer>All numbers: final evaluation, 200 episodes per model, deterministic actions, evaluation seed 7001; differences are percentage points with 95% Welch confidence intervals; one decimal, rounded half up. Base-paper numbers: DA-MAPPO, IEEE Internet of Things Journal, Table V. Detailed scorecard and per-seed data are in the project repository (v4/03-base-paper-baselines/REPORT.md).</footer>
+</div>

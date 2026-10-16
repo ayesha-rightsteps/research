@@ -7,8 +7,12 @@ Reading rule (PLAN.md Section 5, fixed before any result): difference in mean su
   CI inside +-3 points and containing 0 -> equivalent within 3 points;  otherwise -> inconclusive.
 
 Writes output/eval_per_seed.csv and output/eval_summary.md.
+
+Rounding: one decimal, half up (71.45 -> 71.5). Each seed's success is k/200, so a 10-seed mean is often exactly
+x.x5; plain float formatting rounded those up or down by float noise. f1() removes that (added 2026-10-16).
 """
 import os, json, glob
+from decimal import Decimal, ROUND_HALF_UP
 import numpy as np
 from scipy import stats
 
@@ -23,6 +27,12 @@ COMPARISONS = [('mappo-pah', 'fixed-weight-mappo', 'primary question (asked at S
                ('mappo-pah', 'plain-mappo', 'does arbitration add anything at all'),
                ('mappo-pah', 'mappo-pah-no-hungarian', 'Hungarian on vs off'),
                ('fixed-weight-mappo', 'plain-mappo', 'separate value heads')]
+
+
+def f1(x, sign=False):
+    """x to one decimal, half up, after removing float noise below 1e-6."""
+    v = Decimal('{:.6f}'.format(x)).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
+    return ('+' if sign and v >= 0 else '') + str(v)
 
 
 def load():
@@ -70,16 +80,16 @@ def main():
               '|---|---|---|---|---|---|---|']
         for m in METHODS:
             s = get(st, m, 'success') * 100
-            L.append('| {} | {:.1f} | {:.1f} | {:.1f} | {:.1f} | {:.1f} | {:.1f}–{:.1f} |'.format(
-                NAMES[m], s.mean(), get(st, m, 'collision').mean() * 100, get(st, m, 'timeout').mean() * 100,
-                np.nanmean(get(st, m, 'T_ave')), np.nanmean(get(st, m, 'L_ave')), s.min(), s.max()))
+            L.append('| {} | {} | {} | {} | {} | {} | {}–{} |'.format(
+                NAMES[m], f1(s.mean()), f1((get(st, m, 'collision') * 100).mean()), f1((get(st, m, 'timeout') * 100).mean()),
+                f1(np.nanmean(get(st, m, 'T_ave'))), f1(np.nanmean(get(st, m, 'L_ave'))), f1(s.min()), f1(s.max())))
         L += ['', 'T_ave and L_ave: successful episodes only (steps to finish; mean path length per drone).', '',
               '**Comparisons (success, percentage points; 95% Welch CI over 10 vs 10 seeds; PLAN §5 rule):**', '',
               '| Comparison | Question | Difference | 95% CI | Reading |', '|---|---|---|---|---|']
         for a, b, q in COMPARISONS:
             d, lo, hi = welch(get(st, a, 'success') * 100, get(st, b, 'success') * 100)
-            L.append('| {} − {} | {} | {:+.1f} | [{:+.1f}, {:+.1f}] | {} |'.format(NAMES[a], NAMES[b], q, d, lo, hi,
-                                                                               verdict(lo, hi)))
+            L.append('| {} − {} | {} | {} | [{}, {}] | {} |'.format(NAMES[a], NAMES[b], q, f1(d, True), f1(lo, True),
+                                                                f1(hi, True), verdict(lo, hi)))
         L += ['', '**Collisions by kind (sum over 10 seeds × 200 episodes):**', '',
               '| Method | drone–obstacle | drone–drone | both |', '|---|---|---|---|']
         for m in METHODS:

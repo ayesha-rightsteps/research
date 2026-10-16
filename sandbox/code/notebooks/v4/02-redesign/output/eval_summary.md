@@ -7,7 +7,7 @@ Deterministic, 200 episodes per model, evaluation seed 7001, 10 seeds (42–51) 
 | Method | Success % | Collision % | Timeout % | T_ave (steps) | L_ave (units) | Success, worst–best seed |
 |---|---|---|---|---|---|---|
 | Plain MAPPO | 68.9 | 31.1 | 0.0 | 59.6 | 193.9 | 63.5–77.5 |
-| Fixed-weight MAPPO | 79.8 | 20.1 | 0.0 | 58.7 | 200.5 | 76.0–85.0 |
+| Fixed-weight MAPPO | 79.9 | 20.2 | 0.0 | 58.7 | 200.5 | 76.0–85.0 |
 | Hand-coded τ-rule MAPPO | 84.8 | 15.2 | 0.0 | 57.7 | 190.4 | 77.0–91.0 |
 | MAPPO + PAH | 86.8 | 13.2 | 0.0 | 54.4 | 187.8 | 79.0–95.0 |
 | MAPPO + PAH (Hungarian off) | 83.5 | 16.6 | 0.0 | 78.2 | 300.8 | 73.5–91.0 |
@@ -21,8 +21,8 @@ T_ave and L_ave: successful episodes only (steps to finish; mean path length per
 | MAPPO + PAH − Fixed-weight MAPPO | primary question (asked at Stage 3) | +7.0 | [+2.8, +11.1] | better |
 | MAPPO + PAH − Hand-coded τ-rule MAPPO | does learning α add anything over the formula | +2.0 | [-2.6, +6.6] | inconclusive |
 | MAPPO + PAH − Plain MAPPO | does arbitration add anything at all | +17.9 | [+13.0, +22.8] | better |
-| MAPPO + PAH − MAPPO + PAH (Hungarian off) | Hungarian on vs off | +3.3 | [-1.8, +8.5] | inconclusive |
-| Fixed-weight MAPPO − Plain MAPPO | separate value heads | +10.9 | [+7.0, +14.9] | better |
+| MAPPO + PAH − MAPPO + PAH (Hungarian off) | Hungarian on vs off | +3.4 | [-1.8, +8.5] | inconclusive |
+| Fixed-weight MAPPO − Plain MAPPO | separate value heads | +11.0 | [+7.0, +14.9] | better |
 
 **Collisions by kind (sum over 10 seeds × 200 episodes):**
 
@@ -60,8 +60,8 @@ T_ave and L_ave: successful episodes only (steps to finish; mean path length per
 
 | Comparison | Question | Difference | 95% CI | Reading |
 |---|---|---|---|---|
-| MAPPO + PAH − Fixed-weight MAPPO | primary question (asked at Stage 3) | +8.5 | [+1.7, +15.4] | better |
-| MAPPO + PAH − Hand-coded τ-rule MAPPO | does learning α add anything over the formula | +11.2 | [+4.6, +17.9] | better |
+| MAPPO + PAH − Fixed-weight MAPPO | primary question (asked at Stage 3) | +8.6 | [+1.7, +15.4] | better |
+| MAPPO + PAH − Hand-coded τ-rule MAPPO | does learning α add anything over the formula | +11.3 | [+4.6, +17.9] | better |
 | MAPPO + PAH − Plain MAPPO | does arbitration add anything at all | +38.5 | [+32.8, +44.2] | better |
 | MAPPO + PAH − MAPPO + PAH (Hungarian off) | Hungarian on vs off | +14.3 | [+6.3, +22.3] | better |
 | Fixed-weight MAPPO − Plain MAPPO | separate value heads | +30.0 | [+22.8, +37.1] | better |
