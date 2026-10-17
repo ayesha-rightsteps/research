@@ -197,6 +197,54 @@ def test_swapped_targets_differ_only_through_the_assignment_rule():
         assert info['all_targets_reached'] == expected, (mode, info['all_targets_reached'])
 
 
+def _rollout(seed=9, steps=120, **kw):
+    """Fixed random actions; returns the observations, assignments and drone positions of one run."""
+    env = E.MultiUAVEnvV4(n_drones=5, n_obstacles=10, seed=seed, **kw)
+    o = env.reset(); rng = np.random.default_rng(3)
+    obs, asg, pos = [o.copy()], [env.assignment.copy()], [env.drone_pos.copy()]
+    for _ in range(steps):
+        o, _, te, tr, _ = env.step(rng.uniform(-5, 5, (5, 2)))
+        obs.append(o.copy()); asg.append(env.assignment.copy()); pos.append(env.drone_pos.copy())
+        if te or tr:
+            break
+    return np.array(obs), np.array(asg), np.array(pos)
+
+
+def test_every_k_with_k1_is_every_step():
+    """Phase 3: assignment='every-k' with K = 1 gives exactly the default (every-step) episode."""
+    a, b = _rollout(), _rollout(assignment='every-k', assign_every=1)
+    assert all(np.array_equal(x, y) for x, y in zip(a, b))
+
+
+def test_every_k_changes_assignment_only_every_k_steps():
+    """With K = 50 the Hungarian assignment is recomputed only at steps 0, 50, 100, ..."""
+    env = E.MultiUAVEnvV4(n_drones=5, n_obstacles=0, seed=4, assignment='every-k', assign_every=50)
+    env.reset(); rng = np.random.default_rng(1); changed = []
+    for t in range(1, 200):
+        before = env.assignment.copy()
+        env.t = min(env.t, 400)                                # keep the episode from timing out
+        _, _, te, tr, _ = env.step(rng.uniform(-5, 5, (5, 2)))
+        if not np.array_equal(before, env.assignment):
+            changed.append(t)
+        if te or tr:
+            break
+    assert changed and all(t % 50 == 0 for t in changed), changed
+
+
+def test_lidar_noise_zero_is_identical_and_noise_keeps_layouts():
+    """lidar_noise = 0 changes nothing; lidar_noise > 0 changes only the ray readings, not the episode layout."""
+    base = _rollout()
+    zero = _rollout(lidar_noise=0.0)
+    assert all(np.array_equal(x, y) for x, y in zip(base, zero))
+    env0 = E.MultiUAVEnvV4(n_drones=5, n_obstacles=10, seed=9)
+    env1 = E.MultiUAVEnvV4(n_drones=5, n_obstacles=10, seed=9, lidar_noise=0.05)
+    o0, o1 = env0.reset(), env1.reset()
+    assert np.array_equal(env0.drone_pos, env1.drone_pos) and np.array_equal(env0.obstacle_pos, env1.obstacle_pos)
+    rays = slice(E.BASE_DIM, E.BASE_DIM + E.N_RAYS)
+    assert np.array_equal(np.delete(o0, np.s_[rays], axis=1), np.delete(o1, np.s_[rays], axis=1))
+    assert not np.array_equal(o0[:, rays], o1[:, rays]) and (o1[:, rays] >= 0).all() and (o1[:, rays] <= 1).all()
+
+
 if __name__ == '__main__':
     import sys, time
     tests = [v for k, v in sorted(globals().items()) if k.startswith('test_')]

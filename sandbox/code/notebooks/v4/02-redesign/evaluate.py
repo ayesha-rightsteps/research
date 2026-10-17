@@ -21,6 +21,11 @@ Usage:
     --raw-dir NAME     write to output/NAME/ instead of output/eval_raw/ (e.g. a re-run to compare with the original)
     --procs N          parallel processes (default 4)
   Example, RMAPPO Stage 3 only: python evaluate.py --phase2 --methods rmappo --stages 3
+  Phase 3 test settings (v4/04-base-paper-experiments/PLAN.md); any of them switches on the Phase 3 output, which adds
+  'setting' and the extra metrics (loss-of-separation per episode, active edges per step, decision time):
+    --obstacles N   --target-speed V   --drones N   --assign-every K   --lidar-noise S   --phase3 (default setting)
+  The models are not changed; only the test environment is. --drones needs a method whose observation does not
+  depend on the swarm size (not 'all' teammates).
 Phase 2 models (config.json has 'assignment') are rebuilt with 03-base-paper-baselines/train_baselines.py; the
 episode loop is the same, with the two hooks those agents need (graph for IGAT-style, hidden-state reset for RMAPPO).
 """
@@ -42,31 +47,54 @@ PHASE2 = os.path.join(HERE, '..', '03-base-paper-baselines')
 PHASE2_METHODS = ['ippo', 'mappo', 'rmappo', 'da-mappo-2d', 'igat-style']
 
 
-def build(run_dir):
-    """Agent + environment exactly as in training, from the run's config.json."""
+def build(run_dir, setting=None):
+    """Agent exactly as trained (from the run's config.json) and its test environment. With a Phase 3 setting the
+    environment is rebuilt with that one change (obstacles, target speed, drones, assignment frequency, LiDAR noise);
+    without one it is the training environment, as before."""
     c = json.load(open(os.path.join(run_dir, 'config.json')))
     if 'assignment' in c:                       # Phase 2 base-paper method
         sys.path.insert(0, PHASE2)
         import train_baselines as TB
         agent = TB.make_agent(c)
         agent.load(os.path.join(run_dir, 'final_model.pt'))
-        return c, agent, TB.make_env(c, EVAL_SEED, bonus=0.0)
-    agent = M.Agent(n_drones=c['n_drones'], obs_dim=E.OBS_DIM, **c['agent'], pah_hidden=c['pah_hidden'],
-                    alpha_min=c['alpha_min'], alpha_max=c['alpha_max'], pah_delta_scale=c['pah_delta_scale'],
-                    pah_prior_coef=c['pah_prior_coef'], pah_horizon=c['pah_horizon'], pah_d_max=c['pah_d_max'],
-                    hidden=c['hidden'])
-    agent.load(os.path.join(run_dir, 'final_model.pt'))
-    env = E.MultiUAVEnvV4(n_drones=c['n_drones'], n_obstacles=c['n_obstacles'], world_size=c['world_size'],
+        if setting is None:
+            return c, agent, TB.make_env(c, EVAL_SEED, bonus=0.0)
+        mode, teammates = c['assignment'], c['teammates']
+    else:
+        agent = M.Agent(n_drones=c['n_drones'], obs_dim=E.OBS_DIM, **c['agent'], pah_hidden=c['pah_hidden'],
+                        alpha_min=c['alpha_min'], alpha_max=c['alpha_max'], pah_delta_scale=c['pah_delta_scale'],
+                        pah_prior_coef=c['pah_prior_coef'], pah_horizon=c['pah_horizon'], pah_d_max=c['pah_d_max'],
+                        hidden=c['hidden'])
+        agent.load(os.path.join(run_dir, 'final_model.pt'))
+        if setting is None:
+            env = E.MultiUAVEnvV4(n_drones=c['n_drones'], n_obstacles=c['n_obstacles'], world_size=c['world_size'],
+                                  max_speed=c['max_speed'], max_steps=c['max_steps'], collision_radius=c['collision_radius'],
+                                  target_radius=c['target_radius'], success_bonus=0.0, target_speed=c['target_speed'],
+                                  use_hungarian=c['use_hungarian'], seed=EVAL_SEED,
+                                  safety_danger_radius=c['safety_danger_radius'], collision_penalty=c['collision_penalty'])
+            return c, agent, env
+        mode, teammates = ('every-step' if c['use_hungarian'] else 'fixed-arbitrary'), 'conflict'
+    n = setting.get('drones', c['n_drones'])
+    if n != c['n_drones'] and teammates == 'all':
+        raise ValueError('{}: observation includes all teammates, so it cannot run with {} drones'.format(run_dir, n))
+    if 'assign_every' in setting:
+        if mode != 'every-step':
+            raise ValueError('{}: --assign-every only applies to methods trained with every-step assignment'.format(run_dir))
+        mode = 'every-k'
+    env = E.MultiUAVEnvV4(n_drones=n, n_obstacles=setting.get('obstacles', c['n_obstacles']), world_size=c['world_size'],
                           max_speed=c['max_speed'], max_steps=c['max_steps'], collision_radius=c['collision_radius'],
-                          target_radius=c['target_radius'], success_bonus=0.0, target_speed=c['target_speed'],
-                          use_hungarian=c['use_hungarian'], seed=EVAL_SEED,
-                          safety_danger_radius=c['safety_danger_radius'], collision_penalty=c['collision_penalty'])
+                          target_radius=c['target_radius'], success_bonus=0.0,
+                          target_speed=setting.get('target_speed', c['target_speed']), seed=EVAL_SEED,
+                          safety_danger_radius=c['safety_danger_radius'], collision_penalty=c['collision_penalty'],
+                          assignment=mode, teammates=teammates, assign_every=setting.get('assign_every', 1),
+                          lidar_noise=setting.get('lidar_noise', 0.0))
     return c, agent, env
 
 
-def evaluate_run(run_dir, episodes=EPISODES):
+def evaluate_run(run_dir, episodes=EPISODES, setting=None):
     torch.set_num_threads(1)
-    c, agent, env = build(run_dir)
+    c, agent, env = build(run_dir, setting)
+    los_eps, edges, dt = [], [], []            # Phase 3 extras (IGAT-MARL metrics, decision time)
     horizon = c.get('pah_horizon', E.TAU_HORIZON)
     eps = []                                   # one dict per episode
     alpha_by_tau = {k: [] for k in range(4)}   # tau bins [0,1), [1,2), [2,3), 3 (= nothing within the horizon)
@@ -75,10 +103,13 @@ def evaluate_run(run_dir, episodes=EPISODES):
         obs, done, steps = env.reset(), False, 0
         if hasattr(agent, 'reset_episode'):
             agent.reset_episode()
-        path = np.zeros(c['n_drones'])
+        path = np.zeros(env.n)
+        los = 0
         while not done:
             kw = {'adj': env.cg.adj.copy()} if getattr(agent, 'uses_graph', False) else {}
-            act, _, _ = agent.get_actions(obs, deterministic=True, **kw)
+            t0 = time.perf_counter()
+            act, _, _ = agent.get_actions(obs, deterministic=True, values=False, **kw)
+            dt.append(time.perf_counter() - t0)
             before = env.drone_pos.copy()
             obs, _, te, tr, info = env.step(act)
             path += np.linalg.norm(env.drone_pos - before, axis=1)
@@ -93,6 +124,8 @@ def evaluate_run(run_dir, episodes=EPISODES):
             flagged = tau < horizon - 1e-6
             tau_obst += int((flagged & (to <= td)).sum()); tau_drone += int((flagged & (td < to)).sum())
             flagged_steps += int(flagged.sum()); drone_steps += len(tau)
+            los += info['los_pairs']; edges.append(info['active_edges'])
+        los_eps.append(los)
         if info['episode_collision']:
             outcome = 'collision'
         elif info['all_targets_reached']:
@@ -104,7 +137,7 @@ def evaluate_run(run_dir, episodes=EPISODES):
     succ = [e for e in eps if e['outcome'] == 'success']
     kinds = [e['kind'] for e in eps if e['outcome'] == 'collision']
     mean = lambda v: float(np.mean(v)) if len(v) else float('nan')
-    return dict(
+    out = dict(
         method=c['method'], stage=c['stage'], seed=c['seed'], episodes=episodes,
         success=sum(e['outcome'] == 'success' for e in eps) / episodes,
         collision=sum(e['outcome'] == 'collision' for e in eps) / episodes,
@@ -118,6 +151,10 @@ def evaluate_run(run_dir, episodes=EPISODES):
         tau_flagged_frac=flagged_steps / max(drone_steps, 1),
         tau_set_by_obstacle=tau_obst / max(flagged_steps, 1), tau_set_by_drone=tau_drone / max(flagged_steps, 1),
         outcomes=[e['outcome'][0] for e in eps])        # 's' / 'c' / 't' per episode, same layouts for every model
+    if setting is not None:                              # Phase 3 output only; the main results keep their exact format
+        out.update(setting=setting, n_drones_test=env.n, los_per_episode=mean(los_eps), active_edges_per_step=mean(edges),
+                   decision_ms=1000 * mean(dt))
+    return out
 
 
 def arg(name, default=None):
@@ -132,13 +169,17 @@ def main():
     if '--methods' in sys.argv:
         methods = arg('--methods').split(',')
     stages = [int(s) for s in arg('--stages', '2,3').split(',')]
+    setting = {k: cast(arg(flag)) for flag, k, cast in (('--obstacles', 'obstacles', int), ('--target-speed', 'target_speed', float),
+               ('--drones', 'drones', int), ('--assign-every', 'assign_every', int), ('--lidar-noise', 'lidar_noise', float))
+               if flag in sys.argv}
+    setting = setting if (setting or '--phase3' in sys.argv) else None
     runs = sorted(d for st in stages for m in methods
                   for d in glob.glob(os.path.join(root, 'runs', 'stage{}'.format(st), m, 'seed-*'))
                   if os.path.exists(os.path.join(d, 'final_model.pt')))
     print('{} models, {} episodes each, evaluation seed {}'.format(len(runs), episodes, EVAL_SEED), flush=True)
     t0 = time.time()
     with Pool(int(arg('--procs', 4))) as pool:
-        res = pool.starmap(evaluate_run, [(d, episodes) for d in runs])
+        res = pool.starmap(evaluate_run, [(d, episodes, setting) for d in runs])
     raw = os.path.join(out, arg('--raw-dir', 'eval_raw' if episodes == EPISODES else 'eval_raw_check'))
     os.makedirs(raw, exist_ok=True)
     for r in res:

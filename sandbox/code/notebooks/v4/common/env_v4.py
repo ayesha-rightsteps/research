@@ -23,9 +23,15 @@ Phase 2 switches (v4/03-base-paper-baselines/PLAN.md Section 2); the defaults re
   assignment  'every-step'      Hungarian at reset and every step (default; = use_hungarian=True)
               'fixed-at-reset'  Hungarian once at reset, then fixed -- the base paper's "rigid assignment" baselines
               'fixed-arbitrary' drone i -> target i, fixed (= use_hungarian=False, the Phase 1b "Hungarian off")
+              'every-k'         Hungarian at reset and every assign_every steps (Phase 3, DA-MAPPO's "every 50 steps")
   teammates   'conflict'        the 4 conflict-graph neighbour slots (default; obs dim 50)
               'all'             relative positions of all teammates, as DA-MAPPO's "swarm topology" (obs dim 30 + 2(N-1))
               'none'            own features only (obs dim 30) -- the IGAT-style encoder gets neighbours through the graph
+
+Phase 3 test-time switches (v4/04-base-paper-experiments/PLAN.md Section 5); defaults change nothing:
+  assign_every  K for assignment='every-k'
+  lidar_noise   sigma: Gaussian noise added to each normalised LiDAR distance (clipped to [0, 1]). It uses its own
+                random generator, so the episode layouts stay exactly those of the noise-free run.
 """
 
 import numpy as np
@@ -96,7 +102,8 @@ class MultiUAVEnvV4:
                  max_speed=5.0, max_steps=500, collision_radius=3.0,
                  target_radius=25.0, success_bonus=20.0, target_speed=1.0,
                  obstacle_radius=OBS_RADIUS, use_hungarian=True, seed=None,
-                 safety_danger_radius=None, collision_penalty=1.0, assignment=None, teammates='conflict'):
+                 safety_danger_radius=None, collision_penalty=1.0, assignment=None, teammates='conflict',
+                 assign_every=1, lidar_noise=0.0):
         self.n = n_drones
         self.n_obs = n_obstacles
         self.W = world_size
@@ -108,7 +115,10 @@ class MultiUAVEnvV4:
         self.tgt_speed = target_speed
         self.obs_r = obstacle_radius
         self.assignment_mode = assignment or ('every-step' if use_hungarian else 'fixed-arbitrary')
-        assert self.assignment_mode in ('every-step', 'fixed-at-reset', 'fixed-arbitrary'), assignment
+        assert self.assignment_mode in ('every-step', 'fixed-at-reset', 'fixed-arbitrary', 'every-k'), assignment
+        self.assign_every = int(assign_every)
+        self.lidar_noise = float(lidar_noise)
+        self.noise_rng = np.random.default_rng(None if seed is None else seed + 1_000_003)
         assert teammates in ('conflict', 'all', 'none'), teammates
         self.use_hungarian = self.assignment_mode == 'every-step'
         self.teammates = teammates
@@ -144,7 +154,7 @@ class MultiUAVEnvV4:
         self.drone_vel = actions.astype(np.float32)
         self.drone_pos = np.clip(self.drone_pos + self.drone_vel, 0.0, self.W)
         self._move_targets()
-        if self.use_hungarian:
+        if self.use_hungarian or (self.assignment_mode == 'every-k' and self.t % self.assign_every == 0):
             self.assignment = self._hungarian()
         self.cg.update(self.drone_pos, self.drone_vel)
 
@@ -208,6 +218,8 @@ class MultiUAVEnvV4:
             rel = self.target_pos[self.assignment[i]] - self.drone_pos[i]
             rays = ray_distances(self.drone_pos[i].astype(np.float64), self.obstacle_pos.astype(np.float64),
                                  self.obs_r, self.W) / RAY_RANGE
+            if self.lidar_noise > 0:
+                rays = np.clip(rays + self.noise_rng.normal(0.0, self.lidar_noise, len(rays)), 0.0, 1.0)
             base = np.concatenate([self.drone_pos[i] / self.W, self.drone_vel[i] / self.max_sp, rel / self.W, rays])
             if self.teammates == 'conflict':
                 nbr = self.cg.neighbor_obs(i, self.drone_pos, self.drone_vel)

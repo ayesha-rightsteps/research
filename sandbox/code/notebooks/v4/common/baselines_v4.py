@@ -171,20 +171,22 @@ class BaselineAgent:
 
     # ---------------------------------------------------------------- acting
     @torch.no_grad()
-    def get_actions(self, obs, deterministic=False, adj=None):
+    def get_actions(self, obs, deterministic=False, adj=None, values=True):
+        """values=False skips the critic (Phase 3 evaluation on other swarm sizes; see mappo_v4.Agent.get_actions)."""
         o = torch.tensor(obs, dtype=torch.float32, device=DEVICE)
         if self.kind == 'ippo':
             dist = self.actor(o)
-            vals = (self.critic(o).numpy(),)                         # one value per drone
+            vals = (self.critic(o).numpy(),) if values else ()     # one value per drone
         elif self.kind == 'rmappo':
             dist, self.h_a = self.actor.step(o, self.h_a)
-            v, self.h_c = self.critic.step(o.flatten().unsqueeze(0), self.h_c)
-            vals = (v.item(),)
+            if values:
+                v, self.h_c = self.critic.step(o.flatten().unsqueeze(0), self.h_c)
+            vals = (v.item(),) if values else ()
         else:
             a = torch.tensor(np.asarray(adj, dtype=bool)).unsqueeze(0)
             dist = self.actor(o.unsqueeze(0), a)
             dist = Normal(dist.mean[0], dist.stddev[0])
-            vals = (self.critic(o.flatten().unsqueeze(0)).item(),)
+            vals = (self.critic(o.flatten().unsqueeze(0)).item(),) if values else ()
         act = dist.mean if deterministic else dist.sample()
         lp = dist.log_prob(act).sum(-1)
         return act.numpy(), lp.numpy(), vals

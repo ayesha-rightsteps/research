@@ -16,7 +16,7 @@ Plan: `PLAN.md` (settings frozen in §10), PAH fix: `PAH_FIX_PLAN.md`. Session l
 Methods: **Plain MAPPO** (one value head, combined reward 0.5/0.5), **Fixed-weight MAPPO** (α = 0.5, mission and
 safety value heads), **Hand-coded τ-rule MAPPO** (α = 0.1 + 0.8·τ/3), **MAPPO + PAH** (risk-learning PAH:
 α = 0.9 − 0.8·p, p = predicted risk, regressed onto the observed safety cost-to-go; no gradient from the actor loss),
-**MAPPO + PAH (Hungarian off)** (target pairing fixed at reset). τ = steps until the nearest drone **or** obstacle
+**MAPPO + PAH (Hungarian off)** (no assignment mechanism: drone i → target i for the whole episode, `fixed-arbitrary`; not the Phase 2 "fixed at reset" mode). τ = steps until the nearest drone **or** obstacle
 collision, capped at 3.
 
 ## Final evaluation (Step 5)
@@ -24,12 +24,12 @@ collision, capped at 3.
 `evaluate.py` → `summarize.py` → `figures.py`. Deterministic actions, 200 episodes per model, evaluation seed 7001
 (same 200 layouts for every model of a stage), each model in its own training configuration (read from its
 `config.json`). `evaluate.py` was cross-checked against the training-time evaluator on 4 models (identical results).
-Full tables: `output/eval_summary.md`; per seed: `output/eval_per_seed.csv`; raw: `output/eval_raw/`.
+Rounding: one decimal, half up (10-seed means are often exactly x.x5; the primary difference is exactly 8.55); updated 2026-10-16. Full tables: `output/eval_summary.md`; per seed: `output/eval_per_seed.csv`; raw: `output/eval_raw/`.
 
 | Method | Stage 2 success % | Stage 3 success % | Stage 3 collision % | Stage 3 T_ave | Stage 3 L_ave |
 |---|---|---|---|---|---|
 | Plain MAPPO | 68.9 | 44.2 | 55.8 | 63.1 | 171 |
-| Fixed-weight MAPPO | 79.8 | 74.2 | 25.8 | 75.5 | 199 |
+| Fixed-weight MAPPO | 79.9 | 74.2 | 25.8 | 75.5 | 199 |
 | Hand-coded τ-rule MAPPO | 84.8 | 71.5 | 28.6 | 72.9 | 182 |
 | **MAPPO + PAH** | **86.8** | **82.7** | **17.3** | **61.3** | 173 |
 | MAPPO + PAH (Hungarian off) | 83.5 | 68.4 | 31.2 | 108.9 | 342 |
@@ -40,17 +40,17 @@ Timeouts ≈ 0 everywhere: an episode that fails, fails by a collision, almost a
 
 | Comparison | Stage 2 | Stage 3 |
 |---|---|---|
-| **MAPPO + PAH − Fixed-weight MAPPO** (primary question, asked at Stage 3) | +7.0 [+2.8, +11.1] better | **+8.5 [+1.7, +15.4] better** |
-| MAPPO + PAH − Hand-coded τ-rule MAPPO (learned α vs the formula) | +2.0 [−2.6, +6.6] inconclusive | +11.2 [+4.6, +17.9] better |
+| **MAPPO + PAH − Fixed-weight MAPPO** (primary question, asked at Stage 3) | +7.0 [+2.8, +11.1] better | **+8.6 [+1.7, +15.4] better** |
+| MAPPO + PAH − Hand-coded τ-rule MAPPO (learned α vs the formula) | +2.0 [−2.6, +6.6] inconclusive | +11.3 [+4.6, +17.9] better |
 | MAPPO + PAH − Plain MAPPO | +17.9 [+13.0, +22.8] better | +38.5 [+32.8, +44.2] better |
-| MAPPO + PAH − MAPPO + PAH (Hungarian off) | +3.3 [−1.8, +8.5] inconclusive | +14.3 [+6.3, +22.3] better |
-| Fixed-weight MAPPO − Plain MAPPO (separate value heads) | +10.9 [+7.0, +14.9] better | +30.0 [+22.8, +37.1] better |
+| MAPPO + PAH − MAPPO + PAH (Hungarian off) | +3.4 [−1.8, +8.5] inconclusive | +14.3 [+6.3, +22.3] better |
+| Fixed-weight MAPPO − Plain MAPPO (separate value heads) | +11.0 [+7.0, +14.9] better | +30.0 [+22.8, +37.1] better |
 
 ### What it means
 
-1. **Primary question: MAPPO + PAH beats Fixed-weight MAPPO at Stage 3** (+8.5 points, CI above 0), and at Stage 2.
+1. **Primary question: MAPPO + PAH beats Fixed-weight MAPPO at Stage 3** (+8.6 points, CI above 0), and at Stage 2.
    It is also the fastest to finish (T_ave 61 vs 76 steps at Stage 3): the extra safety does not cost time.
-2. **Learning α beats the hand-coded formula at Stage 3** (+11.2). At Stage 2 the two are not distinguishable.
+2. **Learning α beats the hand-coded formula at Stage 3** (+11.3). At Stage 2 the two are not distinguishable.
    The formula on its own is not better than a fixed α = 0.5 at Stage 3 (71.5 vs 74.2), so what helps is the
    learned shape, not just "lower α in danger".
 3. **What PAH learned** (`fig3_alpha_by_tau`): α ≈ 0.13–0.19 in danger (τ < 1) and ≈ 0.81–0.85 when nothing is

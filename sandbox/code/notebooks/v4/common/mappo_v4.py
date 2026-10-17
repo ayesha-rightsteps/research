@@ -198,14 +198,16 @@ class Agent:
         return (out,) if self.heads == 1 else out
 
     @torch.no_grad()
-    def get_actions(self, obs, deterministic=False):
+    def get_actions(self, obs, deterministic=False, values=True):
+        """values=False skips the centralized critic (Phase 3 evaluation): its input is the whole team's observation,
+        so it only fits the trained swarm size, while the shared actor works for any number of drones."""
         obs_t = torch.tensor(obs, dtype=torch.float32, device=DEVICE)
         if deterministic:
             act = self.actor(obs_t).mean
             lp = torch.zeros(obs_t.shape[0])
         else:
             act, lp = self.actor.get_action(obs_t)
-        vals = tuple(v.item() for v in self._values(obs_t.flatten().unsqueeze(0)))
+        vals = tuple(v.item() for v in self._values(obs_t.flatten().unsqueeze(0))) if values else ()
         return act.cpu().numpy(), lp.cpu().numpy(), vals
 
     def _alpha(self, tau_t, d_t, n_t):

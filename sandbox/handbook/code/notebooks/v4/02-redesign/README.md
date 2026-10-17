@@ -24,13 +24,13 @@ episodes pe chalaya, bina randomness ke (drone wahi karta hai jo us ka "best gue
 | **MAPPO + PAH** | **82.7%** |
 | MAPPO + PAH (Hungarian off) | 68.4% |
 
-- **Asal sawal ka jawab: haan.** MAPPO + PAH, Fixed-weight MAPPO se +8.5 points aage, aur 95% confidence ke
+- **Asal sawal ka jawab: haan.** MAPPO + PAH, Fixed-weight MAPPO se +8.6 points aage, aur 95% confidence ke
   hisaab se yeh farq 0 se upar hai (kam se kam +1.7). Stage 2 pe bhi aage (+7.0).
-- **Seekha hua α, formula se behtar** (Stage 3 pe +11.2). Stage 2 pe dono barabar.
+- **Seekha hua α, formula se behtar** (Stage 3 pe +11.3). Stage 2 pe dono barabar.
 - **PAH sab se jaldi bhi pahunchta hai** — safety ke saath waqt zaya nahi hota.
 - **PAH ne kya seekha:** khatre mein α ~0.13–0.19 (safety pehle), kuch na ho to ~0.81–0.85 (mission pehle), aur
   formula se **pehle** safety ki taraf mudta hai (1–2 steps door khatre pe bhi α kam).
-- **Hungarian zaroori hai:** band karne se raasta ~2 guna lamba, drones aapas mein zyada takrate hain.
+- **Hungarian zaroori hai** ("Hungarian off" = drone i hamesha target i, koi assignment nahi): band karne se raasta ~2 guna lamba, drones aapas mein zyada takrate hain.
 
 ## Imandari wali baatein (thesis mein likhni hain)
 - PAH ka fix pehle wale PAH ki ek seed ka nateeja dekh kar aaya tha. Fix ek naapi hui galti (bias) ko hatata hai —

@@ -134,6 +134,31 @@ def test_every_baseline_updates_saves_and_loads(tmp='/tmp'):
         assert np.allclose(x1, x2), kind
 
 
+def test_values_false_gives_the_same_actions_and_runs_on_other_swarm_sizes():
+    """Phase 3: get_actions(values=False) skips the critic only -- same actions -- so a model trained on 5 drones can act
+    for 8 (IGAT-style here; the Phase 1b agent is checked in test_mappo_v4)."""
+    import mappo_v4 as M
+    for kind in B.KINDS:
+        torch.manual_seed(0)
+        env = _env(teammates='none' if kind == 'igat' else 'all', assignment='fixed-at-reset')
+        ag = B.BaselineAgent(kind, 5, env.obs_dim)
+        o, adj = env.reset(), env.cg.adj.copy()
+        ag.reset_episode(); a1 = ag.get_actions(o, deterministic=True, adj=adj)[0]
+        ag.reset_episode(); a2, _, v = ag.get_actions(o, deterministic=True, adj=adj, values=False)
+        assert np.array_equal(a1, a2) and v == (), kind
+    env8 = E.MultiUAVEnvV4(n_drones=8, n_obstacles=5, seed=2, teammates='none', assignment='fixed-at-reset')
+    ag = B.BaselineAgent('igat', 5, env8.obs_dim)
+    o = env8.reset()
+    a = ag.get_actions(o, deterministic=True, adj=env8.cg.adj.copy(), values=False)[0]
+    assert a.shape == (8, 2) and np.isfinite(a).all()
+    pm = M.Agent(n_drones=5, obs_dim=E.OBS_DIM, **M.METHODS['mappo-pah'])
+    env8c = E.MultiUAVEnvV4(n_drones=8, n_obstacles=5, seed=2)
+    a = pm.get_actions(env8c.reset(), deterministic=True, values=False)[0]
+    assert a.shape == (8, 2) and np.isfinite(a).all()
+    env5c = E.MultiUAVEnvV4(n_drones=5, n_obstacles=5, seed=2); o5 = env5c.reset()
+    assert np.array_equal(pm.get_actions(o5, deterministic=True)[0], pm.get_actions(o5, deterministic=True, values=False)[0])
+
+
 if __name__ == '__main__':
     import sys, time
     tests = [v for k, v in sorted(globals().items()) if k.startswith('test_')]
