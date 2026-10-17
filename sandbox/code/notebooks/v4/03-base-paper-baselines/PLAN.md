@@ -9,7 +9,7 @@ Implementation record: §7.
 
 ## 0. Why
 
-Phase 1b answered the thesis question: MAPPO + PAH beats Fixed-weight MAPPO (Stage 3, +8.5 points, 95% CI
+Phase 1b answered the thesis question: MAPPO + PAH beats Fixed-weight MAPPO (Stage 3, +8.6 points [exact 8.55; half-up rounding, 2026-10-16], 95% CI
 [+1.7, +15.4]; `02-redesign/README.md`). An examiner will also ask how MAPPO + PAH compares with **published
 methods**. The base paper's numbers cannot be put next to ours (Gazebo, 3 drones, other obstacles, other
 reward), so — as the base paper itself does — every method is trained and evaluated **in the same

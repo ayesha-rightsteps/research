@@ -1,7 +1,7 @@
 # v4 Phase 3 — the base papers' experiments on our trained models (plan)
 
-Status: **plan, waiting for Manish's go-ahead** (v4 README rule: each phase is decided by Ayesha, Manish and the
-supervisor). Written 2026-10-17. Nothing here has been run.
+Status: written 2026-10-17; code and gates done (186/186 byte-identical); **run started 2026-10-17 21:12** on Ayesha's
+decision (`run_phase3.sh`).
 
 ## 1. Purpose
 
@@ -43,7 +43,7 @@ not a failure of the method.
 | E4 | **Swarm size 3–10** (IGAT-MARL, N = 3…10) | drones 3, 4, …, 10 (Stage 3 models trained on 8; Stage 2 models trained on 5), each model with its own obstacle count | methods whose observation does not depend on the number of drones: MAPPO + PAH, Fixed-weight, τ-rule, Plain MAPPO, IGAT-style MAPPO | 5 × 10 × 2 × 8 = 800 |
 | E5 | **IGAT-MARL metrics** | none: loss-of-separation per episode and active conflict-graph edges per step, recorded during E1–E4 and the main setting | all | (inside the others) |
 | E6 | **Sensor noise** (robustness) | Gaussian noise on the LiDAR distances, σ = 0.02, 0.05, 0.10 of the ray range, Stage 3 | all 9 | 9 × 10 × 3 = 270 |
-| E7 | **Computation time** | wall-clock time per decision step (all drones) for 3–10 drones, 1 process | E4 methods | small |
+| E7 | **Computation time** | wall-clock time per decision step (all drones) for 3–10 drones, 1 process, 20 episodes | MAPPO + PAH, Fixed-weight, IGAT-style MAPPO (Stage 3 models) | 3 × 10 × 8 (20 episodes each) |
 | — | **Learning curves** | already done (`03-base-paper-baselines/output/figures/fig5_learning_curves`) | — | 0 |
 
 Known limits, to state in the thesis:
