@@ -1,6 +1,6 @@
 # v4 Phase 3 — the base papers' experiments on our trained models (plan)
 
-Status: written 2026-10-17; code and gates done (186/186 byte-identical); **run started 2026-10-17 21:12** on Ayesha's
+Status: written 2026-10-17; code and gates done (186/186 byte-identical); **run done 2026-10-17 21:12–22:53 (0 errors); results in `REPORT.md`** on Ayesha's
 decision (`run_phase3.sh`).
 
 ## 1. Purpose
